@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import Tile from "./components/Tile/Tile";
+import Player from "./components/Player/Player";
 import Background from "./components/Background";
 
 import blockSprite from "./assets/Block.png";
@@ -37,6 +38,7 @@ const Game = () => {
         {items.map(item => (
           <Tile {...item} src={blockSprite} />
         ))}
+        <Player />
       </Board>
     </>
   );
