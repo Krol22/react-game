@@ -6,7 +6,7 @@ import Position from "../Position";
 import Sprite from "../Sprite";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
-import { moveUp, moveDown, moveLeft, moveRight, idle } from "../../features/Player/playerSlice";
+import { moveUp, moveDown, moveLeft, moveRight, idle } from "../../features/gameSlice";
 import { PLAYER_MOVE_TIME } from "../../constants";
 
 import playerSprite from "../../assets/Player.png";
@@ -31,7 +31,7 @@ const Player = () => {
   const dispatch = useDispatch();
   const [offsetY, setOffsetY] = useState(0);
   const { x, y, flip, playerState } = useSelector((state) => {
-    return state.player;
+    return state.game.player;
   });
 
   // StateManager

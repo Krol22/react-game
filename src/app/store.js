@@ -1,13 +1,11 @@
 import { combineReducers } from "redux";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
-import playerSlice from "../features/Player/playerSlice";
+import gameSlice from "../features/gameSlice";
 
 const createReducer = (injectedReducers = {}) => {
-  console.log(playerSlice);
-
   return combineReducers({ 
-    player: playerSlice,
+    game: gameSlice,
     ...injectedReducers,
   });
 };

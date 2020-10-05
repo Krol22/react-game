@@ -14,7 +14,7 @@ const BackgroundWrapper = styled.div`
 const renderRainDrop = () => {
   const randomX = Math.random() * 100;
 
-  return <RainDrop initialX={randomX} />;
+  return <RainDrop key={randomX} initialX={randomX} />;
 };
 
 const Background = () => {
