@@ -1,8 +1,15 @@
 import { combineReducers } from "redux";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
+import playerSlice from "../features/Player/playerSlice";
+
 const createReducer = (injectedReducers = {}) => {
-  return combineReducers({ ...injectedReducers });
+  console.log(playerSlice);
+
+  return combineReducers({ 
+    player: playerSlice,
+    ...injectedReducers,
+  });
 };
 
 const getMiddleware = () => {

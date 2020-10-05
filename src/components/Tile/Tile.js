@@ -4,15 +4,7 @@ import styled from "styled-components";
 import Position from "../Position";
 import Sprite from "../Sprite";
 
-const TILE_WIDTH_HALF = 19;
-const TILE_HEIGHT_HALF = 8;
-
-const mapToIsometric = (x, y) => {
-  return {
-    left: (x - y) * TILE_WIDTH_HALF,
-    top: (x + y) * TILE_HEIGHT_HALF, 
-  };
-};
+import { mapToIsometric } from "../../helpers/mapToIsometric";
 
 const HoverElement = styled.div`
   position: absolute;
