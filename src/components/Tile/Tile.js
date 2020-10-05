@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
+import Position from "../Position";
 import Sprite from "../Sprite";
 
 const TILE_WIDTH_HALF = 19;
@@ -12,12 +13,6 @@ const mapToIsometric = (x, y) => {
     top: (x + y) * TILE_HEIGHT_HALF, 
   };
 };
-
-const PlaceWrapper = styled.div`
-  position: absolute;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
-`;
 
 const HoverElement = styled.div`
   position: absolute;
@@ -38,10 +33,10 @@ const Tile = ({ x, y, src }) => {
   }, [hover])
 
   return (
-    <PlaceWrapper top={top} left={left} hover={hover} >
+    <Position y={top} x={left}>
       <HoverElement onMouseEnter={() => {setHover(true)}} onMouseLeave={() =>{setHover(false)}} />
       <Sprite src={src} width={31} height={23} frame={frame}/>
-    </PlaceWrapper>
+    </Position>
   );
 };
 
