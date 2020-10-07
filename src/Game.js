@@ -1,10 +1,13 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import Tile from "./components/Tile/Tile";
 import Player from "./components/Player/Player";
+import Enemies from "./components/Enemy/Enemies";
 import Background from "./components/Background";
+
+import { tick, endTick } from "./features/gameSlice";
 
 import blockSprite from "./assets/Block.png";
 
@@ -13,7 +16,24 @@ const Board = styled.div`
 `;
 
 const Game = () => {
+  const dispatch = useDispatch();
   const map = useSelector((state) => state.game.map);
+  const shouldTick = useSelector((state) => state.game.shouldTick);
+
+  useEffect(() => {
+    if (!shouldTick) {
+      return;
+    }
+
+
+    setTimeout(() => {
+      dispatch(tick());
+    }, 500);
+
+    setTimeout(() => {
+      dispatch(endTick());
+    }, 1000);
+  }, [dispatch, shouldTick]);
 
   return (
     <>
@@ -26,6 +46,7 @@ const Game = () => {
             {...mapElement}
           />
         ))}
+        <Enemies />
         <Player />
       </Board>
     </>

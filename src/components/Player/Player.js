@@ -6,8 +6,8 @@ import Position from "../Position";
 import Sprite from "../Sprite";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
-import { moveUp, moveDown, moveLeft, moveRight, idle } from "../../features/gameSlice";
-import { PLAYER_MOVE_TIME } from "../../constants";
+import { moveUp, moveDown, moveLeft, moveRight, idle, tick } from "../../features/gameSlice";
+import useMove from "../useMove";
 
 import playerSprite from "../../assets/Player.png";
 
@@ -29,42 +29,30 @@ const playerStates = {
 
 const Player = () => {
   const dispatch = useDispatch();
-  const [offsetY, setOffsetY] = useState(0);
-  const { x, y, flip, playerState } = useSelector((state) => {
-    return state.game.player;
-  });
+
+  const test = useCallback(() => {
+    dispatch(idle());
+  }, [dispatch])
+
+  const [offsetY, jump] = useMove(test);
+  const shouldTick = useSelector((state) => state.game.shouldTick);
+  const { x, y, flip, playerState } = useSelector((state) => state.game.player);
 
   // StateManager
   useEffect(() => {
     // onStateEnter,
     if (playerState === playerStates.MOVE) {
-      setOffsetY(-10);
-
-      setTimeout(() => {
-        setOffsetY(0);
-      }, PLAYER_MOVE_TIME / 2);
-
-      setTimeout(() => {
-        dispatch(idle());
-      }, PLAYER_MOVE_TIME);
+      jump();
     }
 
     if (playerState === playerStates.HIT_WALL) {
-      setOffsetY(-10);
-
-      setTimeout(() => {
-        setOffsetY(0);
-      }, PLAYER_MOVE_TIME / 2);
-
-      setTimeout(() => {
-        dispatch(idle());
-      }, PLAYER_MOVE_TIME);
+      jump();
     }
 
     return () => {
       // on stateLeave,
     }
-  }, [playerState]);
+  }, [jump, playerState]);
 
   // change to move state,
   const move = useCallback(moveAction => {
@@ -77,6 +65,10 @@ const Player = () => {
   // this should be in external function;
   useEffect(() => {
     const onKeyDown = (e) => {
+      if (shouldTick) {
+        return;
+      }
+
       if (e.keyCode === 37) {
         move(moveLeft) 
       } else if (e.keyCode === 39) {
@@ -93,7 +85,7 @@ const Player = () => {
     return () => {
        window.removeEventListener("keydown", onKeyDown);
     }
-  }, [playerState]);
+  }, [shouldTick, playerState]);
 
   const { left, top } = mapToIsometric(x, y); 
 

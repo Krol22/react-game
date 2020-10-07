@@ -11,18 +11,18 @@ const BackgroundWrapper = styled.div`
   height: 100%;
 `;
 
-const renderRainDrop = () => {
-  const randomX = Math.random() * 100;
+const renderRainDrop = (index) => {
+  const randomX = Math.round(Math.random() * 100);
 
-  return <RainDrop key={randomX} initialX={randomX} />;
+  return <RainDrop key={index} initialX={randomX} />;
 };
 
 const Background = () => {
   return (
     <BackgroundWrapper>
-      {Array.from(Array(NUMBER_OF_RAINDROPS)).map(() => renderRainDrop())}
+      {Array.from(Array(NUMBER_OF_RAINDROPS)).map((_, index) => renderRainDrop(index))}
     </BackgroundWrapper>
   );
 };
 
-export default Background;
+export default React.memo(Background);
