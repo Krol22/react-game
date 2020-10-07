@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const playerStates = {
   IDLE: "IDLE",
   MOVE: "MOVE",
+  ATTACK: "ATTACK",
   HIT_WALL: "HIT_WALL",
 };
 
@@ -35,8 +36,8 @@ const initialState = {
     {
       state: "IDLE",
       id: 0,
-      x: -1, 
-      y: -1,
+      x: 0, 
+      y: 0,
     },
   ],
   player: {
@@ -47,72 +48,71 @@ const initialState = {
   }
 };
 
+const collisionCheck = (map, position) => {
+  const element = map.find(({x, y, type}) => position.x === x && position.y === y);
+
+  if (!element) {
+    return false;
+  }
+
+  if (!element.type) {
+    return "EMPTY";
+  }
+  
+  return element.type;
+}
+
 const playerSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    moveUp: (state) => {
-      state.player.flip = 1;
-      if (state.player.y === -1) {
-        state.player.playerState = playerStates.HIT_WALL;
-        state.shouldTick = true;
+    movePlayer: (state, { payload }) => {
+      state.player.flip = (payload.x > 0 || payload.y < 0) ? 1 : -1;
+      state.shouldTick = true;
+
+      const newPos = {
+        y: state.player.y + (payload.y || 0),
+        x: state.player.x + (payload.x || 0),
+      };
+
+      const prevPos = {
+        y: state.player.y,
+        x: state.player.x,
+      };
+
+      const collisionType = collisionCheck(state.map, newPos);
+
+      if (!collisionType) {
+        state.player.playerState = playerStates.MOVE;
         return;
       }
 
-      state.player.y -= 1;
-      state.player.playerState = playerStates.MOVE;
-      state.shouldTick = true;
-    },
-    moveDown: (state) => {
-      state.player.flip = -1;
-      if (state.player.y === 2) {
-        state.player.playerState = playerStates.HIT_WALL;
-        state.shouldTick = true;
+      if (collisionType === "EMPTY") {
+        state.player = {
+          ...state.player,
+          ...newPos,
+          playerState: playerStates.MOVE,
+        };
+
+        const prevElement = state.map.find(({x, y}) => prevPos.x === x && prevPos.y === y);
+        const mapElement = state.map.find(({x, y}) => newPos.x === x && newPos.y === y);
+
+        prevElement.type = "EMPTY";
+        mapElement.type = "PLAYER";
+
         return;
       }
 
-      state.player.y += 1;
-      state.player.playerState = playerStates.MOVE;
-      state.shouldTick = true;
-    },
-    moveLeft: (state) => {
-      state.player.flip = -1;
-      if (state.player.x === -1) {
-        state.player.playerState = playerStates.HIT_WALL;
-        state.shouldTick = true;
-        return;
+      if (collisionType === "ENEMY") {
+        state.player.playerState = playerStates.ATTACK;
       }
 
-      state.player.x -= 1;
-      state.player.playerState = playerStates.MOVE;
-      state.shouldTick = true;
-    },
-    moveRight: (state) => {
-      state.player.flip = 1;
-      if (state.player.x === 2) {
-        state.player.playerState = playerStates.HIT_WALL;
-        state.shouldTick = true;
-        return;
-      }
-
-      state.player.x += 1;
-      state.player.playerState = playerStates.MOVE;
-      state.shouldTick = true;
     },
     idle: (state) => {
       state.player.playerState = playerStates.IDLE;
     },
     tick: (state) => {
       state.tick += 1;
-      // state.enemies[0].x += tickMoves[state.tick].x;
-      // state.enemies[0].y += tickMoves[state.tick].y;
-      // state.enemies[0].state = "MOVE";
-//
-      // if (state.tick >= 3) {
-        // state.tick = 0;
-      // } else {
-        // state.tick += 1;
-      // }
     },
     endTick: (state) => {
       state.shouldTick = false;
@@ -121,23 +121,57 @@ const playerSlice = createSlice({
       enemies[0].state = payload;
     },
     move: (state) => {
-      state.enemies[0].x += tickMoves[state.tick % 2].x;
-      state.enemies[0].y += tickMoves[state.tick % 2].y;
-      state.enemies[0].state = "MOVE";
+      const position = tickMoves[state.tick % 2];
+
+      const prevPos = {
+        y: state.enemies[0].y,
+        x: state.enemies[0].x,
+      };
+
+      const newPos = {
+        x: state.enemies[0].x + position.x,
+        y: state.enemies[0].y + position.y,
+      };
+
+      state.enemies[0].flip = (position.x > 0 || position.y < 0) ? 1 : -1;
+
+      const collisionType = collisionCheck(state.map, newPos);
+
+      if (!collisionType) {
+        state.enemies[0].state = "MOVE";
+        return;
+      }
+
+      if (collisionType === "EMPTY") {
+        state.enemies[0] = {
+          ...state.enemies[0],
+          ...newPos,
+          state: "MOVE",
+        };
+
+        const prevElement = state.map.find(({x, y}) => prevPos.x === x && prevPos.y === y);
+        const mapElement = state.map.find(({x, y}) => newPos.x === x && newPos.y === y);
+
+        prevElement.type = "EMPTY";
+        mapElement.type = "ENEMY";
+
+        return;
+      }
+
+      if (collisionType === "PLAYER") {
+        state.enemies[0].state = "MOVE";
+      }
     },
   }
 });
 
 export const {
-  moveUp,
-  moveDown,
-  moveLeft,
-  moveRight,
   idle,
   move,
   tick,
   endTick,
   changeState,
+  movePlayer,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

@@ -21,7 +21,7 @@ const EnemyWrapper = styled.div`
   }
 `;
 
-const Enemy = ({ id, x, y, state }) => {
+const Enemy = ({ id, x, y, flip, state }) => {
   const dispatch = useDispatch();
   const idle = useCallback(() => {
     dispatch(changeState("IDLE"));
@@ -56,7 +56,7 @@ const Enemy = ({ id, x, y, state }) => {
           z={1}
           offsetX={8}
           offsetY={8 + offsetY}
-          flipX={1}
+          flipX={flip}
         />
       </Position>
     </EnemyWrapper>

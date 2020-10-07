@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -6,7 +6,7 @@ import Position from "../Position";
 import Sprite from "../Sprite";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
-import { moveUp, moveDown, moveLeft, moveRight, idle, tick } from "../../features/gameSlice";
+import { movePlayer, idle } from "../../features/gameSlice";
 import useMove from "../useMove";
 
 import playerSprite from "../../assets/Player.png";
@@ -25,6 +25,7 @@ const playerStates = {
   IDLE: "IDLE",
   MOVE: "MOVE",
   HIT_WALL: "HIT_WALL",
+  ATTACK: "ATTACK",
 };
 
 const Player = () => {
@@ -49,17 +50,22 @@ const Player = () => {
       jump();
     }
 
+    if (playerState === playerStates.ATTACK) {
+      console.log("Attack");
+      test();
+    }
+
     return () => {
       // on stateLeave,
     }
   }, [jump, playerState]);
 
   // change to move state,
-  const move = useCallback(moveAction => {
+  const move = useCallback(direction => {
     if (playerState !== playerStates.IDLE) {
       return;
     }
-    dispatch(moveAction());
+    dispatch(movePlayer(direction));
   }, [dispatch, playerState]);
 
   // this should be in external function;
@@ -70,13 +76,13 @@ const Player = () => {
       }
 
       if (e.keyCode === 37) {
-        move(moveLeft) 
+        move({ x: -1 }) 
       } else if (e.keyCode === 39) {
-        move(moveRight);
+        move({ x: 1 });
       } else if (e.keyCode === 38) {
-        move(moveUp);
+        move({ y: -1 });
       } else if (e.keyCode === 40) {
-        move(moveDown);
+        move({ y: 1 });
       }
     };
 
