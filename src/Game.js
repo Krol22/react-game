@@ -19,12 +19,22 @@ const Game = () => {
   const dispatch = useDispatch();
   const map = useSelector((state) => state.game.map);
   const shouldTick = useSelector((state) => state.game.shouldTick);
+  const skipTurn = useSelector((state) => state.game.skipTurn);
 
   useEffect(() => {
     if (!shouldTick) {
       return;
     }
 
+    if (skipTurn) {
+      dispatch(tick());
+
+      setTimeout(() => {
+        dispatch(endTick());
+      }, 500);
+
+      return;
+    }
 
     setTimeout(() => {
       dispatch(tick());
@@ -37,7 +47,7 @@ const Game = () => {
 
   return (
     <>
-      <Background />
+      {/* <Background />*/}
       <Board>
         {map.map(mapElement => (
           <Tile
@@ -46,7 +56,7 @@ const Game = () => {
             {...mapElement}
           />
         ))}
-        <Enemies />
+        {/* <Enemies /> */}
         <Player />
       </Board>
     </>

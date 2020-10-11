@@ -12,7 +12,7 @@ const useMove = (idleAction) => {
 
     setTimeout(() => {
       idleAction();
-    }, 450);
+    }, 250);
   }, [idleAction]);
 
   return [offsetY, move];

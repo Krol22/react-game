@@ -9,7 +9,12 @@ const Sprite = styled.img`
   ${({ height }) => `height: ${height}px;`}
   ${({ z = 0 }) => `z-index: ${z};`}
   ${({ frame = 0, width }) => `object-position: ${frame * -width}px 0;`}
-  ${({ flipX = 1 }) => `transform: scaleX(${flipX});`}
+  ${({
+    flipX = 1,
+    angle = 0,
+  }) => `
+    transform: scaleX(${flipX}) rotate(${angle}deg);
+  `}
 
   ${({ offsetX = 0, offsetY = 0}) => `
     left: ${offsetX}px;

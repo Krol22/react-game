@@ -111,11 +111,16 @@ const playerSlice = createSlice({
     idle: (state) => {
       state.player.playerState = playerStates.IDLE;
     },
+    skipTurn: (state) => {
+      state.shouldTick = true;
+      state.skipTurn = true;
+    },
     tick: (state) => {
       state.tick += 1;
     },
     endTick: (state) => {
       state.shouldTick = false;
+      state.skipTurn = false;
     },
     changeState: ({ enemies }, payload) => {
       enemies[0].state = payload;
@@ -172,6 +177,7 @@ export const {
   endTick,
   changeState,
   movePlayer,
+  skipTurn,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

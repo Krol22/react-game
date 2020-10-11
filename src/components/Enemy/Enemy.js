@@ -33,7 +33,7 @@ const Enemy = ({ id, x, y, flip, state }) => {
     dispatch(move());
   }, [dispatch, tick]);
 
-  const [offsetY, jump] = useMove(idle);
+  const [offsetY, jump] = useMove(idle, "enemy");
   const {left, top} = mapToIsometric(x, y);
 
   useEffect(() => {
