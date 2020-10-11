@@ -122,7 +122,7 @@ const playerSlice = createSlice({
       state.shouldTick = false;
       state.skipTurn = false;
     },
-    changeState: ({ enemies }, payload) => {
+    changeState: ({ enemies }, { payload }) => {
       enemies[0].state = payload;
     },
     move: (state) => {
@@ -139,6 +139,7 @@ const playerSlice = createSlice({
       };
 
       state.enemies[0].flip = (position.x > 0 || position.y < 0) ? 1 : -1;
+      state.enemies[0].direction = position;
 
       const collisionType = collisionCheck(state.map, newPos);
 
@@ -164,7 +165,7 @@ const playerSlice = createSlice({
       }
 
       if (collisionType === "PLAYER") {
-        state.enemies[0].state = "MOVE";
+        state.enemies[0].state = "ATTACK";
       }
     },
   }

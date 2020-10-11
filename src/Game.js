@@ -47,7 +47,7 @@ const Game = () => {
 
   return (
     <>
-      {/* <Background />*/}
+      <Background />
       <Board>
         {map.map(mapElement => (
           <Tile
@@ -56,7 +56,7 @@ const Game = () => {
             {...mapElement}
           />
         ))}
-        {/* <Enemies /> */}
+        <Enemies />
         <Player />
       </Board>
     </>

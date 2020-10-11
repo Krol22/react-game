@@ -5,6 +5,8 @@ import styled from "styled-components";
 import Position from "../Position";
 import Sprite from "../Sprite";
 import useMove from "../useMove";
+import useIdle from "../useIdle";
+import useEnemyAttack from "../useEnemyAttack";
 
 import { changeState, move } from "../../features/gameSlice";
 import { mapToIsometric } from "../../helpers/mapToIsometric";
@@ -17,11 +19,14 @@ const EnemyWrapper = styled.div`
   }
 
   ${Sprite} {
-    transition: top 0.2s ease-in-out, transform 0.1s ease-in-out;
+    transition: 
+      top 0.2s ease-in-out,
+      left 0.2s ease-in-out,
+      transform 0.1s ease-in-out;
   }
 `;
 
-const Enemy = ({ id, x, y, flip, state }) => {
+const Enemy = ({ id, x, y, flip, state, direction }) => {
   const dispatch = useDispatch();
   const idle = useCallback(() => {
     dispatch(changeState("IDLE"));
@@ -34,15 +39,27 @@ const Enemy = ({ id, x, y, flip, state }) => {
   }, [dispatch, tick]);
 
   const [offsetY, jump] = useMove(idle, "enemy");
+  const [frame, play, pause] = useIdle(1);
   const {left, top} = mapToIsometric(x, y);
+  const [attackOffsetX, attackOffsetY, playAttack] = useEnemyAttack(idle); 
 
   useEffect(() => {
-    if (state === "MOVE")  {
+    if (state === "IDLE") {
+      play();
+    }
+
+    if (state === "MOVE") {
       jump();
     }
 
+    if (state === "ATTACK") {
+      playAttack(direction);
+    }
+
     return () => {
-      // on stateLeave,
+      if (state === "IDLE") {
+        pause();
+      }
     };
   }, [jump, state]);
 
@@ -54,8 +71,8 @@ const Enemy = ({ id, x, y, flip, state }) => {
           width={16}
           height={16}
           z={1}
-          offsetX={8}
-          offsetY={8 + offsetY}
+          offsetX={8 + attackOffsetX}
+          offsetY={8 + attackOffsetY + offsetY + frame}
           flipX={flip}
         />
       </Position>
