@@ -1,21 +1,20 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { useInterval } from "beautiful-react-hooks";
 
-import Position from "../Position";
-import Sprite from "../Sprite";
+import Position from "../Game/Position";
+import Sprite from "../Game/Sprite";
 import Weapon from "./Weapon";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
 import { movePlayer, idle, skipTurn } from "../../features/gameSlice";
 import useMove from "../useMove";
-import useIdle from "../useIdle";
+import useAttack from "./usePlayerAttack";
 
 import playerSprite from "../../assets/Player.png";
-import useAttack from "../useAttack";
 
 const PlayerWrapper = styled.div`
+
   ${Position} {
     transition: all 0.5s ease-in-out;
   }
@@ -34,6 +33,16 @@ const PlayerWrapper = styled.div`
         left 0.1s ease-in-out;
     }
   `}
+
+  ${({ state }) => state === "IDLE" && `
+    transform: translateY(0);
+    animation-name: idle;  
+    animation-duration: 0.3s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  `}
+
 `;
 
 const playerStates = {
@@ -54,16 +63,11 @@ const Player = () => {
   const [offsetY, jump] = useMove(test);
   const [attackOffsetX, attackOffsetY, weaponAngle, playAttack] = useAttack(test);
   const shouldTick = useSelector((state) => state.game.shouldTick);
-  const [frame, play, pause] = useIdle(1);
   const { x, y, flip, playerState } = useSelector((state) => state.game.player);
 
   // StateManager
   useEffect(() => {
     // onStateEnter,
-    if (playerState === playerStates.IDLE) {
-      play();
-    }
-
     if (playerState === playerStates.MOVE) {
       jump();
     }
@@ -76,11 +80,7 @@ const Player = () => {
       playAttack(moveDirection);
     }
 
-    return () => {
-      if (playerState === playerStates.IDLE) {
-        pause();
-      }
-    };
+    return () => {};
   }, [
     playAttack,
     jump,
@@ -90,7 +90,7 @@ const Player = () => {
   useEffect(() => {
     return () => {
     }
-  }, [playerState, pause]);
+  }, [playerState]);
 
   // change to move state,
   const move = useCallback(direction => {
@@ -139,7 +139,7 @@ const Player = () => {
           height={16}
           z={1}
           offsetX={8 + attackOffsetX}
-          offsetY={8 + offsetY + attackOffsetY + (frame * 1)}
+          offsetY={8 + offsetY + attackOffsetY}
           flipX={flip}
         />
       </Position>
@@ -147,7 +147,7 @@ const Player = () => {
         x={left}
         y={top} 
         flip={flip}
-        offsetY={offsetY + attackOffsetY + (frame * 1)}
+        offsetY={offsetY + attackOffsetY}
         offsetX={attackOffsetX}
         angle={weaponAngle}
       />

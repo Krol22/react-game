@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { css } from "styled-components";
 
 const useIdle = (frames) => {
   // I wonder if it's big mistake.
@@ -23,5 +24,12 @@ const useIdle = (frames) => {
 
   return [frame, play, pause];
 };
+
+export const idleAnimation = css`
+  animation-duration: 0.3s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+`;
 
 export default useIdle

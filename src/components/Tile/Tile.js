@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import Position from "../Position";
-import Sprite from "../Sprite";
+import Position from "../Game/Position";
+import Sprite from "../Game/Sprite";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
 
@@ -16,7 +16,7 @@ const HoverElement = styled.div`
 
 
 const Tile = ({ x, y, src }) => {
-  const { top, left } = mapToIsometric(x, y);
+  const { top, left } = mapToIsometric(x + 1, y + 1);
   const [ hover, setHover ] = useState(false);
   const [ frame, setFrame ] = useState(1);
 

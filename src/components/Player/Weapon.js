@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import Position from "../Position";
-import Sprite from "../Sprite";
+
+import Position from "../Game/Position";
+import Sprite from "../Game/Sprite";
 
 import sword from "../../assets/Sword.png";
 

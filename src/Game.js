@@ -5,7 +5,8 @@ import styled from "styled-components";
 import Tile from "./components/Tile/Tile";
 import Player from "./components/Player/Player";
 import Enemies from "./components/Enemy/Enemies";
-import Background from "./components/Background";
+// import Background from "./components/Background/Background";
+// import AudioPlayer from "./components/AudioPlayer";
 
 import { tick, endTick } from "./features/gameSlice";
 
@@ -47,7 +48,8 @@ const Game = () => {
 
   return (
     <>
-      <Background />
+      {/* disabled for performance reasons - <Background /> */}
+      {/* <AudioPlayer /> */ }
       <Board>
         {map.map(mapElement => (
           <Tile

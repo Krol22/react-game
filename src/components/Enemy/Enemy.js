@@ -2,11 +2,11 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import Position from "../Position";
-import Sprite from "../Sprite";
+import Position from "../Game/Position";
+import Sprite from "../Game/Sprite";
 import useMove from "../useMove";
 import useIdle from "../useIdle";
-import useEnemyAttack from "../useEnemyAttack";
+import useEnemyAttack from "./useEnemyAttack";
 
 import { changeState, move } from "../../features/gameSlice";
 import { mapToIsometric } from "../../helpers/mapToIsometric";
@@ -24,6 +24,16 @@ const EnemyWrapper = styled.div`
       left 0.2s ease-in-out,
       transform 0.1s ease-in-out;
   }
+
+  ${({ state }) => state === "IDLE" && `
+    transform: translateY(0);
+    animation-name: idle;  
+    animation-duration: 0.3s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  `}
+
 `;
 
 const Enemy = ({ id, x, y, flip, state, direction }) => {
