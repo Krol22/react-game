@@ -4,11 +4,11 @@ import styled from "styled-components";
 
 import Position from "../Game/Position";
 import Sprite from "../Game/Sprite";
+import HealthBar from "./HealthBar";
 import useMove from "../useMove";
-import useIdle from "../useIdle";
 import useEnemyAttack from "./useEnemyAttack";
 
-import { changeState, move } from "../../features/gameSlice";
+import { changeState, move, enemyHit } from "../../features/gameSlice";
 import { mapToIsometric } from "../../helpers/mapToIsometric";
 
 import enemySprite from "../../assets/Enemy.png";
@@ -34,9 +34,17 @@ const EnemyWrapper = styled.div`
     animation-timing-function: linear;
   `}
 
+  ${({ state }) => state === "HIT" && `
+    ${Sprite} {
+      animation-name: hit;
+      animation-duration: 0.1s;
+      animation-delay: 0.3s;
+      animation-timing-function: linear;
+    }
+  `}
 `;
 
-const Enemy = ({ id, x, y, flip, state, direction }) => {
+const Enemy = ({ id, x, y, health, flip, state, direction }) => {
   const dispatch = useDispatch();
   const idle = useCallback(() => {
     dispatch(changeState("IDLE"));
@@ -49,15 +57,10 @@ const Enemy = ({ id, x, y, flip, state, direction }) => {
   }, [dispatch, tick]);
 
   const [offsetY, jump] = useMove(idle, "enemy");
-  const [frame, play, pause] = useIdle(1);
   const {left, top} = mapToIsometric(x, y);
   const [attackOffsetX, attackOffsetY, playAttack] = useEnemyAttack(idle); 
 
   useEffect(() => {
-    if (state === "IDLE") {
-      play();
-    }
-
     if (state === "MOVE") {
       jump();
     }
@@ -66,23 +69,27 @@ const Enemy = ({ id, x, y, flip, state, direction }) => {
       playAttack(direction);
     }
 
-    return () => {
-      if (state === "IDLE") {
-        pause();
-      }
-    };
+    if (state === "HIT") {
+      setTimeout(() => {
+        dispatch(enemyHit());
+        idle();
+      }, 400);
+    }
+
+    return () => {};
   }, [jump, state]);
 
   return (
-    <EnemyWrapper>
-      <Position x={left} y={top}>
+    <EnemyWrapper state={state}>
+      <Position x={left + 8} y={top + 6}>
+        <HealthBar health={health} offsetY={0}/>
         <Sprite
           src={enemySprite}
           width={16}
           height={16}
           z={1}
-          offsetX={8 + attackOffsetX}
-          offsetY={8 + attackOffsetY + offsetY + frame}
+          offsetX={attackOffsetX}
+          offsetY={attackOffsetY + offsetY}
           flipX={flip}
         />
       </Position>

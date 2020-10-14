@@ -43,6 +43,12 @@ const PlayerWrapper = styled.div`
     animation-timing-function: linear;
   `}
 
+  ${({ state }) => state === "HIT" && `
+    animation-name: hit;
+    animation-duration: 0.1s;
+    animation-delay: 0.3s;
+    animation-timing-function: linear;
+  `}
 `;
 
 const playerStates = {
@@ -80,6 +86,13 @@ const Player = () => {
       playAttack(moveDirection);
     }
 
+    if (playerState === "HIT") {
+      // todo: change name
+      setTimeout(() => {
+        test();
+      }, 400);
+    }
+
     return () => {};
   }, [
     playAttack,
@@ -109,15 +122,20 @@ const Player = () => {
       }
 
       if (e.keyCode === 37) {
-        move({ x: -1 }) 
+        move({ x: -1 }); 
+        return;
       } else if (e.keyCode === 39) {
         move({ x: 1 });
+        return;
       } else if (e.keyCode === 38) {
         move({ y: -1 });
+        return;
       } else if (e.keyCode === 40) {
         move({ y: 1 });
+        return;
       } else if (e.keyCode === 32) {
         dispatch(skipTurn());
+        return;
       }
     };
 

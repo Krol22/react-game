@@ -21,6 +21,7 @@ const Game = () => {
   const map = useSelector((state) => state.game.map);
   const shouldTick = useSelector((state) => state.game.shouldTick);
   const skipTurn = useSelector((state) => state.game.skipTurn);
+  const { playerActionTime, worldActionTime } = useSelector((state) => state.game);
 
   useEffect(() => {
     if (!shouldTick) {
@@ -32,18 +33,18 @@ const Game = () => {
 
       setTimeout(() => {
         dispatch(endTick());
-      }, 500);
+      }, worldActionTime);
 
       return;
     }
 
     setTimeout(() => {
       dispatch(tick());
-    }, 500);
+    }, playerActionTime);
 
     setTimeout(() => {
       dispatch(endTick());
-    }, 1000);
+    }, playerActionTime + worldActionTime);
   }, [dispatch, shouldTick]);
 
   return (

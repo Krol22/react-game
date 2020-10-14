@@ -13,13 +13,15 @@ const tickMoves = [
 ];
 
 const initialState = {
+  playerActionTime: 500,
+  worldActionTime: 500,
   tick: 0,
   map: [
-    { x: 0, y: 0 },
+    { x: 0, y: 0, type: "ENEMY" },
     { x: 1, y: 0 },
     { x: 2, y: 0 },
     { x: 3, y: 0 },
-    { x: 0, y: 1 },
+    { x: 0, y: 1, type: "PLAYER" },
     { x: 1, y: 1 },
     { x: 2, y: 1 },
     { x: 3, y: 1 },
@@ -38,10 +40,11 @@ const initialState = {
       id: 0,
       x: 0, 
       y: 0,
+      health: 100,
     },
   ],
   player: {
-    x: 1,
+    x: 0,
     y: 1,
     flip: 1,
     playerState: playerStates.IDLE,
@@ -105,11 +108,16 @@ const playerSlice = createSlice({
 
       if (collisionType === "ENEMY") {
         state.player.playerState = playerStates.ATTACK;
+        const enemy = state.enemies.find(({ x, y }) => newPos.x === x && newPos.y === y);
+        enemy.state = "HIT";
       }
 
     },
     idle: (state) => {
       state.player.playerState = playerStates.IDLE;
+    },
+    enemyHit: (state) => {
+      state.enemies[0].health -= 20;
     },
     skipTurn: (state) => {
       state.shouldTick = true;
@@ -121,6 +129,8 @@ const playerSlice = createSlice({
     endTick: (state) => {
       state.shouldTick = false;
       state.skipTurn = false;
+      state.playerActionTime = 500;
+      state.worldActionTime = 500;
     },
     changeState: ({ enemies }, { payload }) => {
       enemies[0].state = payload;
@@ -166,6 +176,7 @@ const playerSlice = createSlice({
 
       if (collisionType === "PLAYER") {
         state.enemies[0].state = "ATTACK";
+        state.player.playerState = "HIT";
       }
     },
   }
@@ -179,6 +190,7 @@ export const {
   changeState,
   movePlayer,
   skipTurn,
+  enemyHit,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;
