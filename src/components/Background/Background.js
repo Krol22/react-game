@@ -25,22 +25,23 @@ const renderRainDrop = (index) => {
 };
 
 const Background = () => {
-  const canvasRef = useRef();
-  
-
-  useEffect(() => {
-    const image = new Image();
-    image.src = rainSprite;
-
-    const ctx = canvasRef.current.getContext("2d");
-    ctx.drawImage(image, 20, 20);
-  }, [canvasRef]);
+  // const canvasRef = useRef();
+//
+  // useEffect(() => {
+    // const image = new Image();
+    // image.src = rainSprite;
+//
+    // const ctx = canvasRef.current.getContext("2d");
+    // ctx.drawImage(image, 20, 20);
+  // }, [canvasRef]);
 
   return (
     <BackgroundWrapper>
-      <Canvas ref={canvasRef} />
+      {Array.from(Array(NUMBER_OF_RAINDROPS)).map((_, index) => renderRainDrop(index))}
     </BackgroundWrapper>
   );
 };
+
+// <Canvas ref={canvasRef} />
 
 export default React.memo(Background);

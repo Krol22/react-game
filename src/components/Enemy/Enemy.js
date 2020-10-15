@@ -47,13 +47,16 @@ const EnemyWrapper = styled.div`
 const Enemy = ({ id, x, y, health, flip, state, direction }) => {
   const dispatch = useDispatch();
   const idle = useCallback(() => {
-    dispatch(changeState("IDLE"));
+    dispatch(changeState({ 
+      state: "IDLE",
+      id,
+    }));
   }, [dispatch])
   const tick = useSelector((state) => state.game.tick);
 
   useEffect(() => {
     if (!tick) { return; }
-    dispatch(move());
+    dispatch(move(id));
   }, [dispatch, tick]);
 
   const [offsetY, jump] = useMove(idle, "enemy");
@@ -71,7 +74,7 @@ const Enemy = ({ id, x, y, health, flip, state, direction }) => {
 
     if (state === "HIT") {
       setTimeout(() => {
-        dispatch(enemyHit());
+        dispatch(enemyHit(id));
         idle();
       }, 400);
     }

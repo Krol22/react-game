@@ -10,6 +10,8 @@ export const playerStates = {
 const tickMoves = [
   {x: 0, y: -1},
   {x: 0, y: 1},
+  {x: 1, y: 0},
+  {x: -1, y: 0},
 ];
 
 const initialState = {
@@ -39,6 +41,13 @@ const initialState = {
       state: "IDLE",
       id: 0,
       x: 0, 
+      y: 0,
+      health: 100,
+    },
+    {
+      state: "IDLE",
+      id: 1,
+      x: 1, 
       y: 0,
       health: 100,
     },
@@ -116,8 +125,10 @@ const playerSlice = createSlice({
     idle: (state) => {
       state.player.playerState = playerStates.IDLE;
     },
-    enemyHit: (state) => {
-      state.enemies[0].health -= 20;
+    enemyHit: ({ enemies }, { payload }) => {
+      enemies
+        .find(enemy => enemy.id === payload)
+        .health -= 20;
     },
     skipTurn: (state) => {
       state.shouldTick = true;
@@ -133,37 +144,43 @@ const playerSlice = createSlice({
       state.worldActionTime = 500;
     },
     changeState: ({ enemies }, { payload }) => {
-      enemies[0].state = payload;
+      enemies
+        .find(enemy => enemy.id === payload.id)
+        .state = payload.state;
     },
-    move: (state) => {
-      const position = tickMoves[state.tick % 2];
+    move: (state, { payload }) => {
+      const position = tickMoves[Math.floor((Math.random() * 4))];
+
+      const enemy = state.enemies.find(({ id }) => id === payload);
+
+      if (!enemy) {
+        return;
+      }
 
       const prevPos = {
-        y: state.enemies[0].y,
-        x: state.enemies[0].x,
+        y: enemy.y,
+        x: enemy.x,
       };
 
       const newPos = {
-        x: state.enemies[0].x + position.x,
-        y: state.enemies[0].y + position.y,
+        x: enemy.x + position.x,
+        y: enemy.y + position.y,
       };
 
-      state.enemies[0].flip = (position.x > 0 || position.y < 0) ? 1 : -1;
-      state.enemies[0].direction = position;
+      enemy.flip = (position.x > 0 || position.y < 0) ? 1 : -1;
+      enemy.direction = position;
 
       const collisionType = collisionCheck(state.map, newPos);
 
       if (!collisionType) {
-        state.enemies[0].state = "MOVE";
+        enemy.state = "MOVE";
         return;
       }
 
       if (collisionType === "EMPTY") {
-        state.enemies[0] = {
-          ...state.enemies[0],
-          ...newPos,
-          state: "MOVE",
-        };
+        enemy.x = newPos.x;
+        enemy.y = newPos.y;
+        enemy.state = "MOVE";
 
         const prevElement = state.map.find(({x, y}) => prevPos.x === x && prevPos.y === y);
         const mapElement = state.map.find(({x, y}) => newPos.x === x && newPos.y === y);
@@ -175,7 +192,7 @@ const playerSlice = createSlice({
       }
 
       if (collisionType === "PLAYER") {
-        state.enemies[0].state = "ATTACK";
+        enemy.state = "ATTACK";
         state.player.playerState = "HIT";
       }
     },
