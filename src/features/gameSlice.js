@@ -53,7 +53,7 @@ const initialState = {
     },
   ],
   player: {
-    x: 0,
+    x: 1,
     y: 1,
     flip: 1,
     playerState: playerStates.IDLE,

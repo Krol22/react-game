@@ -59,7 +59,7 @@ const Game = () => {
             {...mapElement}
           />
         ))}
-        <Enemies />
+        {/* <Enemies /> */}
         <Player />
       </Board>
     </>

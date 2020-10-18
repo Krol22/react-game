@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Position from "../Game/Position";
 import Sprite from "../Game/Sprite";
 import Weapon from "./Weapon";
+import ParticleEmitter from "../Game/ParticleEmitter";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
 import { movePlayer, idle, skipTurn } from "../../features/gameSlice";
@@ -14,7 +15,6 @@ import useAttack from "./usePlayerAttack";
 import playerSprite from "../../assets/Player.png";
 
 const PlayerWrapper = styled.div`
-
   ${Position} {
     transition: all 0.5s ease-in-out;
   }
@@ -149,27 +149,27 @@ const Player = () => {
   const { left, top } = mapToIsometric(x, y); 
 
   return (
-    <PlayerWrapper state={playerState}>
-      <Position x={left} y={top}>
+    <Position x={left} y={top}>
+      <PlayerWrapper state={playerState}>
         <Sprite
           src={playerSprite}
           width={16}
           height={16}
           z={1}
           offsetX={8 + attackOffsetX}
-          offsetY={8 + offsetY + attackOffsetY}
+          offsetY={-8 + offsetY + attackOffsetY}
           flipX={flip}
         />
-      </Position>
-      <Weapon 
-        x={left}
-        y={top} 
-        flip={flip}
-        offsetY={offsetY + attackOffsetY}
-        offsetX={attackOffsetX}
-        angle={weaponAngle}
-      />
-    </PlayerWrapper>
+        <Weapon 
+          x={0}
+          y={0} 
+          flip={flip}
+          offsetY={-34 + offsetY + attackOffsetY}
+          offsetX={attackOffsetX}
+          angle={weaponAngle}
+        />
+      </PlayerWrapper>
+    </Position>
   );
 };
 

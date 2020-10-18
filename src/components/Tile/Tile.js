@@ -16,7 +16,7 @@ const HoverElement = styled.div`
 
 
 const Tile = ({ x, y, src }) => {
-  const { top, left } = mapToIsometric(x + 1, y + 1);
+  const { top, left } = mapToIsometric(x, y);
   const [ hover, setHover ] = useState(false);
   const [ frame, setFrame ] = useState(1);
 

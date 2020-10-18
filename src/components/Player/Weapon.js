@@ -7,9 +7,7 @@ import Sprite from "../Game/Sprite";
 import sword from "../../assets/Sword.png";
 
 const WeaponWrapper = styled.div`
-  ${Position} {
-    transition: transform 0.1s ease-in-out;
-  }
+  position: absolute;
 
   & ${Sprite} {
     transform-origin: 50% 100%;
@@ -19,17 +17,15 @@ const WeaponWrapper = styled.div`
 const Weapon = ({ x, y, flip, offsetX, offsetY, angle }) => {
   return (
     <WeaponWrapper>
-      <Position x={x} y={y}>
-        <Sprite
-          src={sword}
-          width={8}
-          height={21}
-          z={1}
-          offsetX={offsetX + 12}
-          offsetY={offsetY + 2}
-          angle={flip * angle}
-        />
-      </Position>
+      <Sprite
+        src={sword}
+        width={8}
+        height={21}
+        z={1}
+        offsetX={offsetX + 12}
+        offsetY={offsetY + 2}
+        angle={flip * angle}
+      />
     </WeaponWrapper>
   );
 };
