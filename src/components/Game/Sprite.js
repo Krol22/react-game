@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Sprite = styled.img`
   image-rendering: pixelated;
   object-fit: none;
-  position: relative;
+  position: absolute;
 
   ${({ width }) => `width: ${width}px;`}
   ${({ height }) => `height: ${height}px;`}
