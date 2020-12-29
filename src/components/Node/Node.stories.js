@@ -4,6 +4,7 @@ import { Node } from "./Node";
 
 export default {
   title: "components/Node",
+  component: Node,
   argTypes: {
     rotation: {
       control: {
@@ -26,7 +27,8 @@ const NodeTemplate = ({
     rotation={rotation}
     scaleX={scaleX}
     scaleY={scaleY}
-    debug={debug}>
+    debug={debug}
+  >
     Game Node
   </Node>
 );

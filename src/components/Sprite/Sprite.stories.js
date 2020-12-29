@@ -6,20 +6,48 @@ import { Sprite } from "./Sprite";
 
 export default {
   title: "components/Node",
+  component: Sprite,
 };
 
-const SpriteTemplate = () => (
+const SpriteTemplate = ({
+  x, y, zIndex, rotation, scaleX, scaleY, debug,
+  offsetX, offsetY, flipH, flipV, width, height,
+}) => (
   <Sprite 
     src={swordAsset} 
-    width={8}
-    height={21}
+    offsetX={offsetX}
+    offsetY={offsetY}
+    flipH={flipH}
+    flipV={flipV}
+    width={width}
+    height={height}
     node={{
-      x: 30,
-      y: 30,
+      x,
+      y,
+      zIndex,
+      rotation,
+      scaleX,
+      scaleY,
+      debug,
     }}
   />
 );
 
 export const SpriteNode = SpriteTemplate.bind({});
 
-SpriteNode.args = {};
+SpriteNode.args = {
+  offsetX: 0,
+  offsetY: 0,
+  flipH: false,
+  flipV: false,
+  width: 8,
+  height: 21,
+
+  x: 30,
+  y: 30,
+  zIndex: 0,
+  rotation: 0,
+  scaleX: 1,
+  scaleY: 1,
+  debug: true,
+};
