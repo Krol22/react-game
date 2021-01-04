@@ -11,17 +11,24 @@ export default {
         options: ["sword", "hammer"],
       },
     },
+    state: {
+      control: {
+        type: "select",
+        options: ["idle", "test"],
+      }
+    }
   },
 };
 
-const PlayerTemplate = ({ weapon }) => {
+const PlayerTemplate = ({ weapon, state }) => {
   return (
-    <Player x={20} y={20} weapon={weapon} />
+    <Player x={20} y={20} weapon={weapon} state={state} />
   );
 };
 
 export const PlayerEntity = PlayerTemplate.bind({});
 
 PlayerEntity.args = {
-  weapon: "sword"
+  weapon: "sword",
+  state: "idle"
 };

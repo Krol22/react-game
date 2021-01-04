@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import playerSprite from "../../assets/Player.png";
@@ -7,6 +7,9 @@ import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 import { Sword, Hammer } from "../Weapons";
 import { HealthBar } from "../HealthBar";
+import useGsapAnimations from "../../hooks/useGsapAnimations";
+
+import playerAnimations from "./Player.animations";
 
 const weapons = {
   sword: {
@@ -27,35 +30,52 @@ const weapons = {
   },
 };
 
-export function Player({ x, y, weapon = "sword" }) {
+export function Player({ x, y, weapon = "sword", state = "idle" }) {
   const { Weapon, node } = weapons[weapon];
 
+  const nodeRef = useRef(null);
+
+  const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
+
+  useEffect(() => {
+    if (state === "idle") {
+      playAnimation("idle");
+    } else if (state === "test") {
+      playAnimation("test");
+    }
+
+    return () => {}
+
+  }, [nodeRef, state]);
+
   return (
-    <Node
-      x={x}
-      y={y}
-      width={16}
-      height={16}
-    >
-      <HealthBar
-        currentHealth={75}
-        maxHealth={100}
-        node={{
-          y: -2,
-          zIndex: 4,
-        }}
-      />
-      <Sprite
-        node-id="player"
-        src={playerSprite}
+    <div ref={nodeRef}>
+      <Node
+        x={x}
+        y={y}
         width={16}
         height={16}
-        node={{
-          zIndex: 3,
-        }}
-      />
-      <Weapon node={node} />
-    </Node>
+      >
+        <HealthBar
+          currentHealth={75}
+          maxHealth={100}
+          node={{
+            y: -2,
+            zIndex: 4,
+          }}
+        />
+        <Sprite
+          id="player-sprite"
+          src={playerSprite}
+          width={16}
+          height={16}
+          node={{
+            zIndex: 3,
+          }}
+        />
+        <Weapon node={node} />
+      </Node>
+    </div>
   );
 };
 
