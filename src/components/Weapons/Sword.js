@@ -12,6 +12,7 @@ export function Sword({ node }) {
       width={8}
       height={21}
       node={{
+        anchorPoint: "50% 70%",
         rotation: -45,
         ...node,
       }}

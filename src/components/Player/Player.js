@@ -15,6 +15,7 @@ const weapons = {
   sword: {
     Weapon: Sword,
     node: {
+      id: "player-weapon",
       x: -3,
       y: -3,
       zIndex: 3,
@@ -23,6 +24,7 @@ const weapons = {
   hammer: {
     Weapon: Hammer,
     node: {
+      id: "player-weapon",
       x: -3,
       y: -6,
       zIndex: 3,
@@ -42,11 +44,13 @@ export function Player({ x, y, weapon = "sword", state = "idle" }) {
       playAnimation("idle");
     } else if (state === "test") {
       playAnimation("test");
+    } else if (state === "attack") {
+      playAnimation("attack");
     }
 
     return () => {}
 
-  }, [nodeRef, state]);
+  }, [nodeRef, state, weapon]);
 
   return (
     <div ref={nodeRef}>

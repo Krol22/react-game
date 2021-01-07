@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Node = styled.div`
   box-sizing: content-box;
@@ -15,7 +15,8 @@ export const Node = styled.div`
     local = false,
     width = 0,
     height = 0,
-  }) => `
+    anchorPoint,
+  }) => css`
     position: ${local ? 'relative' : 'absolute'};
     top: ${y}px;
     left: ${x}px;
@@ -28,5 +29,6 @@ export const Node = styled.div`
     height: ${height}px;
 
     ${debug && `background-color: red;`}
+    ${anchorPoint && `transform-origin: ${anchorPoint};`}
   `}
 `;

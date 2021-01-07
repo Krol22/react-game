@@ -3,11 +3,10 @@ import { useState, useCallback } from "react";
 const useGsapAnimations = (nodeRef, animations = []) => {
   const [timeline, setTimeline] = useState(null);
 
-  const playAnimation = useCallback((animationName) => {
+  const playAnimation = useCallback((animationName, props) => {
     if (timeline) {
-      // stop and reverse previous animation if exists,
-      // TODO: this doesn't actually work properly xD
-      timeline.reverse();
+      // stop and remove previous animation if exists,
+      timeline.restart();
       timeline.kill();
     }
 
@@ -16,7 +15,7 @@ const useGsapAnimations = (nodeRef, animations = []) => {
       return;
     }
 
-    const newTimeline = animations[animationName](nodeRef);
+    const newTimeline = animations[animationName](nodeRef, props);
 
     setTimeline(newTimeline);
   }, [animations, timeline, nodeRef]);

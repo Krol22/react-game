@@ -10,12 +10,16 @@ const HealthBarTemplate = ({
   currentHealth,
   maxHealth,
 }) => {
+  const node = {
+    x: 10,
+    y: 10,
+  };
+
   return (
     <HealthBar
-      x={10}
-      y={10}
       currentHealth={currentHealth}
       maxHealth={maxHealth}
+      node={node}
     />
   );
 };

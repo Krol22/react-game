@@ -13,6 +13,7 @@ export function Hammer({ node }) {
       height={37}
       node={{
         rotation: -90,
+        anchorPoint: "50% 70%",
         ...node,
       }}
     />

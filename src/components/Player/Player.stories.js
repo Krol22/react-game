@@ -14,7 +14,7 @@ export default {
     state: {
       control: {
         type: "select",
-        options: ["idle", "test"],
+        options: ["idle", "test", "attack"],
       }
     }
   },
@@ -30,5 +30,5 @@ export const PlayerEntity = PlayerTemplate.bind({});
 
 PlayerEntity.args = {
   weapon: "sword",
-  state: "idle"
+  state: "attack"
 };
