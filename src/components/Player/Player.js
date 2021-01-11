@@ -10,6 +10,7 @@ import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import playerAnimations from "./Player.animations";
+import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
 
 const weapons = {
   sword: {
@@ -32,10 +33,11 @@ const weapons = {
   },
 };
 
-export function Player({ x, y, weapon = "sword", state = "idle" }) {
-  const { Weapon, node } = weapons[weapon];
 
+export function Player({ x, y, weapon, state, flipX }) {
   const nodeRef = useRef(null);
+
+  const { Weapon, node } = weapons[weapon];
 
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
 
@@ -55,10 +57,11 @@ export function Player({ x, y, weapon = "sword", state = "idle" }) {
   return (
     <div ref={nodeRef}>
       <Node
-        x={x}
-        y={y}
+        x={x + TILE_WIDTH_HALF / 2 - 2}
+        y={y - TILE_HEIGHT_HALF}
         width={16}
         height={16}
+        zIndex={10}
       >
         <HealthBar
           currentHealth={75}
@@ -73,6 +76,7 @@ export function Player({ x, y, weapon = "sword", state = "idle" }) {
           src={playerSprite}
           width={16}
           height={16}
+          flipV={flipX}
           node={{
             zIndex: 3,
           }}
@@ -87,4 +91,6 @@ Player.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   weapon: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+  flipX: PropTypes.bool,
 };

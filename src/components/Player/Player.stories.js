@@ -20,15 +20,17 @@ export default {
   },
 };
 
-const PlayerTemplate = ({ weapon, state }) => {
+const PlayerTemplate = ({ x, y, weapon, state }) => {
   return (
-    <Player x={20} y={20} weapon={weapon} state={state} />
+    <Player x={x} y={y} weapon={weapon} state={state} />
   );
 };
 
 export const PlayerEntity = PlayerTemplate.bind({});
 
 PlayerEntity.args = {
+  x: 20,
+  y: 20,
   weapon: "sword",
-  state: "attack"
+  state: "idle"
 };

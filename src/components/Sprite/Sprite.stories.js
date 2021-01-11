@@ -5,7 +5,7 @@ import swordAsset from "../../assets/Sword.png";
 import { Sprite } from "./Sprite";
 
 export default {
-  title: "components/Node",
+  title: "components/Sprite",
   component: Sprite,
 };
 
@@ -42,7 +42,6 @@ SpriteNode.args = {
   flipV: false,
   width: 8,
   height: 21,
-
   x: 30,
   y: 30,
   zIndex: 0,

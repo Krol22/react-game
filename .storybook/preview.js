@@ -1,3 +1,4 @@
+import React from "react";
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -7,7 +8,7 @@ export const parameters = {
       {
         name: "forest",
         value: "#2a2b2a",
-      }
-    ]
-  }
-}
+      },
+    ],
+  },
+};
