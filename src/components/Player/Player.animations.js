@@ -1,5 +1,7 @@
 import gsap from "gsap";
 
+import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
+
 export const idleAnimation = (nodeRef) => {
   const [current] = nodeRef.current.children;
 
@@ -65,8 +67,68 @@ export const attackAnimation = (nodeRef) => {
   return timeline;
 };
 
+export const moveAnimation = (nodeRef, direction) => {
+  const SPEED = 1;
+
+  const [current] = nodeRef.current.children;
+
+  const playerSprite = current.querySelectorAll("#player-sprite");
+  const weaponSprite = current.querySelectorAll("#player-weapon");
+  
+  const elements = [playerSprite, weaponSprite];
+
+  const timeline = gsap.timeline();
+
+  if (direction === "TOP") {
+    timeline.to(elements, { x: `-=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+
+    timeline
+      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
+      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "back.out(4)" }, 0 * SPEED);
+
+    return timeline;
+  }
+
+  if (direction === "BOTTOM") {
+    timeline.to(elements, { x: `+=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+
+    timeline
+      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
+      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power2.in" }, 0 * SPEED);
+
+    return timeline;
+  }
+
+  if (direction === "RIGHT") {
+    // gsap.set(elements, { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}` });
+    // don't use set instead it's better to use timeline as I can easlily remove set values
+    timeline.to(elements, { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+
+    timeline
+      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
+      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power2.in" }, 0 * SPEED);
+
+    return timeline;
+  }
+
+  if (direction === "LEFT") {
+    // gsap.set(elements, { x: `+=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}` });
+    timeline.to(elements, { x: `+=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+
+    timeline
+      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
+      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "back.out(4)" }, 0 * SPEED);
+
+    return timeline;
+  }
+
+  return timeline;
+};
+
+
 export default {
   test: testAnimation,
   idle: idleAnimation,
   attack: attackAnimation,
+  move: moveAnimation,
 };

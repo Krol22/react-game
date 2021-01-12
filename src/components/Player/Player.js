@@ -34,7 +34,7 @@ const weapons = {
 };
 
 
-export function Player({ x, y, weapon, state, flipX }) {
+export function Player({ x, y, weapon, state, flipX, moveDir }) {
   const nodeRef = useRef(null);
 
   const { Weapon, node } = weapons[weapon];
@@ -48,11 +48,13 @@ export function Player({ x, y, weapon, state, flipX }) {
       playAnimation("test");
     } else if (state === "attack") {
       playAnimation("attack");
+    } else if (state === "move") {
+      playAnimation("move", moveDir);
     }
 
     return () => {}
 
-  }, [nodeRef, state, weapon]);
+  }, [nodeRef, state, weapon, moveDir]);
 
   return (
     <div ref={nodeRef}>
@@ -76,7 +78,7 @@ export function Player({ x, y, weapon, state, flipX }) {
           src={playerSprite}
           width={16}
           height={16}
-          flipV={flipX}
+          flipH={flipX}
           node={{
             zIndex: 3,
           }}

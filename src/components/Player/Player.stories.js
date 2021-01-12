@@ -14,7 +14,7 @@ export default {
     state: {
       control: {
         type: "select",
-        options: ["idle", "test", "attack"],
+        options: ["idle", "test", "attack", "move"],
       }
     }
   },
@@ -32,5 +32,5 @@ PlayerEntity.args = {
   x: 20,
   y: 20,
   weapon: "sword",
-  state: "idle"
+  state: "move"
 };

@@ -1,14 +1,14 @@
 import React from "react";
 
 import { Node } from "../Node";
-import { MapContainer } from "./Map";
+import { Map } from "./Map";
 
 export default {
   title: "game/Map",
 }
 const MapTemplate = ({ map }) => (
   <Node x={40} y={20}>
-    <MapContainer map={map} />
+    <Map map={map} />
   </Node>
 );
 

@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import { Game } from "./Game";
+
 const Wrapper = styled.div`
   display: flex;
   height: 100%;
@@ -10,7 +12,9 @@ const Wrapper = styled.div`
 
 function App() {
   return (
-    <Wrapper />
+    <Wrapper>
+      <Game />
+    </Wrapper>
   );
 }
 

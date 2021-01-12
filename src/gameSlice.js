@@ -1,6 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { collisionCheck } from "./helpers/collisionCheck";
+
+const getDirectionString = (moveDir) => {
+  if (moveDir.x < 0) {
+    return "LEFT";
+  }
+
+  if (moveDir.x > 0) {
+    return "RIGHT";
+  }
+
+  if (moveDir.y < 0) {
+    return "TOP";
+  }
+
+  if (moveDir.y > 0) {
+    return "BOTTOM";
+  }
+};
 
 const initialState = {
   tick: 0,
@@ -18,34 +36,71 @@ const initialState = {
   },
 };
 
+export const movePlayer = createAsyncThunk(
+  "game/movePlayer",
+  (direction, { getState, dispatch, rejectWithValue }) => {
+    const { player, map } = getState().game;
+
+    if (player.state !== "idle") {
+      return rejectWithValue(false);
+    }
+
+    const flipX = (direction.x > 0 || direction.y < 0) ? 1 : -1;
+
+    const newPos = {
+      x: player.x + (direction.x || 0),
+      y: player.y + (direction.y || 0),
+    };
+
+    const collisionType = collisionCheck(map, newPos);
+
+    if (collisionType === "MAP") {
+      return rejectWithValue(false);
+    }
+
+    const moveDir = getDirectionString(direction);
+
+    setTimeout(() => {
+      dispatch(idle());
+    }, 400);
+
+    // XD Fix
+    setTimeout(() => {
+      dispatch(newPosition(newPos));
+    }, 1);
+
+    return {
+      newPos,
+      flipX,
+      moveDir,
+    };
+  },
+);
+
 const gameSlice = createSlice({
   initialState,
   name: "game",
   reducers: {
-    movePlayer: (state, { payload }) => {
-      state.player.flipX = (payload.x > 0 || payload.y < 0) ? 1 : -1;
-
-      const newPos = {
-        x: state.player.x + (payload.x || 0),
-        y: state.player.y + (payload.y || 0),
-      };
-
-      const collisionType = collisionCheck(state.map, newPos);
-
-      if (collisionType === "MAP") {
-        return;
-      }
-
-      state.player = {
-        ...state.player,
-        ...newPos,
-      };
+    idle: (state) => {
+      state.player.state = "idle";
+    },
+    newPosition: (state, { payload }) => {
+      state.player.x = payload.x;
+      state.player.y = payload.y;
     },
   },
+  extraReducers: {
+    [movePlayer.fulfilled]: (state, { payload }) => {
+      state.player.flipX = payload.flipX;
+      state.player.moveDir = payload.moveDir;
+      state.player.state = "move";
+    },
+  }
 });
 
 export const {
-  movePlayer,
+  idle,
+  newPosition,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
