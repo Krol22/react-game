@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import enemySprite from "../../assets/Enemy3.png";
+import enemySprite from "../../assets/Mage.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 
-export function Enemy3({ x, y }) {
+export function Mage({ x, y }) {
   return (
     <Node x={x} y={y}>
       <Sprite
@@ -19,7 +19,7 @@ export function Enemy3({ x, y }) {
   )
 };
 
-Enemy3.propTypes = {
+Mage.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   state: PropTypes.string.isRequired,

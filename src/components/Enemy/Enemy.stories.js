@@ -1,62 +1,62 @@
 import React from "react";
 
-import { Enemy } from "./Enemy";
-import { Enemy2 } from "./Enemy2";
-import { Enemy3 } from "./Enemy3";
-import { Boss1 } from "./Boss1";
+import { Imp } from "./Imp";
+import { Mage } from "./Mage";
+import { Skeleton } from "./Skeleton";
+import { Ogre } from "./Ogre";
 
 export default {
   title: "game/Enemy",
 };
 
-const EnemyTemplate = ({ x, y }) => {
+const ImpTemplate = ({ x, y }) => {
   return (
-    <Enemy x={x} y={y} />
+    <Imp x={x} y={y} />
   );
 };
 
-export const EnemyEntity = EnemyTemplate.bind({});
+export const ImpEnemy = ImpTemplate.bind({});
 
-EnemyEntity.args = {
+ImpEnemy.args = {
   x: 10,
   y: 10,
 };
 
-const Enemy2Template = ({ x, y }) => {
+const MageTemplate = ({ x, y }) => {
   return (
-    <Enemy2 x={x} y={y} />
+    <Mage x={x} y={y} />
   );
 };
 
-export const Enemy2Entity = Enemy2Template.bind({});
+export const MageEnemy = MageTemplate.bind({});
 
-Enemy2Entity.args = {
+MageEnemy.args = {
   x: 10,
   y: 10,
 };
 
-const Enemy3Template = ({ x, y }) => {
+const SkeletonTemplate = ({ x, y }) => {
   return (
-    <Enemy3 x={x} y={y} />
+    <Skeleton x={x} y={y} />
   );
 };
 
-export const Enemy3Entity = Enemy3Template.bind({});
+export const SkeletonEnemy = SkeletonTemplate.bind({});
 
-Enemy3Entity.args = {
+SkeletonEnemy.args = {
   x: 10,
   y: 10,
 };
 
-const Boss1Template = ({ x, y }) => {
+const OgreTemplate = ({ x, y }) => {
   return (
-    <Boss1 x={x} y={y} />
+    <Ogre x={x} y={y} />
   );
 };
 
-export const Boss1Entity = Boss1Template.bind({});
+export const OgreEnemy = OgreTemplate.bind({});
 
-Boss1Entity.args = {
+OgreEnemy.args = {
   x: 10,
   y: 10,
 };

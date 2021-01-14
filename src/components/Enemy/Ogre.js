@@ -1,25 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import enemySprite from "../../assets/Enemy2.png";
+import ogreSprite from "../../assets/Ogre.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 
-export function Enemy2({ x, y }) {
+export function Ogre({ x, y }) {
   return (
     <Node x={x} y={y}>
       <Sprite
         id="body-sprite"
-        src={enemySprite}
-        width={16}
-        height={16}
+        src={ogreSprite}
+        width={32}
+        height={32}
       />
     </Node>
   )
 };
 
-Enemy2.propTypes = {
+Ogre.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   state: PropTypes.string.isRequired,

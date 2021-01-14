@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import Tile from "./components/Tile/Tile";
 import Player from "./components/Player/Player";
-import Enemies from "./components/Enemy/Enemies";
+import Enemies from "./components/Imp/Enemies";
 // import Background from "./components/Background/Background";
 // import AudioPlayer from "./components/AudioPlayer";
 
