@@ -2,10 +2,12 @@ import { combineReducers } from "redux";
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
 import gameSlice from "./gameSlice";
+import inputSlice from "./inputSlice";
 
 const createReducer = (injectedReducers = {}) => {
   return combineReducers({
     game: gameSlice,
+    input: inputSlice,
     ...injectedReducers,
   });
 };

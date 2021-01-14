@@ -11,6 +11,7 @@ import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import playerAnimations from "./Player.animations";
 import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
+import usePlayerInput from "./usePlayerInput";
 
 const weapons = {
   sword: {
@@ -40,6 +41,7 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
   const { Weapon, node } = weapons[weapon];
 
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
+  usePlayerInput();
 
   useEffect(() => {
     if (state === "idle") {
@@ -59,8 +61,8 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
   return (
     <div ref={nodeRef}>
       <Node
-        x={x + TILE_WIDTH_HALF / 2 - 2}
-        y={y - TILE_HEIGHT_HALF}
+        x={x + TILE_WIDTH_HALF / 2 - 1}
+        y={y - TILE_HEIGHT_HALF - 2}
         width={16}
         height={16}
         zIndex={10}
