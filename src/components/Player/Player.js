@@ -6,12 +6,10 @@ import playerSprite from "../../assets/Player.png";
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 import { Sword, Hammer } from "../Weapons";
-import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import playerAnimations from "./Player.animations";
 import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
-import usePlayerInput from "./usePlayerInput";
 
 const weapons = {
   sword: {
@@ -41,7 +39,6 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
   const { Weapon, node } = weapons[weapon];
 
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
-  usePlayerInput();
 
   useEffect(() => {
     if (state === "idle") {
@@ -67,14 +64,6 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
         height={16}
         zIndex={10}
       >
-        <HealthBar
-          currentHealth={75}
-          maxHealth={100}
-          node={{
-            y: -2,
-            zIndex: 4,
-          }}
-        />
         <Sprite
           id="player-sprite"
           src={playerSprite}

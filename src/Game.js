@@ -7,6 +7,7 @@ import { Player } from "./components/Player/Player";
 import { mapToIsometric } from "./helpers/mapToIsometric";
 
 import useInputManager from "./hooks/useInputManager";
+import usePlayerInput from "./components/Player/usePlayerInput";
 
 const Wrapper = styled.div`
   position: relative;
@@ -14,6 +15,7 @@ const Wrapper = styled.div`
 
 export const Game = () => {
   useInputManager();
+  usePlayerInput();
 
   const { player, map } = useSelector((state) => state.game);
 
