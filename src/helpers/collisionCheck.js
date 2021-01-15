@@ -1,7 +1,7 @@
 export const collisionCheck = (map, newPos) => {
   /* Check map bounds */
   /* TODO move 3 to constants */
-  if (newPos.x < 0 || newPos.x > 3 || newPos.y < 0 || newPos.y > 3) {
+  if (newPos.x < 0 || newPos.x > 5 || newPos.y < 0 || newPos.y > 5) {
     return "MAP";
   }
 

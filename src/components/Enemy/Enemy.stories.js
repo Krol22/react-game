@@ -18,8 +18,8 @@ const ImpTemplate = ({ x, y }) => {
 export const ImpEnemy = ImpTemplate.bind({});
 
 ImpEnemy.args = {
-  x: 10,
-  y: 10,
+  x: 12,
+  y: 15,
 };
 
 const MageTemplate = ({ x, y }) => {
@@ -31,8 +31,8 @@ const MageTemplate = ({ x, y }) => {
 export const MageEnemy = MageTemplate.bind({});
 
 MageEnemy.args = {
-  x: 10,
-  y: 10,
+  x: 11,
+  y: 25,
 };
 
 const SkeletonTemplate = ({ x, y }) => {
@@ -44,8 +44,8 @@ const SkeletonTemplate = ({ x, y }) => {
 export const SkeletonEnemy = SkeletonTemplate.bind({});
 
 SkeletonEnemy.args = {
-  x: 10,
-  y: 10,
+  x: 11,
+  y: 25,
 };
 
 const OgreTemplate = ({ x, y }) => {
@@ -58,5 +58,5 @@ export const OgreEnemy = OgreTemplate.bind({});
 
 OgreEnemy.args = {
   x: 10,
-  y: 10,
+  y: 24,
 };

@@ -6,11 +6,12 @@ import smallShadowSprite from "../../assets/SmallShadow.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
+import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import enemyAnimations from "./Enemy.animations";
 
-export function Ogre({ x, y }) {
+export function Ogre({ x, y, zIndex }) {
   const nodeRef = useRef(null);
 
   const { playAnimation } = useGsapAnimations(nodeRef, enemyAnimations);
@@ -43,6 +44,10 @@ export function Ogre({ x, y }) {
             scaleY: 2,
           }}
         />
+        <HealthBar currentHealth={3} maxHealth={5} size={2} node={{
+          x: -1,
+          zIndex: zIndex + 2
+        }}/>
       </Node>
     </div>
   )

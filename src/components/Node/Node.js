@@ -7,7 +7,6 @@ export const Node = styled.div`
   ${({
     x = 0,
     y = 0,
-    zIndex = 1,
     rotation = 0,
     scaleX = 1,
     scaleY = 1,
@@ -16,11 +15,11 @@ export const Node = styled.div`
     width = 0,
     height = 0,
     anchorPoint,
+    zIndex,
   }) => css`
     position: ${local ? 'relative' : 'absolute'};
     top: ${y}px;
     left: ${x}px;
-    z-index: ${zIndex};
     transform:
       rotate(${rotation}deg)
       scale(${scaleX}, ${scaleY});
@@ -28,6 +27,7 @@ export const Node = styled.div`
     width: ${width}px;
     height: ${height}px;
 
+    ${zIndex && `z-index: ${zIndex};`}
     ${debug && `background-color: red;`}
     ${anchorPoint && `transform-origin: ${anchorPoint};`}
   `}

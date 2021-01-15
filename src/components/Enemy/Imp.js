@@ -10,7 +10,7 @@ import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import enemyAnimations from "./Enemy.animations";
 
-export function Imp({ x, y }) {
+export function Imp({ x, y, zIndex }) {
   const nodeRef = useRef(null);
 
   const { playAnimation } = useGsapAnimations(nodeRef, enemyAnimations);
@@ -24,16 +24,8 @@ export function Imp({ x, y }) {
       <Node
         x={x + 7} 
         y={y - 10}
+        zIndex={zIndex}
       >
-        <Sprite
-          id="body-sprite"
-          src={enemySprite}
-          width={16}
-          height={16}
-          node={{
-            zIndex: 3,
-          }}
-        />
         <Sprite
           id="shadow-sprite"
           src={smallShadowSprite}
@@ -42,6 +34,12 @@ export function Imp({ x, y }) {
           node={{
             y: 14,
           }}
+        />
+        <Sprite
+          id="body-sprite"
+          src={enemySprite}
+          width={16}
+          height={16}
         />
       </Node>
     </div>

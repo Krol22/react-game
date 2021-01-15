@@ -81,6 +81,7 @@ export const moveAnimation = (nodeRef, direction) => {
   const timeline = gsap.timeline();
 
   if (direction === "TOP") {
+    gsap.set(current, { scaleX: 1 });
     timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
 
     timeline
@@ -95,7 +96,8 @@ export const moveAnimation = (nodeRef, direction) => {
   }
 
   if (direction === "BOTTOM") {
-    timeline.to([...elements, shadowSprite], { x: `+=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+    gsap.set(current, { scaleX: -1 });
+    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
 
     timeline
       .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
@@ -109,6 +111,7 @@ export const moveAnimation = (nodeRef, direction) => {
   }
 
   if (direction === "RIGHT") {
+    gsap.set(current, { scaleX: 1 });
     // gsap.set(elements, { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}` });
     // don't use set instead it's better to use timeline as I can easlily remove set values
     timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
@@ -125,8 +128,8 @@ export const moveAnimation = (nodeRef, direction) => {
   }
 
   if (direction === "LEFT") {
-    // gsap.set(elements, { x: `+=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}` });
-    timeline.to([...elements, shadowSprite], { x: `+=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+    gsap.set(current, { scaleX: -1 });
+    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
 
     timeline
       .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)

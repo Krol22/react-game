@@ -6,28 +6,30 @@ import { Node } from "../Node";
 
 const HealthBarContainer = styled.div`
   position: relative;
-  background-color: red;
-  width: 16px;
-  height: 2px;
+  width: ${({ size }) => size ? `${size * 16}px` : "16px"};
+  height: 1px;
+  background-color: #421B2E;
+  border: 1px solid black;
 
   &:before {
     display: block;
     content: "";
     position: absolute;
-    height: 2px;
-    background-color: green;
-    ${({currentHealth, maxHealth}) =>
-      `width: ${16 * currentHealth / maxHealth}px;`
+    height: 1px;
+    background-color: #AA4951;
+    ${({currentHealth, maxHealth, size = 1}) =>
+      `width: ${size * 16 * currentHealth / maxHealth}px;`
     }
   }
 `;
 
-export function HealthBar({ currentHealth, maxHealth, node }) {
+export function HealthBar({ currentHealth, maxHealth, node, size }) {
   return (
     <Node {...node}>
       <HealthBarContainer
         currentHealth={currentHealth}
         maxHealth={maxHealth}
+        size={size}
       />
     </Node>
   );
@@ -36,6 +38,5 @@ export function HealthBar({ currentHealth, maxHealth, node }) {
 HealthBar.propTypes = {
   currentHealth: PropTypes.number.isRequired,
   maxHealth: PropTypes.number.isRequired,
-  x: PropTypes.number,
-  y: PropTypes.number,
+  size: PropTypes.number.isRequired,
 };

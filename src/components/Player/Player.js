@@ -34,7 +34,7 @@ const weapons = {
 };
 
 
-export function Player({ x, y, weapon, state, flipX, moveDir }) {
+export function Player({ x, y, weapon, state, flipX, moveDir, zIndex }) {
   const nodeRef = useRef(null);
 
   const { Weapon, node } = weapons[weapon];
@@ -56,8 +56,6 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
 
   }, [nodeRef, state, weapon, moveDir]);
 
-  console.log(flipX);
-
   return (
     <div ref={nodeRef}>
       <Node
@@ -65,18 +63,8 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
         y={y - TILE_HEIGHT_HALF - 4}
         width={16}
         height={16}
-        zIndex={10}
+        zIndex={zIndex + 1}
       >
-        <Sprite
-          id="player-sprite"
-          src={playerSprite}
-          width={16}
-          height={16}
-          node={{
-            zIndex: 3,
-          }}
-        />
-        <Weapon node={node} />
         <Sprite
           id="shadow-sprite"
           src={smallShadowSprite}
@@ -86,6 +74,13 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
             y: 14,
           }}
         />
+        <Sprite
+          id="player-sprite"
+          src={playerSprite}
+          width={16}
+          height={16}
+        />
+        <Weapon node={node} />
       </Node>
     </div>
   );

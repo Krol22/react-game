@@ -26,8 +26,8 @@ export function EnemiesContainer({ enemies }) {
       {enemies
         .map(mapToIsometric)
         .map(mapToComponent)
-        .map(({ x, y, Component }) => (
-          <Component x={x} y={y} />
+        .map(({ x, y, zIndex, Component }) => (
+          <Component x={x} y={y} zIndex={zIndex} />
         )
       )}
     </>

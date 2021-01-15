@@ -6,11 +6,12 @@ import smallShadowSprite from "../../assets/SmallShadow.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
+import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import enemyAnimations from "./Enemy.animations";
 
-export function Mage({ x, y }) {
+export function Mage({ x, y, zIndex }) {
   const nodeRef = useRef(null);
 
   const { playAnimation } = useGsapAnimations(nodeRef, enemyAnimations);
@@ -21,16 +22,7 @@ export function Mage({ x, y }) {
 
   return (
     <div ref={nodeRef}>
-      <Node x={x + 6} y={y - 10}>
-        <Sprite
-          id="body-sprite"
-          src={enemySprite}
-          width={16}
-          height={16}
-          node={{
-            zIndex: 3,
-          }}
-        />
+      <Node x={x + 6} y={y - 10} zIndex={zIndex}>
         <Sprite
           id="shadow-sprite"
           src={smallShadowSprite}
@@ -38,6 +30,20 @@ export function Mage({ x, y }) {
           height={5}
           node={{
             y: 14,
+          }}
+        />
+        <Sprite
+          id="body-sprite"
+          src={enemySprite}
+          width={16}
+          height={16}
+        />
+        <HealthBar
+          currentHealth={1}
+          maxHealth={2}
+          node={{
+            x: -1,
+            y: -4,
           }}
         />
       </Node>
