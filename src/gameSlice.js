@@ -27,18 +27,27 @@ const initialState = {
     { x: 1, y: 0, type: 0 },
     { x: 2, y: 0, type: 0 },
     { x: 3, y: 0, type: 0 },
+    { x: 4, y: 0, type: 0 },
     { x: 0, y: 1, type: 0 },
-    { x: 1, y: 1, type: 1 },
-    { x: 2, y: 1, type: 1 },
+    { x: 1, y: 1, type: 0 },
+    { x: 2, y: 1, type: 0 },
     { x: 3, y: 1, type: 0 },
-    { x: 0, y: 2, type: 1 },
+    { x: 4, y: 1, type: 0 },
+    { x: 0, y: 2, type: 0 },
     { x: 1, y: 2, type: 0 },
     { x: 2, y: 2, type: 0 },
     { x: 3, y: 2, type: 0 },
+    { x: 4, y: 2, type: 0 },
     { x: 0, y: 3, type: 0 },
     { x: 1, y: 3, type: 0 },
     { x: 2, y: 3, type: 0 },
     { x: 3, y: 3, type: 0 },
+    { x: 4, y: 3, type: 0 },
+    { x: 0, y: 4, type: 0 },
+    { x: 1, y: 4, type: 0 },
+    { x: 2, y: 4, type: 0 },
+    { x: 3, y: 4, type: 0 },
+    { x: 4, y: 4, type: 0 },
   ],
   player: {
     x: 0,
@@ -46,6 +55,12 @@ const initialState = {
     state: "idle",
     weapon: "sword",
   },
+  enemies: [
+    { x: 2, y: 4, type: "IMP" },
+    { x: 3, y: 4, type: "MAGE" },
+    { x: 4, y: 4, type: "SKELETON" },
+    { x: 3, y: 1, type: "OGRE" },
+  ]
 };
 
 export const movePlayer = createAsyncThunk(

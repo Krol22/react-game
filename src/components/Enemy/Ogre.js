@@ -20,7 +20,7 @@ export function Ogre({ x, y }) {
 
   return (
     <div ref={nodeRef}>
-      <Node x={x} y={y}>
+      <Node x={x - 1} y={y - 18}>
         <Sprite
           id="body-sprite"
           src={enemySprite}

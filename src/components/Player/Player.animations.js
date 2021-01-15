@@ -94,7 +94,7 @@ export const moveAnimation = (nodeRef, direction) => {
 
     timeline
       .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power2.in" }, 0 * SPEED);
+      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power3.in" }, 0 * SPEED);
 
     return timeline;
   }

@@ -20,7 +20,7 @@ export function Skeleton({ x, y }) {
 
   return (
     <div ref={nodeRef}>
-      <Node x={x} y={y}>
+      <Node x={x + 7} y={y - 8}>
         <Sprite
           id="body-sprite"
           src={enemySprite}

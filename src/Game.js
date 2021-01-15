@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import { Map } from "./components/Map/Map";
 import { Player } from "./components/Player/Player";
+import { EnemiesContainer } from "./components/Enemy/EnemiesContainer";
 import { mapToIsometric } from "./helpers/mapToIsometric";
 
 import useInputManager from "./hooks/useInputManager";
@@ -17,12 +18,13 @@ export const Game = () => {
   useInputManager();
   usePlayerInput();
 
-  const { player, map } = useSelector((state) => state.game);
+  const { player, map, enemies } = useSelector((state) => state.game);
 
   return (
     <Wrapper>
       <Player {...mapToIsometric(player)} />
       <Map map={map} />
+      <EnemiesContainer enemies={enemies} />
     </Wrapper>
   );
 };
