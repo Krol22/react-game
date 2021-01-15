@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import playerSprite from "../../assets/Player.png";
+import smallShadowSprite from "../../assets/SmallShadow.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
@@ -55,11 +56,13 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
 
   }, [nodeRef, state, weapon, moveDir]);
 
+  console.log(flipX);
+
   return (
     <div ref={nodeRef}>
       <Node
-        x={x + TILE_WIDTH_HALF / 2 - 1}
-        y={y - TILE_HEIGHT_HALF - 2}
+        x={x + TILE_WIDTH_HALF / 2}
+        y={y - TILE_HEIGHT_HALF - 4}
         width={16}
         height={16}
         zIndex={10}
@@ -69,12 +72,20 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
           src={playerSprite}
           width={16}
           height={16}
-          flipH={flipX}
           node={{
             zIndex: 3,
           }}
         />
         <Weapon node={node} />
+        <Sprite
+          id="shadow-sprite"
+          src={smallShadowSprite}
+          width={16}
+          height={5}
+          node={{
+            y: 14,
+          }}
+        />
       </Node>
     </div>
   );
