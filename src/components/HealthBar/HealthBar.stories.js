@@ -27,7 +27,7 @@ const HealthBarTemplate = ({
 export const HealthBarEntity = HealthBarTemplate.bind({});
 
 HealthBarEntity.args = {
-  currentHealth: 75,
-  maxHealth: 100,
+  currentHealth: 2,
+  maxHealth: 3,
 };
 

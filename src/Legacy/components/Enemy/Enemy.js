@@ -11,7 +11,7 @@ import useEnemyAttack from "./useEnemyAttack";
 import { changeState, move, enemyHit } from "../../features/gameSlice";
 import { mapToIsometric } from "../../helpers/mapToIsometric";
 
-import enemySprite from "../../assets/Enemy.png";
+import enemySprite from "../../assets/Imp.png";
 
 const EnemyWrapper = styled.div`
   ${Position} {
@@ -44,7 +44,7 @@ const EnemyWrapper = styled.div`
   `}
 `;
 
-const Enemy = ({ id, x, y, health, flip, state, direction }) => {
+const Imp = ({ id, x, y, health, flip, state, direction }) => {
   const dispatch = useDispatch();
   const idle = useCallback(() => {
     dispatch(changeState({ 
@@ -100,4 +100,4 @@ const Enemy = ({ id, x, y, health, flip, state, direction }) => {
   );
 };
 
-export default Enemy;
+export default Imp;

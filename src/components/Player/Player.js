@@ -2,16 +2,15 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import playerSprite from "../../assets/Player.png";
+import smallShadowSprite from "../../assets/SmallShadow.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 import { Sword, Hammer } from "../Weapons";
-import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import playerAnimations from "./Player.animations";
 import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
-import usePlayerInput from "./usePlayerInput";
 
 const weapons = {
   sword: {
@@ -35,13 +34,12 @@ const weapons = {
 };
 
 
-export function Player({ x, y, weapon, state, flipX, moveDir }) {
+export function Player({ x, y, weapon, state, flipX, moveDir, zIndex }) {
   const nodeRef = useRef(null);
 
   const { Weapon, node } = weapons[weapon];
 
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
-  usePlayerInput();
 
   useEffect(() => {
     if (state === "idle") {
@@ -61,18 +59,19 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
   return (
     <div ref={nodeRef}>
       <Node
-        x={x + TILE_WIDTH_HALF / 2 - 1}
-        y={y - TILE_HEIGHT_HALF - 2}
+        x={x + TILE_WIDTH_HALF / 2}
+        y={y - TILE_HEIGHT_HALF - 4}
         width={16}
         height={16}
-        zIndex={10}
+        zIndex={zIndex + 1}
       >
-        <HealthBar
-          currentHealth={75}
-          maxHealth={100}
+        <Sprite
+          id="shadow-sprite"
+          src={smallShadowSprite}
+          width={16}
+          height={5}
           node={{
-            y: -2,
-            zIndex: 4,
+            y: 14,
           }}
         />
         <Sprite
@@ -80,10 +79,6 @@ export function Player({ x, y, weapon, state, flipX, moveDir }) {
           src={playerSprite}
           width={16}
           height={16}
-          flipH={flipX}
-          node={{
-            zIndex: 3,
-          }}
         />
         <Weapon node={node} />
       </Node>
