@@ -41,8 +41,6 @@ const inputSlice = createSlice({
   },
 });
 
-console.log(inputSlice);
-
 export const {
   keyDown,
   keyUp,

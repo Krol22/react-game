@@ -22,9 +22,9 @@ ImpEnemy.args = {
   y: 15,
 };
 
-const MageTemplate = ({ x, y }) => {
+const MageTemplate = ({ x, y, state }) => {
   return (
-    <Mage x={x} y={y} />
+    <Mage x={x} y={y} state={state} />
   );
 };
 
@@ -33,6 +33,7 @@ export const MageEnemy = MageTemplate.bind({});
 MageEnemy.args = {
   x: 11,
   y: 25,
+  state: "DEAD",
 };
 
 const SkeletonTemplate = ({ x, y }) => {

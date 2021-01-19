@@ -1,6 +1,6 @@
 import React from "react";
 
-import swordAsset from "../../assets/Sword.png";
+import swordAsset from "../../assets/Weapons/Sword.png";
 
 import { Sprite } from "./Sprite";
 

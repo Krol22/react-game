@@ -8,8 +8,6 @@ import { mapToIsometric } from "../../helpers/mapToIsometric";
 const mapToComponent = (tile => {
   const { type } = tile;
 
-  console.log(type);
-
   let component;
   switch(type) {
     case 0: 
@@ -29,10 +27,11 @@ const mapToComponent = (tile => {
 }) 
 
 export const Map = ({ map }) => {
+  const { tiles } = map;
 
   return (
     <>
-      {map.map(mapToIsometric).map(mapToComponent).map(({ x, y, Component }) => (
+      {tiles.map(mapToIsometric).map(mapToComponent).map(({ x, y, Component }) => (
         <Component x={x} y={y} />
       ))}
     </>

@@ -1,13 +1,50 @@
-export const collisionCheck = (map, newPos) => {
-  /* Check map bounds */
-  /* TODO move 3 to constants */
-  if (newPos.x < 0 || newPos.x > 5 || newPos.y < 0 || newPos.y > 5) {
-    return "MAP";
+import { ENTITY_TYPE } from "../constants";
+
+export const COLLISION_TYPE = {
+  PLAYER: "PLAYER",
+  ENEMY: "ENEMY",
+  MAP: "MAP",
+};
+
+export const collisionCheck = (entities, map, newPos) => {
+  const { tiles } = map;
+
+  const mapElement = tiles.find(({x, y}) => newPos.x === x && newPos.y === y);
+
+  // no tile
+  if (!mapElement) {
+    return {
+      type: COLLISION_TYPE.MAP,
+    };
   }
 
-  const mapElement = map.find(({x, y}) => newPos.x === x && newPos.y === y);
-
+  // wall
   if (mapElement.type === 1) {
-    return "MAP";
+    return {
+      type: COLLISION_TYPE.MAP,
+    };
+  }
+
+  const entity = entities.find(({ id }) => id === mapElement.entityId);
+
+  // no collision
+  if (!entity) {
+    return false;
+  }
+
+  // enemy
+  if (entity.entityType === ENTITY_TYPE.ENEMY) {
+    return {
+      type: COLLISION_TYPE.ENEMY,
+      entityId: entity.id,
+    };
+  }
+
+  // player
+  if (entity.entityType === ENTITY_TYPE.PLAYER) {
+    return {
+      type: COLLISION_TYPE.PLAYER,
+      entityId: entity.id,
+    };
   }
 };

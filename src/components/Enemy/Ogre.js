@@ -11,7 +11,7 @@ import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import enemyAnimations from "./Enemy.animations";
 
-export function Ogre({ x, y, zIndex }) {
+export function Ogre({ x, y, zIndex, currentHealth, maxHealth }) {
   const nodeRef = useRef(null);
 
   const { playAnimation } = useGsapAnimations(nodeRef, enemyAnimations);
@@ -44,10 +44,15 @@ export function Ogre({ x, y, zIndex }) {
             scaleY: 2,
           }}
         />
-        <HealthBar currentHealth={3} maxHealth={5} size={2} node={{
-          x: -1,
-          zIndex: zIndex + 2
-        }}/>
+        <HealthBar
+          currentHealth={currentHealth}
+          maxHealth={maxHealth}
+          size={2}
+          node={{
+            x: -1,
+            zIndex: zIndex + 2
+          }}
+        />
       </Node>
     </div>
   )

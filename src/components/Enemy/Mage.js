@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 
 import enemySprite from "../../assets/Mage.png";
@@ -8,17 +8,38 @@ import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
+import { ENTITY_STATE } from "../../constants";
 
 import enemyAnimations from "./Enemy.animations";
 
-export function Mage({ x, y, zIndex }) {
+export function Mage({ x, y, zIndex, currentHealth, maxHealth, state }) {
   const nodeRef = useRef(null);
+
+  const [ bodySpriteOffsetY, setBodySpriteOffsetY ] = useState(0);
 
   const { playAnimation } = useGsapAnimations(nodeRef, enemyAnimations);
 
   useEffect(() => {
-    playAnimation("idle");
-  }, [nodeRef]);
+    switch(state) {
+      case ENTITY_STATE.IDLE:
+        playAnimation("idle");
+        setBodySpriteOffsetY(0);
+        break;
+      case ENTITY_STATE.MOVE:
+        // TODO: implement me,
+        break;
+      case ENTITY_STATE.ATTACK:
+        // TODO: implement me,
+        break;
+      case ENTITY_STATE.HIT:
+        // TODO: implement me,
+        break;
+      case ENTITY_STATE.DEAD:
+        playAnimation("dead");
+        setBodySpriteOffsetY(3);
+        break;
+    }
+  }, [state]);
 
   return (
     <div ref={nodeRef}>
@@ -37,15 +58,20 @@ export function Mage({ x, y, zIndex }) {
           src={enemySprite}
           width={16}
           height={16}
-        />
-        <HealthBar
-          currentHealth={1}
-          maxHealth={2}
           node={{
-            x: -1,
-            y: -4,
+            y: bodySpriteOffsetY,
           }}
         />
+        {state !== ENTITY_STATE.DEAD && ( 
+          <HealthBar
+            currentHealth={currentHealth}
+            maxHealth={maxHealth}
+            node={{
+              x: -1,
+              y: -4,
+            }}
+          />
+        )}
       </Node>
     </div>
   )
@@ -55,4 +81,6 @@ Mage.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   state: PropTypes.string.isRequired,
+  currentHealth: PropTypes.number.isRequired,
+  maxHealth: PropTypes.number.isRequired,
 }

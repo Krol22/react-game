@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import gsap from "gsap";
 
 import playerSprite from "../../assets/Player.png";
 import smallShadowSprite from "../../assets/SmallShadow.png";
 
 import { Node } from "../Node";
 import { Sprite } from "../Sprite";
-import { Sword, Hammer } from "../Weapons";
+import { Weapon } from "../Weapons";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import playerAnimations from "./Player.animations";
@@ -14,7 +15,6 @@ import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
 
 const weapons = {
   sword: {
-    Weapon: Sword,
     node: {
       id: "player-weapon",
       x: -3,
@@ -23,7 +23,6 @@ const weapons = {
     },
   },
   hammer: {
-    Weapon: Hammer,
     node: {
       id: "player-weapon",
       x: -3,
@@ -34,10 +33,10 @@ const weapons = {
 };
 
 
-export function Player({ x, y, weapon, state, flipX, moveDir, zIndex }) {
+export function Player({ x, y, weapon, state, moveDir, zIndex }) {
   const nodeRef = useRef(null);
 
-  const { Weapon, node } = weapons[weapon];
+  const { node } = weapons[weapon];
 
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
 
@@ -47,42 +46,48 @@ export function Player({ x, y, weapon, state, flipX, moveDir, zIndex }) {
     } else if (state === "test") {
       playAnimation("test");
     } else if (state === "attack") {
-      playAnimation("attack");
+      playAnimation("attack", moveDir);
     } else if (state === "move") {
       playAnimation("move", moveDir);
     }
 
-    return () => {}
+    return () => {};
 
   }, [nodeRef, state, weapon, moveDir]);
 
+  useEffect(() => {
+    if (moveDir === "TOP") { gsap.set(nodeRef.current, { scaleX: 1 }) }
+    if (moveDir === "BOTTOM") { gsap.set(nodeRef.current, { scaleX: -1 }) }
+    if (moveDir === "LEFT") { gsap.set(nodeRef.current, { scaleX: -1 }) }
+    if (moveDir === "RIGHT") { gsap.set(nodeRef.current, { scaleX: 1 }) }
+  }, [nodeRef, moveDir]);
+
   return (
-    <div ref={nodeRef}>
-      <Node
-        x={x + TILE_WIDTH_HALF / 2}
-        y={y - TILE_HEIGHT_HALF - 4}
+    <Node
+      x={x + TILE_WIDTH_HALF / 2}
+      y={y - TILE_HEIGHT_HALF - 4}
+      width={16}
+      height={16}
+      zIndex={zIndex + 1}
+      ref={nodeRef}
+    >
+      <Sprite
+        id="shadow-sprite"
+        src={smallShadowSprite}
+        width={16}
+        height={5}
+        node={{
+          y: 14,
+        }}
+      />
+      <Sprite
+        id="player-sprite"
+        src={playerSprite}
         width={16}
         height={16}
-        zIndex={zIndex + 1}
-      >
-        <Sprite
-          id="shadow-sprite"
-          src={smallShadowSprite}
-          width={16}
-          height={5}
-          node={{
-            y: 14,
-          }}
-        />
-        <Sprite
-          id="player-sprite"
-          src={playerSprite}
-          width={16}
-          height={16}
-        />
-        <Weapon node={node} />
-      </Node>
-    </div>
+      />
+      <Weapon name={weapon} node={{...node}} />
+    </Node>
   );
 };
 

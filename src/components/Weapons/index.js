@@ -1,2 +1,1 @@
-export * from "./Hammer";
-export * from "./Sword";
+export * from "./Weapon";

@@ -12,10 +12,15 @@ const useGsapAnimations = (nodeRef, animations = []) => {
     if (timeline) {
       // stop and remove previous animation if exists,
       timeline.restart();
+      timeline.repeat(0);
       timeline.kill();
     }
 
     const newTimeline = animations[animationName](nodeRef, props);
+    
+    if (!newTimeline) {
+      console.error(`Animation ${animationName} should return timeline in order to correctly clear!`);
+    }
 
     setTimeline(newTimeline);
   }, [animations, timeline, nodeRef]);
