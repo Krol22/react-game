@@ -66,7 +66,7 @@ const initialState = {
       id: 1,
       x: 0,
       y: 0,
-      state: "idle",
+      state: ENTITY_STATE.IDLE,
       weapon: "sword",
       facing: "left",
       currentHealth: 3,
@@ -121,7 +121,7 @@ export const movePlayer = createAsyncThunk(
 
     const player = entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
 
-    if (player.state !== "idle") {
+    if (player.state !== ENTITY_STATE.IDLE) {
       return rejectWithValue(false);
     }
 
@@ -149,16 +149,24 @@ export const movePlayer = createAsyncThunk(
     if (collisionType === COLLISION_TYPE.ENEMY) {
       const { attributes } = weapons[player.weapon];
 
+      const { currentHealth } = entities.find(({ id }) => collidedEntityId === id);
+
       dispatch(damageEntity({
         entityId: collidedEntityId,
         damage: attributes.damage,
       }));
 
+      if (currentHealth > attributes.damage) {
+        setTimeout(() => {
+          dispatch(idle(collidedEntityId));
+        }, 100);
+      }
+
       return rejectWithValue(false);
     }
 
     setTimeout(() => {
-      dispatch(idle());
+      dispatch(idle(player.id));
     }, 400);
 
     dispatch(moveEntityOnMap({
@@ -180,10 +188,10 @@ const gameSlice = createSlice({
   initialState,
   name: "game",
   reducers: {
-    idle: (state) => {
-      const player = state.entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+    idle: (state, { payload }) => {
+      const entity = state.entities.find(({ id }) => id === payload);
 
-      player.state = "idle";
+      entity.state = ENTITY_STATE.IDLE;
     },
     changePosition: (state, { payload }) => {
       const player = state.entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
@@ -219,6 +227,7 @@ const gameSlice = createSlice({
       entity.currentHealth = newHealth < 0 ? 0 : newHealth;
 
       if (entity.currentHealth > 0) {
+        entity.state = ENTITY_STATE.HIT;
         return;
       }
 
@@ -232,7 +241,7 @@ const gameSlice = createSlice({
   extraReducers: {
     [movePlayer.fulfilled]: (state) => {
       const player = state.entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-      player.state = "move";
+      player.state = ENTITY_STATE.MOVE;
     },
   },
 });

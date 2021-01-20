@@ -11,7 +11,7 @@ import { Weapon } from "../Weapons";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
 import playerAnimations from "./Player.animations";
-import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF } from "../../constants";
+import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF, ENTITY_STATE } from "../../constants";
 
 const weapons = {
   sword: {
@@ -41,13 +41,11 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
 
   useEffect(() => {
-    if (state === "idle") {
+    if (state === ENTITY_STATE.IDLE) {
       playAnimation("idle");
-    } else if (state === "test") {
-      playAnimation("test");
-    } else if (state === "attack") {
+    } else if (state === ENTITY_STATE.ATTACK) {
       playAnimation("attack", moveDir);
-    } else if (state === "move") {
+    } else if (state === ENTITY_STATE.MOVE) {
       playAnimation("move", moveDir);
     }
 

@@ -32,7 +32,7 @@ export function Mage({ x, y, zIndex, currentHealth, maxHealth, state }) {
         // TODO: implement me,
         break;
       case ENTITY_STATE.HIT:
-        // TODO: implement me,
+        playAnimation("hit");
         break;
       case ENTITY_STATE.DEAD:
         playAnimation("dead");

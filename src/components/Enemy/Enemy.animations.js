@@ -37,9 +37,27 @@ export const deadAnimation = (nodeRef) => {
     .to([...elements, shadowSprite], { display: "none" }, .7);
 
   return timeline;
-}
+};
+
+export const hitAnimation = (nodeRef) => {
+  const current = nodeRef.current;
+
+  const playerSprite = current.querySelectorAll("#body-sprite");
+  const shadowSprite = current.querySelectorAll("#shadow-sprite");
+
+  const elements = [playerSprite, shadowSprite];
+
+  const timeline = gsap.timeline();
+
+  timeline
+    .to(elements, { filter: "brightness(100)", duration: .05 });
+
+  return timeline;
+};
+
 
 export default {
   idle: idleAnimation,
   dead: deadAnimation,
+  hit: hitAnimation
 };
