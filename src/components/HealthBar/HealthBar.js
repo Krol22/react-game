@@ -16,7 +16,7 @@ const HealthBarContainer = styled.div`
     content: "";
     position: absolute;
     height: 1px;
-    background-color: #AA4951;
+    background-color: #ac3232;
     ${({currentHealth, maxHealth, size = 1}) =>
       `width: ${size * 16 * currentHealth / maxHealth}px;`
     }

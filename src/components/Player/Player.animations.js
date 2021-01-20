@@ -42,80 +42,59 @@ export const testAnimation = (nodeRef) => {
 };
 
 export const attackAnimation = (nodeRef, direction) => {
-  const SPEED = .9;
+  const SPEED = .6;
   const current = nodeRef.current;
 
   const playerSprite = current.querySelectorAll("#player-sprite");
   const weaponSprite = current.querySelectorAll("#player-weapon");
   const shadowSprite = current.querySelectorAll("#shadow-sprite");
 
-  const elements = [playerSprite, weaponSprite];
+  const elements = [playerSprite, weaponSprite, shadowSprite];
 
   gsap.set([playerSprite], { x: "=0", y: "=0" });
   gsap.set([weaponSprite], { x: "=0", y: "=0" });
 
-  const timeline = gsap.timeline({ repeat: -1 });
+  const timeline = gsap.timeline();
 
-  if (direction === "TOP") {
-    gsap.set(current, { scaleX: 1 });
+  let xSign = "-";
+  let ySign = "-";
 
-    timeline
-      .to(elements, { x: `+=${TILE_WIDTH_HALF / 2}`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `-=${TILE_HEIGHT_HALF / 2}`, duration: .4 * SPEED, ease: "back.out(4)" }, 0 * SPEED);
-
-    timeline
-      .to(shadowSprite, { x: `+=${TILE_WIDTH_HALF / 2}`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `-=${TILE_HEIGHT_HALF / 2}`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
+  switch (direction) {
+    case "TOP":
+      xSign = "+"; 
+      ySign = "-";
+      break;
+    case "LEFT":
+      xSign = "+"; 
+      ySign = "-";
+      break;
+    case "RIGHT":
+      xSign = "+"; 
+      ySign = "+";
+      break;
+    case "BOTTOM":
+      xSign = "+"; 
+      ySign = "+";
+      break;
   }
 
-  if (direction === "BOTTOM") {
-    gsap.set(current, { scaleX: -1 });
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+  timeline
+    .to(elements, {
+      x: `${xSign}=${TILE_WIDTH_HALF / 2}`,
+      y: `${ySign}=${TILE_HEIGHT_HALF / 2}`,
+      duration: .4 * SPEED,
+    }, 0 * SPEED)
+    .to(elements, {
+      x: `=0`,
+      y: `=0`,
+      duration: .4 * SPEED,
+    });
 
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power3.in" }, 0 * SPEED);
 
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
-  }
-
-  if (direction === "RIGHT") {
-    gsap.set(current, { scaleX: 1 });
-    // gsap.set(elements, { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}` });
-    // don't use set instead it's better to use timeline as I can easlily remove set values
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
-
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power2.in" }, 0 * SPEED);
-
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
-  }
-
-  if (direction === "LEFT") {
-    gsap.set(current, { scaleX: -1 });
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
-
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "back.out(4)" }, 0 * SPEED);
-
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
-  }
+  timeline
+    .to(weaponSprite, { rotate: 85 , duration: .3 * SPEED, ease: "back.in(2)" }, 0 * SPEED)
+    .to(weaponSprite, { x: `${xSign}=${TILE_WIDTH_HALF}`, duration: .4 * SPEED }, 0 * SPEED)
+    .to(weaponSprite, { rotate: -45, duration: .3 * SPEED }, .4 * SPEED);
 
   return timeline;
 };
@@ -133,71 +112,45 @@ export const moveAnimation = (nodeRef, direction) => {
 
   const timeline = gsap.timeline();
 
-  if (direction === "TOP") {
-    // gsap.set(current, { scaleX: 1 });
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+  let xSign = "-";
+  let ySign = "-";
+  let ease = "back.out(4)"
 
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "back.out(4)" }, 0 * SPEED);
-
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
+  switch (direction) {
+    case "TOP":
+      xSign = "-"; 
+      ySign = "+";
+      ease = "back.out(4)";
+      break;
+    case "LEFT":
+      xSign = "-"; 
+      ySign = "+";
+      ease = "back.out(4)";
+      break;
+    case "RIGHT":
+      xSign = "-"; 
+      ySign = "-";
+      ease = "power2.in";
+      break;
+    case "BOTTOM":
+      xSign = "-"; 
+      ySign = "-";
+      ease = "power3.in";
+      break;
   }
 
-  if (direction === "BOTTOM") {
-    // gsap.set(current, { scaleX: -1 });
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
+  timeline.to([...elements, shadowSprite], { x: `${xSign}=${TILE_WIDTH_HALF}`, y: `${ySign}=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
 
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power3.in" }, 0 * SPEED);
+  timeline
+    .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
+    .to(elements, { y: `=0`, duration: .4 * SPEED, ease }, 0 * SPEED);
 
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
-  }
-
-  if (direction === "RIGHT") {
-    // gsap.set(current, { scaleX: 1 });
-    // gsap.set(elements, { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}` });
-    // don't use set instead it's better to use timeline as I can easlily remove set values
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `-=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
-
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "power2.in" }, 0 * SPEED);
-
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
-  }
-
-  if (direction === "LEFT") {
-    // gsap.set(current, { scaleX: -1 });
-    timeline.to([...elements, shadowSprite], { x: `-=${TILE_WIDTH_HALF}`, y: `+=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
-
-    timeline
-      .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(elements, { y: `=0`, duration: .4 * SPEED, ease: "back.out(4)" }, 0 * SPEED);
-
-    timeline
-      .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-      .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
-
-    return timeline;
-  }
+  timeline
+    .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
+    .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
 
   return timeline;
 };
-
 
 export default {
   test: testAnimation,

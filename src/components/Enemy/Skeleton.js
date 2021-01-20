@@ -10,7 +10,7 @@ import { HealthBar } from "../HealthBar";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 import { ENTITY_STATE } from "../../constants";
 
-import enemyAnimations from "./Enemy.animations";
+import enemyAnimations, { hitAnimation } from "./Enemy.animations";
 
 export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state }) {
   const nodeRef = useRef(null);
@@ -30,13 +30,16 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state }) {
       case ENTITY_STATE.ATTACK:
         // TODO: implement me,
         break;
-      case ENTITY_STATE.HIT:
-        playAnimation("hit");
+      case ENTITY_STATE.HIT: {
+        hitAnimation(nodeRef);
         break;
-      case ENTITY_STATE.DEAD:
+      }
+      case ENTITY_STATE.DEAD: {
+        hitAnimation(nodeRef);
         playAnimation("dead");
         setBodySpriteOffsetY(3);
         break;
+      }
     }
   }, [state]);
 
@@ -67,7 +70,7 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state }) {
             maxHealth={maxHealth}
             node={{
               x: -1,
-              y: -4,
+              y: -3,
             }}
           />
         )}

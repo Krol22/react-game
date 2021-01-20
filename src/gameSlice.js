@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
 import { collisionCheck, COLLISION_TYPE } from "./helpers/collisionCheck";
 import { weapons } from "./components/Weapons/Weapons";
+import delay from "./helpers/asyncDelay";
 
 const getDirectionString = (moveDir) => {
   if (moveDir.x < 0) {
@@ -59,6 +60,10 @@ const initialState = {
       { x: 0, y: 5, type: 0 },
       { x: 2, y: 5, type: 0 },
       { x: 4, y: 5, type: 0 },
+      { x: 5, y: 5, type: 0 },
+      { x: 6, y: 5, type: 0 },
+      { x: 5, y: 6, type: 0 },
+      { x: 6, y: 6, type: 0 },
     ],
   },
   entities: [
@@ -116,7 +121,7 @@ const initialState = {
 
 export const movePlayer = createAsyncThunk(
   "game/movePlayer",
-  (direction, { getState, dispatch, rejectWithValue }) => {
+  async (direction, { getState, dispatch, rejectWithValue }) => {
     const { entities, map } = getState().game;
 
     const player = entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
@@ -151,6 +156,13 @@ export const movePlayer = createAsyncThunk(
 
       const { currentHealth } = entities.find(({ id }) => collidedEntityId === id);
 
+      dispatch(changeState({
+        entityId: player.id,
+        newState: ENTITY_STATE.ATTACK,
+      }));
+
+      await delay(200);
+
       dispatch(damageEntity({
         entityId: collidedEntityId,
         damage: attributes.damage,
@@ -161,6 +173,14 @@ export const movePlayer = createAsyncThunk(
           dispatch(idle(collidedEntityId));
         }, 100);
       }
+
+
+      setTimeout(() => {
+        dispatch(changeState({
+          entityId: player.id,
+          newState: ENTITY_STATE.IDLE,
+        }));
+      }, 400);
 
       return rejectWithValue(false);
     }
@@ -188,6 +208,12 @@ const gameSlice = createSlice({
   initialState,
   name: "game",
   reducers: {
+    changeState: (state, { payload }) => {
+      const { entityId, newState } = payload;
+
+      const entity = state.entities.find(({ id }) => id === entityId);
+      entity.state = newState;
+    },
     idle: (state, { payload }) => {
       const entity = state.entities.find(({ id }) => id === payload);
 
@@ -249,6 +275,7 @@ const gameSlice = createSlice({
 export const {
   idle,
   changePosition,
+  changeState,
   changeFacing,
   moveEntityOnMap,
   damageEntity,

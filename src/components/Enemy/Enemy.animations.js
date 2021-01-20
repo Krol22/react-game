@@ -20,7 +20,7 @@ export const idleAnimation = (nodeRef) => {
 };
 
 export const deadAnimation = (nodeRef) => {
-  const SPEED = 1.2;
+  const SPEED = 0.7;
 
   const [current] = nodeRef.current.children;
   const bodySprite = current.querySelectorAll("#body-sprite");
@@ -32,7 +32,7 @@ export const deadAnimation = (nodeRef) => {
 
   timeline
     .to(elements, { y: "-=5", duration: .3 * SPEED })
-    .to(elements, { rotationZ: 90, duration: .5 * SPEED }, .1 * SPEED)
+    .to(elements, { rotationZ: 90, duration: .3 * SPEED }, .1 * SPEED)
     .to(elements, { y: "=+3", duration: .2 * SPEED }, .4 * SPEED)
     .to([...elements, shadowSprite], { display: "none" }, .7);
 
@@ -40,24 +40,13 @@ export const deadAnimation = (nodeRef) => {
 };
 
 export const hitAnimation = (nodeRef) => {
-  const current = nodeRef.current;
+  const bodySprite = nodeRef.current.children[0].querySelectorAll("#body-sprite");
 
-  const playerSprite = current.querySelectorAll("#body-sprite");
-  const shadowSprite = current.querySelectorAll("#shadow-sprite");
-
-  const elements = [playerSprite, shadowSprite];
-
-  const timeline = gsap.timeline();
-
-  timeline
-    .to(elements, { filter: "brightness(100)", duration: .05 });
-
-  return timeline;
+  gsap.to(bodySprite, { filter: "brightness(100)", duration: .1 });
+  gsap.to(bodySprite, { filter: "initial", duration: .05, delay: .1 });
 };
-
 
 export default {
   idle: idleAnimation,
   dead: deadAnimation,
-  hit: hitAnimation
 };

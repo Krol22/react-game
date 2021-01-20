@@ -9,7 +9,7 @@ import { Sprite } from "../Sprite";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 import { ENTITY_STATE } from "../../constants";
 
-import enemyAnimations from "./Enemy.animations";
+import enemyAnimations, { hitAnimation } from "./Enemy.animations";
 
 export function Imp({ x, y, zIndex, state }) {
   const nodeRef = useRef(null);
@@ -29,12 +29,12 @@ export function Imp({ x, y, zIndex, state }) {
       case ENTITY_STATE.ATTACK:
         // TODO: implement me,
         break;
-      case ENTITY_STATE.HIT:
-        // TODO: implement me,
-        break;
       case ENTITY_STATE.DEAD:
+        hitAnimation(nodeRef);
+
         playAnimation("dead");
         setBodySpriteOffsetY(3);
+
         break;
     }
   }, [state]);

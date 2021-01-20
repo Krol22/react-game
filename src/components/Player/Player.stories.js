@@ -14,7 +14,7 @@ export default {
     state: {
       control: {
         type: "select",
-        options: ["idle", "test", "attack", "move"],
+        options: ["IDLE", "test", "ATTACK", "move"],
       }
     },
     moveDir: {
@@ -38,6 +38,6 @@ PlayerEntity.args = {
   x: 20,
   y: 20,
   weapon: "sword",
-  state: "idle",
-  moveDir: "TOP",
+  state: "ATTACK",
+  moveDir: "RIGHT",
 };
