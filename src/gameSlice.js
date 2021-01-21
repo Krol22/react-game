@@ -1,27 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
-import { collisionCheck, COLLISION_TYPE } from "./helpers/collisionCheck";
-import { weapons } from "./components/Weapons/Weapons";
-import delay from "./helpers/asyncDelay";
-
-const getDirectionString = (moveDir) => {
-  if (moveDir.x < 0) {
-    return "LEFT";
-  }
-
-  if (moveDir.x > 0) {
-    return "RIGHT";
-  }
-
-  if (moveDir.y < 0) {
-    return "TOP";
-  }
-
-  if (moveDir.y > 0) {
-    return "BOTTOM";
-  }
-};
 
 const initialState = {
   tick: 0,
@@ -36,13 +15,13 @@ const initialState = {
       { x: 0, y: 1, type: 0 },
       { x: 1, y: 1, type: 0 },
       { x: 2, y: 1, type: 0 },
-      { x: 3, y: 1, type: 0 },
+      { x: 3, y: 1, type: 0, entityId: 6 },
       { x: 4, y: 1, type: 0 },
       { x: 5, y: 1, type: 0 },
       { x: 0, y: 2, type: 0 },
       { x: 1, y: 2, type: 0 },
       { x: 2, y: 2, type: 0, entityId: 4 },
-      { x: 3, y: 2, type: 0 },
+      { x: 3, y: 2, type: 0, entityId: 5 },
       { x: 4, y: 2, type: 0 },
       { x: 5, y: 2, type: 0 },
       { x: 0, y: 3, type: 0 },
@@ -108,6 +87,26 @@ const initialState = {
       entityType: ENTITY_TYPE.ENEMY,
       state: ENTITY_STATE.IDLE,
     },
+    { 
+      id: 5,
+      x: 3, 
+      y: 2, 
+      type: "SKELETON",
+      currentHealth: 2,
+      maxHealth: 2,
+      entityType: ENTITY_TYPE.ENEMY,
+      state: ENTITY_STATE.IDLE,
+    },
+    { 
+      id: 6,
+      x: 3, 
+      y: 1, 
+      type: "SKELETON",
+      currentHealth: 2,
+      maxHealth: 2,
+      entityType: ENTITY_TYPE.ENEMY,
+      state: ENTITY_STATE.IDLE,
+    },
     // {
       // id: 5,
       // x: 3,
@@ -118,91 +117,6 @@ const initialState = {
     // },
   ],
 };
-
-export const movePlayer = createAsyncThunk(
-  "game/movePlayer",
-  async (direction, { getState, dispatch, rejectWithValue }) => {
-    const { entities, map } = getState().game;
-
-    const player = entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-
-    if (player.state !== ENTITY_STATE.IDLE) {
-      return rejectWithValue(false);
-    }
-
-    const newPosition = {
-      x: player.x + (direction.x || 0),
-      y: player.y + (direction.y || 0),
-    };
-
-    const {
-      type: collisionType,
-      entityId: collidedEntityId,
-    } = collisionCheck(entities, map, newPosition);
-
-    const moveDir = getDirectionString(direction);
-
-    dispatch(changeFacing({
-      moveDir,
-      entityId: player.id,
-    }));
-
-    if (collisionType === COLLISION_TYPE.MAP) {
-      return rejectWithValue(false);
-    }
-
-    if (collisionType === COLLISION_TYPE.ENEMY) {
-      const { attributes } = weapons[player.weapon];
-
-      const { currentHealth } = entities.find(({ id }) => collidedEntityId === id);
-
-      dispatch(changeState({
-        entityId: player.id,
-        newState: ENTITY_STATE.ATTACK,
-      }));
-
-      await delay(200);
-
-      dispatch(damageEntity({
-        entityId: collidedEntityId,
-        damage: attributes.damage,
-      }));
-
-      if (currentHealth > attributes.damage) {
-        setTimeout(() => {
-          dispatch(idle(collidedEntityId));
-        }, 100);
-      }
-
-
-      setTimeout(() => {
-        dispatch(changeState({
-          entityId: player.id,
-          newState: ENTITY_STATE.IDLE,
-        }));
-      }, 400);
-
-      return rejectWithValue(false);
-    }
-
-    setTimeout(() => {
-      dispatch(idle(player.id));
-    }, 400);
-
-    dispatch(moveEntityOnMap({
-      newPosition,
-      entityId: player.id,
-    }));
-
-    /* 
-      Small timeout gives time for gsap to move player to new position.
-      It fixes blink player sprite on new position before movement animation,
-    */
-    setTimeout(() => {
-      dispatch(changePosition(newPosition));
-    }, 10);
-  },
-);
 
 const gameSlice = createSlice({
   initialState,
@@ -262,12 +176,6 @@ const gameSlice = createSlice({
       delete mapTile.entityId;
       
       entity.state = ENTITY_STATE.DEAD;
-    },
-  },
-  extraReducers: {
-    [movePlayer.fulfilled]: (state) => {
-      const player = state.entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-      player.state = ENTITY_STATE.MOVE;
     },
   },
 });
