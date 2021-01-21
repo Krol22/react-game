@@ -173,9 +173,25 @@ const gameSlice = createSlice({
 
       // remove entity from map
       const mapTile = state.map.tiles.find(({ entityId }) => entityId === entity.id);
-      delete mapTile.entityId;
+      mapTile.entityId = null;
       
       entity.state = ENTITY_STATE.DEAD;
+    },
+    changeEnemiesPositions: (state, { payload }) => {
+      payload.forEach(({ id, position }) => {
+        const { tiles } = state.map;
+
+        console.log(id, position, JSON.stringify(tiles, undefined, 2));
+        const currentMapElement = tiles.find(({ entityId: mapEntityId }) => id === mapEntityId);
+        currentMapElement.entityId = null;
+
+        const newMapElement = tiles.find(({ x, y }) => position.x === x && position.y === y);
+        newMapElement.entityId = id;
+
+        const enemy = state.entities.find(({ id: entityId }) => entityId === id);
+        enemy.x = position.x;
+        enemy.y = position.y;
+      }); 
     },
   },
 });
@@ -186,6 +202,7 @@ export const {
   changeState,
   changeFacing,
   moveEntityOnMap,
+  changeEnemiesPositions,
   damageEntity,
 } = gameSlice.actions;
 

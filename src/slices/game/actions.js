@@ -11,6 +11,7 @@ import {
   changeFacing,
   moveEntityOnMap,
   damageEntity,
+  changeEnemiesPositions,
 } from "../../gameSlice";
 
 export const GAME_ACTION = {
@@ -30,6 +31,73 @@ export const GAME_ACTION = {
     // 2.1. count enemies new positions,
     // 2.2. check collision on new positions,
     // 2.3. if collision with player damage player,
+
+// VERY PROFESIONAL AI
+const ai = () => {
+  const direction = Math.round(Math.random() * 4); 
+
+  const directions = [
+    { x: -1, y: 0 },
+    { x: 1, y: 0 },
+    { x: 0, y: -1 },
+    { x: 0, y: 1 },
+    { x: 0, y: 0 },
+  ];
+
+  return directions[direction];
+};
+
+const handleEnemyMove = async (dispatch, getState) => {
+  const { entities } = getState().game;
+  const enemies = entities.filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
+
+  enemies.forEach(enemy => {
+    const newPositions = [];
+    const { x, y } = enemy;
+
+    const direction = ai();
+
+    const newPosition = {
+      x: x + (direction.x || 0),
+      y: y + (direction.y || 0),
+    };
+
+  const { entities, map } = getState().game;
+    const { 
+      type: collisionType,
+      entityId: collidedEntityId,
+    } = collisionCheck(entities, map, newPosition);
+
+    if (collisionType === COLLISION_TYPE.PLAYER) {
+      // DO SOMETHING
+      console.log(collidedEntityId);
+      return;
+    }
+
+    if (collisionType === COLLISION_TYPE.MAP) {
+      return;
+    }
+
+    if (collisionType === COLLISION_TYPE.ENEMY) {
+      console.log(enemy.id, collidedEntityId);
+      return;
+    }
+
+    newPositions.push({
+      id: enemy.id,
+      position: newPosition,
+    });
+
+    dispatch(changeEnemiesPositions(newPositions));
+  });
+
+  /*
+    setTimeout(() => {
+      dispatch(changeEnemyStates(newPositions));
+    }, 400)
+  */ 
+
+};
 
 const getDirectionString = (moveDir) => {
   if (moveDir.x < 0) {
@@ -127,7 +195,9 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
     newState: ENTITY_STATE.MOVE,
   }));
 
-  dispatch(changePosition(newPosition));
+  setTimeout(() => {
+    dispatch(changePosition(newPosition));
+  }, 10);
 };
 
 export const step = createAsyncThunk(
@@ -155,6 +225,9 @@ export const step = createAsyncThunk(
         break;
     }
 
+    await delay(400);
+
+    handleEnemyMove(dispatch, getState);
     return;
   },
 );
