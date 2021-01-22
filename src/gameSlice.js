@@ -56,45 +56,50 @@ const initialState = {
       currentHealth: 3,
       maxHealth: 3,
       entityType: ENTITY_TYPE.PLAYER,
+      active: true,
     },
-    { 
+    {
       id: 2,
-      x: 2, 
-      y: 4, 
+      x: 2,
+      y: 4,
       type: "IMP",
       currentHealth: 1,
       maxHealth: 1,
       entityType: ENTITY_TYPE.ENEMY,
+      active: true,
       state: ENTITY_STATE.IDLE,
     },
-    { 
-      id: 3,
-      x: 3, 
-      y: 4, 
-      type: "MAGE",
-      currentHealth: 2,
-      maxHealth: 2,
-      entityType: ENTITY_TYPE.ENEMY,
-      state: ENTITY_STATE.IDLE,
-    },
-    { 
+    // {
+      // id: 3,
+      // x: 3,
+      // y: 4,
+      // type: "MAGE",
+      // currentHealth: 2,
+      // maxHealth: 2,
+      // entityType: ENTITY_TYPE.ENEMY,
+      // active: true,
+      // state: ENTITY_STATE.IDLE,
+    // },
+    {
       id: 4,
-      x: 2, 
-      y: 2, 
+      x: 2,
+      y: 2,
       type: "SKELETON",
       currentHealth: 2,
       maxHealth: 2,
       entityType: ENTITY_TYPE.ENEMY,
+      active: true,
       state: ENTITY_STATE.IDLE,
     },
-    { 
+    {
       id: 5,
-      x: 3, 
-      y: 2, 
+      x: 3,
+      y: 2,
       type: "SKELETON",
       currentHealth: 2,
       maxHealth: 2,
       entityType: ENTITY_TYPE.ENEMY,
+      active: true,
       state: ENTITY_STATE.IDLE,
     },
     { 
@@ -105,6 +110,7 @@ const initialState = {
       currentHealth: 2,
       maxHealth: 2,
       entityType: ENTITY_TYPE.ENEMY,
+      active: true,
       state: ENTITY_STATE.IDLE,
     },
     // {
@@ -176,12 +182,12 @@ const gameSlice = createSlice({
       mapTile.entityId = null;
       
       entity.state = ENTITY_STATE.DEAD;
+      entity.active = false;
     },
     changeEnemiesPositions: (state, { payload }) => {
       payload.forEach(({ id, position }) => {
         const { tiles } = state.map;
 
-        console.log(id, position, JSON.stringify(tiles, undefined, 2));
         const currentMapElement = tiles.find(({ entityId: mapEntityId }) => id === mapEntityId);
         currentMapElement.entityId = null;
 
@@ -192,6 +198,29 @@ const gameSlice = createSlice({
         enemy.x = position.x;
         enemy.y = position.y;
       }); 
+    },
+    updateStateAfterEnemyAction: (state, { payload }) => {
+      const { tiles, localEntities } = payload;
+
+      state.map.tiles = [...tiles];
+      state.entities = [...localEntities];
+    },
+    idleEnemies: (state) => {
+      const { entities } = state;
+
+      const enemiesToUpdate = entities.filter(({ entityType, state }) => state === ENTITY_STATE.MOVE && entityType === ENTITY_TYPE.ENEMY);
+
+      enemiesToUpdate.forEach(enemy => {
+        enemy.state = ENTITY_STATE.IDLE;
+      });
+    },
+    updateEnemiesPositions: (state, { payload }) => {
+      payload.forEach(({ id, x, y }) => {
+        const enemy = state.entities.find(({ id: entityId }) => entityId === id);
+
+        enemy.x = x;
+        enemy.y = y;
+      });
     },
   },
 });
@@ -204,6 +233,9 @@ export const {
   moveEntityOnMap,
   changeEnemiesPositions,
   damageEntity,
+  updateStateAfterEnemyAction,
+  updateEnemiesPositions,
+  idleEnemies,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

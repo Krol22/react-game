@@ -7,11 +7,25 @@ import { Ogre } from "./Ogre";
 
 export default {
   title: "game/Enemy",
+  argTypes: {
+    state: {
+      control: {
+        type: "select",
+        options: ["IDLE", "DEAD", "HIT", "MOVE"],
+      }
+    },
+    facing: {
+      control: {
+        type: "select",
+        options: ["TOP", "BOTTOM", "LEFT", "RIGHT"],
+      }
+    }
+  }
 };
 
-const ImpTemplate = ({ x, y }) => {
+const ImpTemplate = (props) => {
   return (
-    <Imp x={x} y={y} />
+    <Imp {...props} />
   );
 };
 
@@ -20,11 +34,12 @@ export const ImpEnemy = ImpTemplate.bind({});
 ImpEnemy.args = {
   x: 12,
   y: 15,
+  state: "IDLE",
 };
 
-const MageTemplate = ({ x, y, state }) => {
+const MageTemplate = (props) => {
   return (
-    <Mage x={x} y={y} state={state} />
+    <Mage {...props} />
   );
 };
 
@@ -33,12 +48,12 @@ export const MageEnemy = MageTemplate.bind({});
 MageEnemy.args = {
   x: 11,
   y: 25,
-  state: "DEAD",
+  state: "IDLE",
 };
 
-const SkeletonTemplate = ({ x, y }) => {
+const SkeletonTemplate = (props) => {
   return (
-    <Skeleton x={x} y={y} />
+    <Skeleton {...props} />
   );
 };
 
@@ -47,11 +62,13 @@ export const SkeletonEnemy = SkeletonTemplate.bind({});
 SkeletonEnemy.args = {
   x: 11,
   y: 25,
+  state: "MOVE",
+  facing: "TOP",
 };
 
-const OgreTemplate = ({ x, y }) => {
+const OgreTemplate = (props) => {
   return (
-    <Ogre x={x} y={y} />
+    <Ogre {...props} />
   );
 };
 
@@ -60,4 +77,5 @@ export const OgreEnemy = OgreTemplate.bind({});
 OgreEnemy.args = {
   x: 10,
   y: 24,
+  state: "IDLE",
 };

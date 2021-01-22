@@ -11,7 +11,9 @@ import {
   changeFacing,
   moveEntityOnMap,
   damageEntity,
-  changeEnemiesPositions,
+  updateStateAfterEnemyAction,
+  idleEnemies,
+  updateEnemiesPositions,
 } from "../../gameSlice";
 
 export const GAME_ACTION = {
@@ -28,8 +30,8 @@ export const GAME_ACTION = {
     // 1.2. SKIP, *
     // 1.2.1. do nothing, *
   // 2. for each enemy: 
-    // 2.1. count enemies new positions,
-    // 2.2. check collision on new positions,
+    // 2.1. count enemies new positions, *
+    // 2.2. check collision on new positions, *
     // 2.3. if collision with player damage player,
 
 // VERY PROFESIONAL AI
@@ -45,58 +47,6 @@ const ai = () => {
   ];
 
   return directions[direction];
-};
-
-const handleEnemyMove = async (dispatch, getState) => {
-  const { entities } = getState().game;
-  const enemies = entities.filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
-
-  enemies.forEach(enemy => {
-    const newPositions = [];
-    const { x, y } = enemy;
-
-    const direction = ai();
-
-    const newPosition = {
-      x: x + (direction.x || 0),
-      y: y + (direction.y || 0),
-    };
-
-  const { entities, map } = getState().game;
-    const { 
-      type: collisionType,
-      entityId: collidedEntityId,
-    } = collisionCheck(entities, map, newPosition);
-
-    if (collisionType === COLLISION_TYPE.PLAYER) {
-      // DO SOMETHING
-      console.log(collidedEntityId);
-      return;
-    }
-
-    if (collisionType === COLLISION_TYPE.MAP) {
-      return;
-    }
-
-    if (collisionType === COLLISION_TYPE.ENEMY) {
-      console.log(enemy.id, collidedEntityId);
-      return;
-    }
-
-    newPositions.push({
-      id: enemy.id,
-      position: newPosition,
-    });
-
-    dispatch(changeEnemiesPositions(newPositions));
-  });
-
-  /*
-    setTimeout(() => {
-      dispatch(changeEnemyStates(newPositions));
-    }, 400)
-  */ 
-
 };
 
 const getDirectionString = (moveDir) => {
@@ -115,6 +65,74 @@ const getDirectionString = (moveDir) => {
   if (moveDir.y > 0) {
     return "BOTTOM";
   }
+};
+
+const handleEnemyMove = async (dispatch, getState) => {
+  const { entities, map } = getState().game;
+  const enemies = entities.filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
+  
+  const tiles = JSON.parse(JSON.stringify(map.tiles));
+  const localEntities = JSON.parse(JSON.stringify(entities));
+  const newPositions = [];
+
+  enemies.forEach(enemy => {
+    const { x, y } = enemy;
+
+    const direction = ai();
+
+    const newPosition = {
+      x: x + (direction.x || 0),
+      y: y + (direction.y || 0),
+    };
+
+  
+    // we need to have updated versions of entities and mapTiles for enemy to calculate his new position correctly
+
+    const { 
+      type: collisionType,
+      // entityId: collidedEntityId,
+    } = collisionCheck(localEntities, { tiles }, newPosition);
+
+    if (collisionType === COLLISION_TYPE.PLAYER) {
+      // DO SOMETHING
+      return;
+    }
+
+    if (collisionType === COLLISION_TYPE.MAP) {
+      return;
+    }
+
+    if (collisionType === COLLISION_TYPE.ENEMY) {
+      return;
+    }
+
+    newPositions.push({
+      id: enemy.id,
+      position: newPosition,
+    });
+
+    const currentMapElement = tiles.find(({ entityId: mapEntityId }) => enemy.id === mapEntityId);
+    currentMapElement.entityId = null;
+
+    const newMapElement = tiles.find(({ x, y }) => newPosition.x === x && newPosition.y === y);
+    newMapElement.entityId = enemy.id;
+
+    const localEnemy = localEntities.find(({ id }) => id === enemy.id);
+
+    newPositions.push({ id: enemy.id, x: newPosition.x, y: newPosition.y });
+
+    const facing = getDirectionString(direction);
+
+    localEnemy.facing = facing;
+    localEnemy.state = ENTITY_STATE.MOVE;
+  });
+
+  dispatch(updateStateAfterEnemyAction({ tiles, localEntities }));
+  dispatch(updateEnemiesPositions(newPositions));
+
+  setTimeout(() => {
+    dispatch(idleEnemies());
+  }, 400);
 };
 
 const handlePlayerMove = async (dispatch, state, player, action) => {
