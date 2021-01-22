@@ -14,7 +14,7 @@ export default {
     state: {
       control: {
         type: "select",
-        options: ["IDLE", "test", "ATTACK", "move"],
+        options: ["IDLE", "HIT", "ATTACK", "MOVE"],
       }
     },
     moveDir: {

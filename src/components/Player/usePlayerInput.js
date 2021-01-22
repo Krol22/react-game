@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { step, GAME_ACTION } from "../../slices/game/actions";
+import { step } from "../../slices/game/actions";
 import { 
   ARROW_LEFT,
   ARROW_RIGHT,
   ARROW_UP,
   ARROW_DOWN,
+  GAME_ACTION,
 } from "../../constants";
 
 const usePlayerInput = () => {

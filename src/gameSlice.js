@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
 
 const initialState = {
-  tick: 0,
+  tick: false,
   map: {
     tiles: [
       { x: 0, y: 0, type: 0, entityId: 1 },
@@ -53,8 +53,8 @@ const initialState = {
       state: ENTITY_STATE.IDLE,
       weapon: "sword",
       facing: "left",
-      currentHealth: 3,
-      maxHealth: 3,
+      currentHealth: 50,
+      maxHealth: 50,
       entityType: ENTITY_TYPE.PLAYER,
       active: true,
     },
@@ -222,6 +222,13 @@ const gameSlice = createSlice({
         enemy.y = y;
       });
     },
+
+    startTick: (state) => {
+      state.tick = true;
+    },
+    endTick: (state) => {
+      state.tick = false;
+    }
   },
 });
 
@@ -236,6 +243,8 @@ export const {
   updateStateAfterEnemyAction,
   updateEnemiesPositions,
   idleEnemies,
+  startTick,
+  endTick,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

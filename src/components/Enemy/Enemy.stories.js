@@ -11,7 +11,7 @@ export default {
     state: {
       control: {
         type: "select",
-        options: ["IDLE", "DEAD", "HIT", "MOVE"],
+        options: ["IDLE", "DEAD", "HIT", "MOVE", "ATTACK"],
       }
     },
     facing: {
@@ -62,8 +62,8 @@ export const SkeletonEnemy = SkeletonTemplate.bind({});
 SkeletonEnemy.args = {
   x: 11,
   y: 25,
-  state: "MOVE",
-  facing: "TOP",
+  state: "ATTACK",
+  facing: "BOTTOM",
 };
 
 const OgreTemplate = (props) => {

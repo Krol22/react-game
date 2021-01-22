@@ -10,7 +10,7 @@ import { Sprite } from "../Sprite";
 import { Weapon } from "../Weapons";
 import useGsapAnimations from "../../hooks/useGsapAnimations";
 
-import playerAnimations from "./Player.animations";
+import playerAnimations, { hitAnimation } from "./Player.animations";
 import { TILE_WIDTH_HALF, TILE_HEIGHT_HALF, ENTITY_STATE } from "../../constants";
 
 const weapons = {
@@ -47,6 +47,8 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
       playAnimation("attack", moveDir);
     } else if (state === ENTITY_STATE.MOVE) {
       playAnimation("move", moveDir);
+    } else if (state === ENTITY_STATE.HIT) {
+      hitAnimation(nodeRef);
     }
 
     return () => {};

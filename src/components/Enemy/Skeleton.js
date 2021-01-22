@@ -13,6 +13,14 @@ import { ENTITY_STATE } from "../../constants";
 
 import enemyAnimations, { hitAnimation } from "./Enemy.animations";
 
+const scaleEnemy = (nodeRef, scale) => {
+  const elements = [
+    nodeRef.current.querySelector("#body-sprite"),
+  ];
+
+  gsap.set(elements, { scaleX: scale });
+};
+
 export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state, facing }) {
   const nodeRef = useRef(null);
 
@@ -29,7 +37,7 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state, facing
         playAnimation("move", facing);
         break;
       case ENTITY_STATE.ATTACK:
-        // TODO: implement me,
+        playAnimation("attack", facing);
         break;
       case ENTITY_STATE.HIT: {
         hitAnimation(nodeRef);
@@ -45,10 +53,10 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state, facing
   }, [state]);
 
   useEffect(() => {
-    if (facing === "TOP") { gsap.set(nodeRef.current, { scaleX: -1 }) }
-    if (facing === "BOTTOM") { gsap.set(nodeRef.current, { scaleX: 1 }) }
-    if (facing === "LEFT") { gsap.set(nodeRef.current, { scaleX: 1 }) }
-    if (facing === "RIGHT") { gsap.set(nodeRef.current, { scaleX: -1 }) }
+    if (facing === "TOP") { scaleEnemy(nodeRef, -1) }
+    if (facing === "BOTTOM") { scaleEnemy(nodeRef, 1) }
+    if (facing === "LEFT") { scaleEnemy(nodeRef, 1) }
+    if (facing === "RIGHT") { scaleEnemy(nodeRef, -1) }
   }, [nodeRef, facing]);
 
   return (

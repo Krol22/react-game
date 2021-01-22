@@ -53,11 +53,11 @@ export const moveAnimation = (nodeRef, direction) => {
 
   const current = nodeRef.current;
 
-  const playerSprite = current.querySelectorAll("#body-sprite");
+  const bodySprite = current.querySelectorAll("#body-sprite");
   const shadowSprite = current.querySelectorAll("#shadow-sprite");
   const healthBar = current.querySelectorAll("#health-bar");
 
-  const elements = [playerSprite];
+  const elements = [bodySprite];
 
   if (healthBar.length) {
     elements.push(healthBar);
@@ -71,7 +71,7 @@ export const moveAnimation = (nodeRef, direction) => {
 
   switch (direction) {
     case "TOP":
-      xSign = "+"; 
+      xSign = "-"; 
       ySign = "+";
       ease = "back.out(4)";
       break;
@@ -81,7 +81,7 @@ export const moveAnimation = (nodeRef, direction) => {
       ease = "back.out(4)";
       break;
     case "RIGHT":
-      xSign = "+"; 
+      xSign = "-"; 
       ySign = "-";
       ease = "power2.in";
       break;
@@ -105,8 +105,55 @@ export const moveAnimation = (nodeRef, direction) => {
   return timeline;
 };
 
+export const attackAnimation = (nodeRef, direction) => {
+  const current = nodeRef.current;
+
+  const bodySprite = current.querySelectorAll("#body-sprite");
+
+  const elements = bodySprite;
+
+  const timeline = gsap.timeline();
+
+  let xSign = "-";
+  let ySign = "-";
+  let ease = "back.out(4)";
+
+  switch (direction) {
+    case "TOP":
+      xSign = "+"; 
+      ySign = "-";
+      ease = "back.out(4)";
+      break;
+    case "LEFT":
+      xSign = "-"; 
+      ySign = "-";
+      ease = "back.out(4)";
+      break;
+    case "RIGHT":
+      xSign = "+"; 
+      ySign = "+";
+      ease = "power2.in";
+      break;
+    case "BOTTOM":
+      xSign = "-"; 
+      ySign = "+";
+      ease = "power2.in";
+      break;
+  }
+
+  timeline
+    .to(elements, { x: `${xSign}=${TILE_WIDTH_HALF / 2}`, duration: .4}, 0)
+    .to(elements, { y: `${ySign}=${TILE_HEIGHT_HALF / 2}`, duration: .4, ease }, 0);
+
+  timeline
+    .to(bodySprite, { rotate: Math.sign(xSign+1) * 65, duration: .3, ease: "back.in(4)" }, 0);
+
+  return timeline;
+};
+
 export default {
   idle: idleAnimation,
   dead: deadAnimation,
   move: moveAnimation,
+  attack: attackAnimation,
 };
