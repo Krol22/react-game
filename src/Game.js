@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
+import { Camera } from "./components/Camera/Camera";
 import { Map } from "./components/Map/Map";
 import { Player } from "./components/Player/Player";
 import { EnemiesContainer } from "./components/Enemy/EnemiesContainer";
@@ -32,9 +33,11 @@ export const Game = () => {
 
   return (
     <Wrapper>
-      <Player {...mapToIsometric(player)} />
-      <Map map={map} />
-      <EnemiesContainer enemies={enemies} />
+      <Camera>
+        <Player {...mapToIsometric(player)} />
+        <Map map={map} />
+        <EnemiesContainer enemies={enemies} />
+      </Camera>
     </Wrapper>
   );
 };

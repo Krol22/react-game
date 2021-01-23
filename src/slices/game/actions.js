@@ -25,6 +25,8 @@ import {
   endTick,
 } from "../../gameSlice";
 
+import { changeCameraPosition } from "../camera/cameraSlice";
+
 const handleEnemyAction = async (dispatch, getState) => {
   const { entities, map } = getState().game;
   const enemies = entities.filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
@@ -107,6 +109,7 @@ const movePlayer = (dispatch, player, newPosition) => {
 
   setTimeout(() => {
     dispatch(changePosition(newPosition));
+    dispatch(changeCameraPosition(newPosition));
   }, 10);
 };
 

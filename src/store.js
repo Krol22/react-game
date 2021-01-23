@@ -3,11 +3,13 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 
 import gameSlice from "./gameSlice";
 import inputSlice from "./inputSlice";
+import cameraSlice from "./slices/camera/cameraSlice";
 
 const createReducer = (injectedReducers = {}) => {
   return combineReducers({
     game: gameSlice,
     input: inputSlice,
+    camera: cameraSlice,
     ...injectedReducers,
   });
 };
