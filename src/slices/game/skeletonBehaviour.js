@@ -7,23 +7,17 @@ import {
   damageEntity,
 } from "../../gameSlice";
 
-const ai = () => {
-  const direction = Math.round(Math.random() * 3); 
-
-  const directions = [
-    { x: -1, y: 0 },
-    { x: 1, y: 0 },
-    { x: 0, y: -1 },
-    { x: 0, y: 1 },
-  ];
-
-  return directions[direction];
-};
+const directions = [
+  { x: -1, y: 0 },
+  { x: 0, y: -1 },
+  { x: 1, y: 0 },
+  { x: 0, y: 1 },
+];
 
 export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
-  const { x, y } = enemy;
+  const { x, y, currentStep } = enemy;
 
-  const direction = ai();
+  const direction = directions[currentStep];
   const facing = getDirectionString(direction);
 
   const newPosition = {
@@ -86,5 +80,6 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
   localEnemy.state = ENTITY_STATE.MOVE;
   localEnemy.x = newPosition.x;
   localEnemy.y = newPosition.y;
+  localEnemy.currentStep = currentStep === 3 ? 0 : currentStep + 1
 };
 
