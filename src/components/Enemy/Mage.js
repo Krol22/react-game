@@ -47,38 +47,41 @@ export function Mage({ x, y, zIndex, currentHealth, maxHealth, state }) {
   }, [state]);
 
   return (
-    <div ref={nodeRef}>
-      <Node x={x + 6} y={y - 10} zIndex={zIndex}>
-        <Sprite
-          id="shadow-sprite"
-          src={smallShadowSprite}
-          width={16}
-          height={5}
+    <Node
+      x={x + 6}
+      y={y - 10}
+      zIndex={zIndex}
+      ref={nodeRef}
+    >
+      <Sprite
+        id="shadow-sprite"
+        src={smallShadowSprite}
+        width={16}
+        height={5}
+        node={{
+          y: 14,
+        }}
+      />
+      <Sprite
+        id="body-sprite"
+        src={enemySprite}
+        width={16}
+        height={16}
+        node={{
+          y: bodySpriteOffsetY,
+        }}
+      />
+      {state !== ENTITY_STATE.DEAD && ( 
+        <HealthBar
+          currentHealth={currentHealth}
+          maxHealth={maxHealth}
           node={{
-            y: 14,
+            x: -1,
+            y: -4,
           }}
         />
-        <Sprite
-          id="body-sprite"
-          src={enemySprite}
-          width={16}
-          height={16}
-          node={{
-            y: bodySpriteOffsetY,
-          }}
-        />
-        {state !== ENTITY_STATE.DEAD && ( 
-          <HealthBar
-            currentHealth={currentHealth}
-            maxHealth={maxHealth}
-            node={{
-              x: -1,
-              y: -4,
-            }}
-          />
-        )}
-      </Node>
-    </div>
+      )}
+    </Node>
   )
 };
 

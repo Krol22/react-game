@@ -22,6 +22,17 @@ export const idleAnimation = (nodeRef) => {
   return timeline;
 };
 
+export const hitAnimation = (nodeRef) => {
+  const bodySprite = nodeRef.current.querySelectorAll("#player-sprite");
+  const weaponSprite = nodeRef.current.querySelectorAll("#player-weapon");
+
+  const elements = [bodySprite, weaponSprite];
+
+  gsap.to(elements, { filter: "brightness(100)", duration: .1 });
+  gsap.to(elements, { filter: "initial", duration: .05, delay: .1 });
+};
+
+
 export const testAnimation = (nodeRef) => {
   const current = nodeRef.current;
 

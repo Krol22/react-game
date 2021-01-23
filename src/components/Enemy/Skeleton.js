@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import gsap from "gsap";
 
 import enemySprite from "../../assets/Skeleton.png";
 import smallShadowSprite from "../../assets/SmallShadow.png";
@@ -12,7 +13,15 @@ import { ENTITY_STATE } from "../../constants";
 
 import enemyAnimations, { hitAnimation } from "./Enemy.animations";
 
-export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state }) {
+const scaleEnemy = (nodeRef, scale) => {
+  const elements = [
+    nodeRef.current.querySelector("#body-sprite"),
+  ];
+
+  gsap.set(elements, { scaleX: scale });
+};
+
+export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state, facing }) {
   const nodeRef = useRef(null);
 
   const [ bodySpriteOffsetY, setBodySpriteOffsetY ] = useState(0);
@@ -25,10 +34,10 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state }) {
         setBodySpriteOffsetY(0);
         break;
       case ENTITY_STATE.MOVE:
-        // TODO: implement me,
+        playAnimation("move", facing);
         break;
       case ENTITY_STATE.ATTACK:
-        // TODO: implement me,
+        playAnimation("attack", facing);
         break;
       case ENTITY_STATE.HIT: {
         hitAnimation(nodeRef);
@@ -43,39 +52,45 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state }) {
     }
   }, [state]);
 
+  useEffect(() => {
+    if (facing === "TOP") { scaleEnemy(nodeRef, -1) }
+    if (facing === "BOTTOM") { scaleEnemy(nodeRef, 1) }
+    if (facing === "LEFT") { scaleEnemy(nodeRef, 1) }
+    if (facing === "RIGHT") { scaleEnemy(nodeRef, -1) }
+  }, [nodeRef, facing]);
+
   return (
-    <div ref={nodeRef}>
-      <Node x={x + 7} y={y - 10} zIndex={zIndex}>
-        <Sprite
-          id="shadow-sprite"
-          src={smallShadowSprite}
-          width={16}
-          height={5}
+    <Node x={x + 7} y={y - 10} width={16} height={5} zIndex={zIndex} ref={nodeRef}>
+      <Sprite
+        id="shadow-sprite"
+        src={smallShadowSprite}
+        width={16}
+        height={5}
+        node={{
+          y: 14,
+        }}
+      />
+      <Sprite
+        id="body-sprite"
+        src={enemySprite}
+        width={16}
+        height={16}
+        node={{
+          y: bodySpriteOffsetY,
+        }}
+      />
+      {state !== ENTITY_STATE.DEAD && ( 
+        <HealthBar
+          currentHealth={currentHealth}
+          maxHealth={maxHealth}
           node={{
-            y: 14,
+            x: -1,
+            y: -3,
+            id: "health-bar"
           }}
         />
-        <Sprite
-          id="body-sprite"
-          src={enemySprite}
-          width={16}
-          height={16}
-          node={{
-            y: bodySpriteOffsetY,
-          }}
-        />
-        {state !== ENTITY_STATE.DEAD && ( 
-          <HealthBar
-            currentHealth={currentHealth}
-            maxHealth={maxHealth}
-            node={{
-              x: -1,
-              y: -3,
-            }}
-          />
-        )}
-      </Node>
-    </div>
+      )}
+    </Node>
   )
 };
 

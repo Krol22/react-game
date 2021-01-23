@@ -1,30 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
-import { collisionCheck, COLLISION_TYPE } from "./helpers/collisionCheck";
-import { weapons } from "./components/Weapons/Weapons";
-import delay from "./helpers/asyncDelay";
-
-const getDirectionString = (moveDir) => {
-  if (moveDir.x < 0) {
-    return "LEFT";
-  }
-
-  if (moveDir.x > 0) {
-    return "RIGHT";
-  }
-
-  if (moveDir.y < 0) {
-    return "TOP";
-  }
-
-  if (moveDir.y > 0) {
-    return "BOTTOM";
-  }
-};
 
 const initialState = {
-  tick: 0,
+  tick: false,
   map: {
     tiles: [
       { x: 0, y: 0, type: 0, entityId: 1 },
@@ -53,8 +32,8 @@ const initialState = {
       { x: 5, y: 3, type: 0 },
       { x: 0, y: 4, type: 0 },
       { x: 1, y: 4, type: 0 },
-      { x: 2, y: 4, type: 0, entityId: 2, },
-      { x: 3, y: 4, type: 0, entityId: 3, },
+      { x: 2, y: 4, type: 0 },
+      { x: 3, y: 4, type: 0 },
       { x: 4, y: 4, type: 0 },
       { x: 5, y: 4, type: 0 },
       { x: 0, y: 5, type: 0 },
@@ -74,40 +53,67 @@ const initialState = {
       state: ENTITY_STATE.IDLE,
       weapon: "sword",
       facing: "left",
-      currentHealth: 3,
-      maxHealth: 3,
+      currentHealth: 50,
+      maxHealth: 50,
       entityType: ENTITY_TYPE.PLAYER,
+      active: true,
     },
-    { 
-      id: 2,
-      x: 2, 
-      y: 4, 
-      type: "IMP",
-      currentHealth: 1,
-      maxHealth: 1,
-      entityType: ENTITY_TYPE.ENEMY,
-      state: ENTITY_STATE.IDLE,
-    },
-    { 
-      id: 3,
-      x: 3, 
-      y: 4, 
-      type: "MAGE",
-      currentHealth: 2,
-      maxHealth: 2,
-      entityType: ENTITY_TYPE.ENEMY,
-      state: ENTITY_STATE.IDLE,
-    },
-    { 
+    // {
+      // id: 2,
+      // x: 2,
+      // y: 4,
+      // type: "IMP",
+      // currentHealth: 1,
+      // maxHealth: 1,
+      // entityType: ENTITY_TYPE.ENEMY,
+      // active: true,
+      // state: ENTITY_STATE.IDLE,
+    // },
+    // {
+      // id: 3,
+      // x: 3,
+      // y: 4,
+      // type: "MAGE",
+      // currentHealth: 2,
+      // maxHealth: 2,
+      // entityType: ENTITY_TYPE.ENEMY,
+      // active: true,
+      // state: ENTITY_STATE.IDLE,
+    // },
+    {
       id: 4,
-      x: 2, 
-      y: 2, 
+      x: 2,
+      y: 2,
       type: "SKELETON",
       currentHealth: 2,
       maxHealth: 2,
       entityType: ENTITY_TYPE.ENEMY,
+      active: true,
       state: ENTITY_STATE.IDLE,
+      currentStep: 0,
     },
+    // {
+      // id: 5,
+      // x: 3,
+      // y: 2,
+      // type: "SKELETON",
+      // currentHealth: 2,
+      // maxHealth: 2,
+      // entityType: ENTITY_TYPE.ENEMY,
+      // active: true,
+      // state: ENTITY_STATE.IDLE,
+    // },
+    // {
+      // id: 6,
+      // x: 3,
+      // y: 1,
+      // type: "SKELETON",
+      // currentHealth: 2,
+      // maxHealth: 2,
+      // entityType: ENTITY_TYPE.ENEMY,
+      // active: true,
+      // state: ENTITY_STATE.IDLE,
+    // },
     // {
       // id: 5,
       // x: 3,
@@ -118,91 +124,6 @@ const initialState = {
     // },
   ],
 };
-
-export const movePlayer = createAsyncThunk(
-  "game/movePlayer",
-  async (direction, { getState, dispatch, rejectWithValue }) => {
-    const { entities, map } = getState().game;
-
-    const player = entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-
-    if (player.state !== ENTITY_STATE.IDLE) {
-      return rejectWithValue(false);
-    }
-
-    const newPosition = {
-      x: player.x + (direction.x || 0),
-      y: player.y + (direction.y || 0),
-    };
-
-    const {
-      type: collisionType,
-      entityId: collidedEntityId,
-    } = collisionCheck(entities, map, newPosition);
-
-    const moveDir = getDirectionString(direction);
-
-    dispatch(changeFacing({
-      moveDir,
-      entityId: player.id,
-    }));
-
-    if (collisionType === COLLISION_TYPE.MAP) {
-      return rejectWithValue(false);
-    }
-
-    if (collisionType === COLLISION_TYPE.ENEMY) {
-      const { attributes } = weapons[player.weapon];
-
-      const { currentHealth } = entities.find(({ id }) => collidedEntityId === id);
-
-      dispatch(changeState({
-        entityId: player.id,
-        newState: ENTITY_STATE.ATTACK,
-      }));
-
-      await delay(200);
-
-      dispatch(damageEntity({
-        entityId: collidedEntityId,
-        damage: attributes.damage,
-      }));
-
-      if (currentHealth > attributes.damage) {
-        setTimeout(() => {
-          dispatch(idle(collidedEntityId));
-        }, 100);
-      }
-
-
-      setTimeout(() => {
-        dispatch(changeState({
-          entityId: player.id,
-          newState: ENTITY_STATE.IDLE,
-        }));
-      }, 400);
-
-      return rejectWithValue(false);
-    }
-
-    setTimeout(() => {
-      dispatch(idle(player.id));
-    }, 400);
-
-    dispatch(moveEntityOnMap({
-      newPosition,
-      entityId: player.id,
-    }));
-
-    /* 
-      Small timeout gives time for gsap to move player to new position.
-      It fixes blink player sprite on new position before movement animation,
-    */
-    setTimeout(() => {
-      dispatch(changePosition(newPosition));
-    }, 10);
-  },
-);
 
 const gameSlice = createSlice({
   initialState,
@@ -259,16 +180,56 @@ const gameSlice = createSlice({
 
       // remove entity from map
       const mapTile = state.map.tiles.find(({ entityId }) => entityId === entity.id);
-      delete mapTile.entityId;
+      mapTile.entityId = null;
       
       entity.state = ENTITY_STATE.DEAD;
+      entity.active = false;
     },
-  },
-  extraReducers: {
-    [movePlayer.fulfilled]: (state) => {
-      const player = state.entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-      player.state = ENTITY_STATE.MOVE;
+    changeEnemiesPositions: (state, { payload }) => {
+      payload.forEach(({ id, position }) => {
+        const { tiles } = state.map;
+
+        const currentMapElement = tiles.find(({ entityId: mapEntityId }) => id === mapEntityId);
+        currentMapElement.entityId = null;
+
+        const newMapElement = tiles.find(({ x, y }) => position.x === x && position.y === y);
+        newMapElement.entityId = id;
+
+        const enemy = state.entities.find(({ id: entityId }) => entityId === id);
+        enemy.x = position.x;
+        enemy.y = position.y;
+      }); 
     },
+    updateStateAfterEnemyAction: (state, { payload }) => {
+      const { tiles, localEntities } = payload;
+
+      state.map.tiles = [...tiles];
+      state.entities = [...localEntities];
+    },
+    idleEnemies: (state) => {
+      const { entities } = state;
+
+      const enemiesToUpdate = entities.filter(({ entityType, state }) => state === ENTITY_STATE.MOVE && entityType === ENTITY_TYPE.ENEMY);
+
+      enemiesToUpdate.forEach(enemy => {
+        enemy.state = ENTITY_STATE.IDLE;
+      });
+    },
+    updateEnemiesPositions: (state, { payload }) => {
+      payload.forEach(({ id, x, y }) => {
+        const enemy = state.entities.find(({ id: entityId }) => entityId === id);
+
+        enemy.x = x;
+        enemy.y = y;
+      });
+    },
+
+    startTick: (state) => {
+      state.tick = true;
+    },
+    endTick: (state) => {
+      state.tick = false;
+    }
   },
 });
 
@@ -278,7 +239,13 @@ export const {
   changeState,
   changeFacing,
   moveEntityOnMap,
+  changeEnemiesPositions,
   damageEntity,
+  updateStateAfterEnemyAction,
+  updateEnemiesPositions,
+  idleEnemies,
+  startTick,
+  endTick,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
