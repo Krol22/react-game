@@ -29,7 +29,7 @@ import { changeCameraPosition } from "../camera/cameraSlice";
 
 const handleEnemyAction = async (dispatch, getState) => {
   const { entities, map } = getState().game;
-  const enemies = entities.filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
+  const enemies = Object.values(entities).filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
   
   // making enemies move outside redux, update map and enemyEntities after.  
   const tiles = JSON.parse(JSON.stringify(map.tiles));
@@ -58,7 +58,7 @@ const handleEnemyAction = async (dispatch, getState) => {
 const damageEnemyByPlayer = async (dispatch, player, entities, collidedEntityId) => {
     const { attributes } = weapons[player.weapon];
 
-    const { currentHealth } = entities.find(({ id }) => collidedEntityId === id);
+    const { currentHealth } = entities[collidedEntityId];
 
     dispatch(changeState({
       entityId: player.id,
@@ -163,7 +163,7 @@ export const step = createAsyncThunk(
       dispatch(endTick());
     }, STEP_TIME_MS);
 
-    const player = entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+    const player = Object.values(entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
 
     switch (name) {
       case GAME_ACTION.PLAYER_SKIP:

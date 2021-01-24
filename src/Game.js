@@ -21,8 +21,8 @@ export const Game = () => {
   usePlayerInput();
 
   const { player, map, enemies } = useSelector((state) => {
-    const player = state.game.entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-    const enemies = state.game.entities.filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
+    const player = Object.values(state.game.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+    const enemies = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
 
     return {
       player,

@@ -25,7 +25,7 @@ export const collisionCheck = (entities, map, newPos) => {
     };
   }
 
-  const entity = entities.find(({ id }) => id === mapElement.entityId);
+  const entity = entities[mapElement.entityId];
 
   // no collision
   if (!entity) {
