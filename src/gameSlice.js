@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
 
 import level from "./data/level0.js";
+import { pickables } from "./components/Pickables/Pickables";
 
 const initialState = {
   tick: false,
@@ -109,7 +110,48 @@ const gameSlice = createSlice({
         enemy.y = y;
       });
     },
+    hideEntity: (state, { payload }) => {
+      const entity = state.entities[payload];
+      entity.visible = false;
+    },
+    spawnItemFromCrate: (state, { payload }) => {
+      const { item, crate } = payload;
+      const { tiles } = state.map;
 
+      state.entities[item.id] = item;
+
+      const currentMapElement = tiles.find(({ entityId }) => entityId === crate.id);
+      currentMapElement.entityId = item.id;
+    },
+    pickupItemByPlayer: (state, { payload }) => {
+      const { itemId, playerId } = payload;
+
+      const item = state.entities[itemId];
+      const player = state.entities[playerId];
+
+      const { action } = pickables[item.name];
+      const { name, change } = action;
+
+      if (name === "CHANGE_ATTRIBUTE") {
+        Object.keys(change).forEach(attribute => {
+          const { min, max, current } = player.attributes[attribute];
+
+          const newValue = change[attribute] + current;
+          
+          if (newValue > max) {
+            player.attributes[attribute].current = max;
+            return;
+          }
+
+          if (newValue < min) {
+            player.attributes[attribute].current = min;
+            return;
+          }
+
+          player.attributes[attribute].current = newValue;
+        });
+      }
+    },
     startTick: (state) => {
       state.tick = true;
     },
@@ -130,8 +172,11 @@ export const {
   updateStateAfterEnemyAction,
   updateEnemiesPositions,
   idleEnemies,
+  hideEntity,
   startTick,
   endTick,
+  spawnItemFromCrate,
+  pickupItemByPlayer,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

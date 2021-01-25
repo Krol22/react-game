@@ -4,8 +4,8 @@ export default {
   map: {
     tiles: [
       { x: 0, y: 0, type: 0, entityId: 1 },
-      { x: 1, y: 0, type: 0 },
-      { x: 2, y: 0, type: 0 },
+      { x: 1, y: 0, type: 0, entityId: 7 },
+      { x: 2, y: 0, type: 0, entityId: 6 },
       { x: 3, y: 0, type: 0 },
       { x: 4, y: 0, type: 0 },
       { x: 5, y: 0, type: 0 },
@@ -50,10 +50,17 @@ export default {
       state: ENTITY_STATE.IDLE,
       weapon: "sword",
       facing: "left",
-      currentHealth: 50,
       maxHealth: 50,
       entityType: ENTITY_TYPE.PLAYER,
       active: true,
+      visible: true,
+      attributes: {
+        health: {
+          current: 7,
+          min: 0,
+          max: 10,
+        },
+      }
     },
     // {
       // id: 2,
@@ -88,6 +95,7 @@ export default {
       active: true,
       state: ENTITY_STATE.IDLE,
       currentStep: 0,
+      visible: true,
     },
     // {
       // id: 5,
@@ -119,5 +127,27 @@ export default {
       // entityType: ENTITY_TYPE.ENEMY,
       // mapSize: 2,
     // },
+    6: {
+      id: 6,
+      x: 2,
+      y: 0,
+      entityType: ENTITY_TYPE.CRATE,
+      active: true,
+      visible: true,
+      item: {
+        id: 999,
+        name: "healthPotion",
+      }
+    },
+    7: {
+      id: 7,
+      x: 1,
+      y: 0,
+      entityType: ENTITY_TYPE.PICKABLE,
+      name: "healthPotion",
+      active: true,
+      visible: true,
+      state: ENTITY_STATE.IDLE,
+    },
   },
 };

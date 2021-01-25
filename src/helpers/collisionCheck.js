@@ -4,6 +4,8 @@ export const COLLISION_TYPE = {
   PLAYER: "PLAYER",
   ENEMY: "ENEMY",
   MAP: "MAP",
+  CRATE: "CRATE",
+  PICKABLE: "PICKABLE",
 };
 
 export const collisionCheck = (entities, map, newPos) => {
@@ -44,6 +46,22 @@ export const collisionCheck = (entities, map, newPos) => {
   if (entity.entityType === ENTITY_TYPE.PLAYER) {
     return {
       type: COLLISION_TYPE.PLAYER,
+      entityId: entity.id,
+    };
+  }
+
+  // crate
+  if (entity.entityType === ENTITY_TYPE.CRATE) {
+    return {
+      type: COLLISION_TYPE.CRATE,
+      entityId: entity.id,
+    };
+  }
+
+  // item
+  if (entity.entityType === ENTITY_TYPE.PICKABLE) {
+    return {
+      type: COLLISION_TYPE.PICKABLE,
       entityId: entity.id,
     };
   }

@@ -12,6 +12,8 @@ export const STEP_TIME = STEP_TIME_MS / 1000;
 export const ENTITY_TYPE = {
   PLAYER: "PLAYER",
   ENEMY: "ENEMY", 
+  CRATE: "CRATE",
+  PICKBLE: "PICKBLE",
 };
 
 export const ENTITY_STATE = {
@@ -20,6 +22,8 @@ export const ENTITY_STATE = {
   ATTACK: "ATTACK",
   HIT: "HIT",
   DEAD: "DEAD",
+  PICK: "PICK",
+  SPAWN: "SPAWN",
 };
 
 export const GAME_ACTION = {
