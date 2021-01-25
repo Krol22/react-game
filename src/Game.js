@@ -13,6 +13,7 @@ import usePlayerInput from "./components/Player/usePlayerInput";
 
 import { ENTITY_TYPE } from "./constants";
 import {Pickable} from "./components/Pickables/Pickable";
+import {HealthBar} from "./components/HealthBar";
 
 const Wrapper = styled.div`
   position: relative;
@@ -22,6 +23,7 @@ const UI = styled.div`
   position: fixed;
   top: 20px;
   left: 20px;
+  transform: scale(2);
 `;
 
 export const Game = () => {
@@ -46,7 +48,7 @@ export const Game = () => {
   return (
     <>
       <UI>
-        {player.attributes.health.current}
+        <HealthBar x={10} y={10} health={player.attributes.health} />
       </UI>
       <Wrapper>
         <Camera>

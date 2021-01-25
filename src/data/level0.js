@@ -50,7 +50,6 @@ export default {
       state: ENTITY_STATE.IDLE,
       weapon: "sword",
       facing: "left",
-      maxHealth: 50,
       entityType: ENTITY_TYPE.PLAYER,
       active: true,
       visible: true,
@@ -89,13 +88,18 @@ export default {
       x: 2,
       y: 2,
       type: "SKELETON",
-      currentHealth: 2,
-      maxHealth: 2,
       entityType: ENTITY_TYPE.ENEMY,
       active: true,
       state: ENTITY_STATE.IDLE,
       currentStep: 0,
       visible: true,
+      attributes: {
+        health: {
+          current: 2,
+          min: 0,
+          max: 2,
+        },
+      }
     },
     // {
       // id: 5,

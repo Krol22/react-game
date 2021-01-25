@@ -23,12 +23,14 @@ const HealthBarContainer = styled.div`
   }
 `;
 
-export function HealthBar({ currentHealth, maxHealth, node, size }) {
+export function HealthBar({ health, node, size }) {
+  const { current, max } = health;
+
   return (
     <Node {...node}>
       <HealthBarContainer
-        currentHealth={currentHealth}
-        maxHealth={maxHealth}
+        currentHealth={current}
+        maxHealth={max}
         size={size}
       />
     </Node>

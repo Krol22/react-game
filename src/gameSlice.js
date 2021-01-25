@@ -57,10 +57,10 @@ const gameSlice = createSlice({
 
       const entity = state.entities[entityId];
 
-      const newHealth = entity.currentHealth - damage;
-      entity.currentHealth = newHealth < 0 ? 0 : newHealth;
+      const newHealth = entity.attributes.health.current - damage;
+      entity.attributes.health.current = newHealth < 0 ? 0 : newHealth;
 
-      if (entity.currentHealth > 0) {
+      if (entity.attributes.health.current > 0) {
         entity.state = ENTITY_STATE.HIT;
         return;
       }

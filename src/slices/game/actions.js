@@ -61,7 +61,7 @@ const handleEnemyAction = async (dispatch, getState) => {
 const damageEnemyByPlayer = async (dispatch, player, entities, collidedEntityId) => {
     const { attributes } = weapons[player.weapon];
 
-    const { currentHealth } = entities[collidedEntityId];
+    const currentHealth = entities[collidedEntityId].attributes.health.current;
 
     dispatch(changeState({
       entityId: player.id,
