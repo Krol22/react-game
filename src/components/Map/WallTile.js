@@ -5,9 +5,9 @@ import { Sprite } from "../Sprite";
 
 import wallAsset from "../../assets/Wall.png";
 
-export const WallTile = ({ x, y }) => {
+export const WallTile = ({ x, y, zIndex }) => {
   return (
-    <Node x={x} y={y}>
+    <Node x={x} y={y} zIndex={zIndex}>
       <Sprite 
         src={wallAsset}
         width={31}

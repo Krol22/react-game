@@ -36,7 +36,7 @@ export const deadAnimation = (nodeRef) => {
     .to(elements, { y: "-=5", duration: .3 * SPEED })
     .to(elements, { rotationZ: 90, duration: .3 * SPEED }, .1 * SPEED)
     .to(elements, { y: "=+3", duration: .2 * SPEED }, .4 * SPEED)
-    .to([...elements, shadowSprite], { display: "none" }, .7);
+    .to([...elements, shadowSprite], { opacity: 0, ease: "steps(3)" }, .7);
 
   return timeline;
 };

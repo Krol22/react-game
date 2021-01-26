@@ -38,7 +38,7 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
       }));
     }, 100);
 
-    const localEnemy = localEntities.find(({ id }) => id === enemy.id);
+    const localEnemy = localEntities[enemy.id];
     localEnemy.state = ENTITY_STATE.ATTACK;
     localEnemy.facing = facing;
 
@@ -74,7 +74,7 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
   const newMapElement = tiles.find(({ x, y }) => newPosition.x === x && newPosition.y === y);
   newMapElement.entityId = enemy.id;
 
-  const localEnemy = localEntities.find(({ id }) => id === enemy.id);
+  const localEnemy = localEntities[enemy.id];
 
   localEnemy.facing = facing;
   localEnemy.state = ENTITY_STATE.MOVE;

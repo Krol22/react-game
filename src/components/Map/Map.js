@@ -31,8 +31,8 @@ export const Map = ({ map }) => {
 
   return (
     <>
-      {tiles.map(mapToIsometric).map(mapToComponent).map(({ x, y, Component }) => (
-        <Component x={x} y={y} />
+      {tiles.map(mapToIsometric).map(mapToComponent).map(({ Component, ...rest }) => (
+        <Component {...rest} />
       ))}
     </>
   )

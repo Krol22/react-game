@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 
 export const Node = styled.div`
   box-sizing: content-box;
-  display: inline-block;
 
   ${({
     x = 0,
@@ -16,6 +15,7 @@ export const Node = styled.div`
     height = 0,
     anchorPoint,
     zIndex,
+    visible = true,
   }) => css`
     position: ${local ? 'relative' : 'absolute'};
     top: ${y}px;
@@ -26,6 +26,7 @@ export const Node = styled.div`
     transform-origin: center;
     width: ${width}px;
     height: ${height}px;
+    display: ${visible ? `inline-block` :`none`};
 
     ${zIndex && `z-index: ${zIndex};`}
     ${debug && `background-color: red;`}

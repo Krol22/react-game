@@ -20,14 +20,19 @@ import {
   moveEntityOnMap,
   damageEntity,
   updateStateAfterEnemyAction,
+  spawnItemFromCrate,
   idleEnemies,
+  hideEntity,
   startTick,
   endTick,
+  pickupItemByPlayer,
 } from "../../gameSlice";
+
+import { changeCameraPosition } from "../camera/cameraSlice";
 
 const handleEnemyAction = async (dispatch, getState) => {
   const { entities, map } = getState().game;
-  const enemies = entities.filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
+  const enemies = Object.values(entities).filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
   
   // making enemies move outside redux, update map and enemyEntities after.  
   const tiles = JSON.parse(JSON.stringify(map.tiles));
@@ -56,7 +61,7 @@ const handleEnemyAction = async (dispatch, getState) => {
 const damageEnemyByPlayer = async (dispatch, player, entities, collidedEntityId) => {
     const { attributes } = weapons[player.weapon];
 
-    const { currentHealth } = entities.find(({ id }) => collidedEntityId === id);
+    const currentHealth = entities[collidedEntityId].attributes.health.current;
 
     dispatch(changeState({
       entityId: player.id,
@@ -87,6 +92,71 @@ const damageEnemyByPlayer = async (dispatch, player, entities, collidedEntityId)
     }, 200);
 };
 
+const destroyCrate = async (dispatch, player, entities, collidedEntityId) => {
+  dispatch(changeState({
+    entityId: player.id,
+    newState: ENTITY_STATE.ATTACK,
+  }));
+
+  await delay(200);
+
+  dispatch(changeState({
+    entityId: collidedEntityId,
+    newState: ENTITY_STATE.HIT,
+  }));
+
+  setTimeout(() => {
+    dispatch(hideEntity(collidedEntityId));
+    const crate = entities[collidedEntityId];
+    spawnEntityFromCrate(dispatch, crate)
+  }, 100);
+
+  setTimeout(() => {
+    dispatch(changeState({
+      entityId: player.id,
+      newState: ENTITY_STATE.IDLE,
+    }));
+
+  }, 200);
+};
+
+const spawnEntityFromCrate = async (dispatch, crate) => {
+  const { x, y, item } = crate;
+
+  const { id, name } = item;
+
+  const newItem = {
+    id,
+    x,
+    y,
+    name,
+    entityType: ENTITY_TYPE.PICKABLE,
+    active: true,
+    visible: true,
+    state: ENTITY_STATE.SPAWN,
+  };
+
+  dispatch(spawnItemFromCrate({
+    item: newItem,
+    crate,
+  }));
+};
+
+const pickupItem = async (dispatch, player, collidedEntityId) => {
+  setTimeout(() => {
+    dispatch(changeState({
+      entityId: collidedEntityId,
+      newState: ENTITY_STATE.PICK,
+    }));
+
+    dispatch(pickupItemByPlayer({ itemId: collidedEntityId, playerId: player.id }));
+  }, 300);
+
+  setTimeout(() => {
+    dispatch(hideEntity(collidedEntityId));
+  }, 800);
+};
+
 const movePlayer = (dispatch, player, newPosition) => {
   dispatch(moveEntityOnMap({
     newPosition,
@@ -107,6 +177,7 @@ const movePlayer = (dispatch, player, newPosition) => {
 
   setTimeout(() => {
     dispatch(changePosition(newPosition));
+    dispatch(changeCameraPosition(newPosition));
   }, 10);
 };
 
@@ -140,6 +211,15 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
     return;
   }
 
+  if (collisionType === COLLISION_TYPE.CRATE) {
+    destroyCrate(dispatch, player, entities, collidedEntityId);
+    return;
+  }
+
+  if (collisionType === COLLISION_TYPE.PICKABLE) {
+    pickupItem(dispatch, player, collidedEntityId); 
+  }
+
   movePlayer(dispatch, player, newPosition);
 };
 
@@ -160,7 +240,7 @@ export const step = createAsyncThunk(
       dispatch(endTick());
     }, STEP_TIME_MS);
 
-    const player = entities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+    const player = Object.values(entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
 
     switch (name) {
       case GAME_ACTION.PLAYER_SKIP:

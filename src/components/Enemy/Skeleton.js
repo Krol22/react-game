@@ -21,11 +21,12 @@ const scaleEnemy = (nodeRef, scale) => {
   gsap.set(elements, { scaleX: scale });
 };
 
-export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state, facing }) {
+export function Skeleton({ x, y, zIndex, attributes, state, facing }) {
   const nodeRef = useRef(null);
 
   const [ bodySpriteOffsetY, setBodySpriteOffsetY ] = useState(0);
   const { playAnimation } = useGsapAnimations(nodeRef, enemyAnimations);
+  const { health } = attributes;
 
   useEffect(() => {
     switch(state) {
@@ -81,8 +82,7 @@ export function Skeleton({ x, y, zIndex, currentHealth, maxHealth, state, facing
       />
       {state !== ENTITY_STATE.DEAD && ( 
         <HealthBar
-          currentHealth={currentHealth}
-          maxHealth={maxHealth}
+          health={health}
           node={{
             x: -1,
             y: -3,
