@@ -7,6 +7,7 @@ import {
   ARROW_RIGHT,
   ARROW_UP,
   ARROW_DOWN,
+  SPACE,
   GAME_ACTION,
 } from "../../constants";
 
@@ -46,6 +47,11 @@ const usePlayerInput = () => {
         direction: {
           x: 0, y: 1,
         },
+      }));
+    }
+    if (keys[SPACE].isDown !== keys[SPACE].isPressed) {
+      dispatch(step({
+        name: GAME_ACTION.PLAYER_SKIP,
       }));
     }
   }, [keys, dispatch]);

@@ -5,6 +5,7 @@ export const ARROW_LEFT = 37;
 export const ARROW_RIGHT = 39;
 export const ARROW_UP = 38;
 export const ARROW_DOWN = 40;
+export const SPACE = 32;
 
 export const STEP_TIME_MS = 800;
 export const STEP_TIME = STEP_TIME_MS / 1000;
@@ -13,10 +14,11 @@ export const ENTITY_TYPE = {
   PLAYER: "PLAYER",
   ENEMY: "ENEMY", 
   CRATE: "CRATE",
-  PICKBLE: "PICKBLE",
+  PICKABLE: "PICKABLE",
 };
 
 export const ENTITY_STATE = {
+  NONE: "NONE",
   IDLE: "IDLE",
   MOVE: "MOVE",
   ATTACK: "ATTACK",

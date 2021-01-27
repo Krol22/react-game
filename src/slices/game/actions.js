@@ -12,6 +12,7 @@ import { weapons } from "../../components/Weapons/Weapons";
 import delay from "../../helpers/asyncDelay";
 import { getDirectionString } from "../../helpers/getDirectionString";
 import { skeletonBehaviour } from "./skeletonBehaviour";
+import { padActions } from "../game/padActions";
 
 import {
   changePosition,
@@ -26,6 +27,7 @@ import {
   startTick,
   endTick,
   pickupItemByPlayer,
+  changeFog,
 } from "../../gameSlice";
 
 import { changeCameraPosition } from "../camera/cameraSlice";
@@ -157,7 +159,32 @@ const pickupItem = async (dispatch, player, collidedEntityId) => {
   }, 800);
 };
 
+const handlePadScripts = (dispatch, player, newPosition, tiles) => {
+  const currentPositionTile = tiles.find(({x, y}) => player.x === x && player.y === y);
+  const newPositionTile = tiles.find(({x, y}) => newPosition.x === x && newPosition.y === y);
+
+  try {
+    if (currentPositionTile.action?.onLeave) {
+      const action = currentPositionTile.action.onLeave;
+
+      const { ref, args } = action;
+
+      dispatch(padActions[ref](args));
+    }
+
+    if (newPositionTile.action?.onEnter) {
+      const action = newPositionTile.action.onEnter;
+
+      const { ref, args } = action;
+      dispatch(padActions[ref](args));
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 const movePlayer = (dispatch, player, newPosition) => {
+
   dispatch(moveEntityOnMap({
     newPosition,
     entityId: player.id,
@@ -178,6 +205,7 @@ const movePlayer = (dispatch, player, newPosition) => {
   setTimeout(() => {
     dispatch(changePosition(newPosition));
     dispatch(changeCameraPosition(newPosition));
+    // dispatch(changeFog(newPosition));
   }, 10);
 };
 
@@ -219,6 +247,10 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
   if (collisionType === COLLISION_TYPE.PICKABLE) {
     pickupItem(dispatch, player, collidedEntityId); 
   }
+
+  setTimeout(() => {
+    handlePadScripts(dispatch, player, newPosition, map.tiles);
+  }, 200);
 
   movePlayer(dispatch, player, newPosition);
 };

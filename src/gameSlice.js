@@ -9,6 +9,10 @@ const initialState = {
   tick: false,
   map: level.map,
   entities: level.entities,
+  camera: {
+    x: 0,
+    y: 0,
+  },
 };
 
 const gameSlice = createSlice({
@@ -50,6 +54,29 @@ const gameSlice = createSlice({
         const newMapElement = tiles.find(({ x, y }) => newPosition.x === x && newPosition.y === y);
         newMapElement.entityId = entityId;
         return;
+      }
+    },
+    changeFog: (state, { payload }) => {
+      const lightPosition = payload;
+
+      const { tiles } = state.map;
+
+      tiles.map(tile => tile.fogged = true);
+
+      for(let xOffset = -3; xOffset < 4; xOffset++) {
+        for(let yOffset = -3; yOffset < 4; yOffset++) {
+          if (Math.abs(xOffset) + Math.abs(yOffset) >= 4) {
+            continue;
+          } 
+
+          const tile = tiles.find(({ x, y }) => lightPosition.x + xOffset === x && lightPosition.y + yOffset === y);
+
+          if (!tile) {
+            continue;
+          }
+
+          tile.fogged = false;
+        }
       }
     },
     damageEntity: (state, { payload }) => {
@@ -157,7 +184,7 @@ const gameSlice = createSlice({
     },
     endTick: (state) => {
       state.tick = false;
-    }
+    },
   },
 });
 
@@ -166,6 +193,7 @@ export const {
   changePosition,
   changeState,
   changeFacing,
+  changeFog,
   moveEntityOnMap,
   changeEnemiesPositions,
   damageEntity,
