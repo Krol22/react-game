@@ -7,6 +7,7 @@ import { Map } from "./components/Map/Map";
 import { Player } from "./components/Player/Player";
 import { Crate } from "./components/Crate/Crate";
 import { EnemiesContainer } from "./components/Enemy/EnemiesContainer";
+import { PlayerHealthBar } from "./components/UI/PlayerHealthBar.js/PlayerHealthBar";
 import { mapToIsometric } from "./helpers/mapToIsometric";
 import useInputManager from "./hooks/useInputManager";
 import usePlayerInput from "./components/Player/usePlayerInput";
@@ -86,6 +87,9 @@ export const Game = () => {
         <LevelTitle loaded={loaded}>
           Hello world
         </LevelTitle>
+        <div style={{ transform: "scale(8)", transformOrigin: "top left" }}>
+          <PlayerHealthBar {...player.attributes.health} />
+        </div>
         {showExampleText && (
           <div>
             {text}

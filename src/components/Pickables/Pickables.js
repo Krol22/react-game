@@ -14,7 +14,7 @@ export const pickables = {
     action: {
       name: "CHANGE_ATTRIBUTE",
       change: {
-        health: 2
+        health: 1,
       },
     }
   }
