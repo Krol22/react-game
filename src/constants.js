@@ -1,4 +1,4 @@
-export const TILE_WIDTH_HALF = 15;
+export const TILE_WIDTH_HALF = 18;
 export const TILE_HEIGHT_HALF = 6;
 
 export const ARROW_LEFT = 37;

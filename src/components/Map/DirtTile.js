@@ -4,7 +4,7 @@ import { Node } from "../Node";
 import { Sprite } from "../Sprite";
 
 import fogAsset from "../../assets/Fog.png";
-import blockAsset from "../../assets/Block.png";
+import blockAsset from "../../assets/DirtTile.png";
 
       // {fogged && (
         // <Sprite
@@ -19,14 +19,15 @@ import blockAsset from "../../assets/Block.png";
       // )}
           // frame={fogged ? 1 : 0}
 
-export const DirtTile = ({ x, y, fogged }) => {
+export const DirtTile = ({ x, y, fogged, tileFrame }) => {
   return (
     <>
       <Node x={x} y={y}>
         <Sprite
           src={blockAsset}
-          width={31}
+          width={39}
           height={23}
+          frame={0}
         />
       </Node>
     </>

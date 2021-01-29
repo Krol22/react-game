@@ -61,7 +61,7 @@ export function Skeleton({ x, y, zIndex, attributes, state, facing }) {
   }, [nodeRef, facing]);
 
   return (
-    <Node x={x + 7} y={y - 10} width={16} height={5} zIndex={zIndex} ref={nodeRef}>
+    <Node x={x + 11} y={y - 10} width={16} height={5} zIndex={zIndex} ref={nodeRef}>
       <Sprite
         id="shadow-sprite"
         src={smallShadowSprite}

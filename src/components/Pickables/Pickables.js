@@ -8,7 +8,7 @@ export const pickables = {
       height: 11,
     },
     node: {
-      offsetX: 12,
+      offsetX: 16,
       offsetY: -4,
     },
     action: {

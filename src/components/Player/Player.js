@@ -64,7 +64,7 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
 
   return (
     <Node
-      x={x + TILE_WIDTH_HALF / 2}
+      x={x + TILE_WIDTH_HALF / 2 + 1}
       y={y - TILE_HEIGHT_HALF - 4}
       width={16}
       height={16}
