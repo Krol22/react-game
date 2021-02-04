@@ -43,12 +43,11 @@ export const spawnAnimation = (nodeRef) => {
   const timeline = gsap.timeline();
 
   timeline
-    .to(elements, { duration: .4, y: "=0", delay: .3, ease: "bounce.out"})
+    .to(elements, { duration: .4, y: "=0", delay: .5, ease: "bounce.out"})
     .to(elements, { duration: .4, y: "=0", ease: "bounce.out" });
 
   return timeline;
 };
-
 
 export const testAnimation = (nodeRef) => {
   const current = nodeRef.current;

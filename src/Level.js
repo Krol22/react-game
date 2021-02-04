@@ -31,9 +31,16 @@ const UI = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
-  border: 1px solid red;
   color: white;
   z-index: 10000;
+`;
+
+const TopBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px;
 `;
 
 const Overlay = styled.div`
@@ -50,6 +57,14 @@ const LevelTitle = styled.div`
   transition: top 1s ease-in-out 1.5s, opacity .5s steps(20) 1.5s;
 
   ${({ loaded }) => loaded && `top: -50%; opacity: 0;`};
+`;
+
+const HealthBarContainer = styled.div`
+  display: flex;
+`;
+
+const GoldContainer = styled.div`
+  font-size: 30px;
 `;
 
 export const Level = () => {
@@ -92,12 +107,17 @@ export const Level = () => {
     <>
       <UI>
         <Overlay />
+        <TopBar>
+          <HealthBarContainer style={{ transform: "scale(8)", transformOrigin: "center left" }}>
+            <PlayerHealthBar {...player.attributes.health} />
+          </HealthBarContainer>
+          <GoldContainer>
+            Gold: 0
+          </GoldContainer>
+        </TopBar>
         <LevelTitle loaded={loaded}>
           Hello world
         </LevelTitle>
-        <div style={{ transform: "scale(8)", transformOrigin: "top left" }}>
-          <PlayerHealthBar {...player.attributes.health} />
-        </div>
         {showExampleText && (
           <div>
             {text}

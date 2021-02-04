@@ -36,16 +36,12 @@ export const PlayerHealthBar = ({ current, max }) => {
       timeline
         .to(nodeRef.current, { scale: 1.4, duration: .1 })  
         .to(nodeRef.current, { scale: 1, duration: .1 })  
-
-      console.log("here");
     }
 
     if (current < prevCurrentRef.current) {
       timeline
         .to(nodeRef.current, { scale: 0.8, duration: .05 })  
         .to(nodeRef.current, { scale: 1, duration: .05 })  
-
-      console.log("here2");
     }
     
     prevCurrentRef.current = current;

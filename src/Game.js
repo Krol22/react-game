@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadLevel } from "./gameSlice";
 import { Level } from "./Level";
 
-import level0 from "./data/entitiesLevel.json";
+import level0 from "./data/level.json";
 
 export const Game = () => {
   const dispatch = useDispatch();
