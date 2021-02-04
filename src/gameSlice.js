@@ -1,19 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
 
-import level from "./data/level0.js";
 import { pickables } from "./components/Pickables/Pickables";
+import { parseLevel } from "./helpers/parseLevel";
 
 const initialState = {
   tick: false,
-  map: level.map,
-  entities: level.entities,
+  isLoading: false,
+  loaded: false,
+  map: [],
+  entities: {},
   camera: {
     x: 0,
     y: 0,
   },
 };
+
+export const loadLevel = createAsyncThunk(
+  "game/loadLevel",
+  (level) => {
+    const gameLevel = parseLevel(level);
+
+    return gameLevel;
+  },
+);
 
 const gameSlice = createSlice({
   initialState,
@@ -29,6 +40,11 @@ const gameSlice = createSlice({
       const entity = state.entities[payload];
 
       entity.state = ENTITY_STATE.IDLE;
+    },
+    idlePlayer: (state) => {
+      const player = Object.values(state.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+
+      player.state = ENTITY_STATE.IDLE;
     },
     changePosition: (state, { payload }) => {
       // I could add playerId in a state
@@ -186,6 +202,21 @@ const gameSlice = createSlice({
       state.tick = false;
     },
   },
+  extraReducers: {
+    [loadLevel.pending]: (state) => {
+      state.isLoading = true;
+      state.loaded = false;
+    },
+    [loadLevel.fulfilled]: (state, { payload }) => {
+      const { entities, map } = payload;
+
+      state.entities = {...entities};
+      state.map = {...map};
+
+      state.isLoading = false;
+      state.loaded = true;
+    },
+  },
 });
 
 export const {
@@ -200,6 +231,7 @@ export const {
   updateStateAfterEnemyAction,
   updateEnemiesPositions,
   idleEnemies,
+  idlePlayer,
   hideEntity,
   startTick,
   endTick,

@@ -32,6 +32,23 @@ export const hitAnimation = (nodeRef) => {
   gsap.to(elements, { filter: "initial", duration: .05, delay: .1 });
 };
 
+export const spawnAnimation = (nodeRef) => {
+  const bodySprite = nodeRef.current.querySelectorAll("#player-sprite");
+  const weaponSprite = nodeRef.current.querySelectorAll("#player-weapon");
+
+  const elements = [bodySprite, weaponSprite];
+
+  gsap.set([elements], { y: "-=200" });
+
+  const timeline = gsap.timeline();
+
+  timeline
+    .to(elements, { duration: .4, y: "=0", delay: .3, ease: "bounce.out"})
+    .to(elements, { duration: .4, y: "=0", ease: "bounce.out" });
+
+  return timeline;
+};
+
 
 export const testAnimation = (nodeRef) => {
   const current = nodeRef.current;
@@ -167,5 +184,6 @@ export default {
   test: testAnimation,
   idle: idleAnimation,
   attack: attackAnimation,
+  spawn: spawnAnimation,
   move: moveAnimation,
 };

@@ -47,6 +47,8 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
       playAnimation("attack", moveDir);
     } else if (state === ENTITY_STATE.MOVE) {
       playAnimation("move", moveDir);
+    } else if (state === ENTITY_STATE.SPAWN) {
+      playAnimation("spawn");
     } else if (state === ENTITY_STATE.HIT) {
       hitAnimation(nodeRef);
     }

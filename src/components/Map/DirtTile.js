@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Node } from "../Node";
-import { Sprite } from "../Sprite";
+import { Autotile } from "../Autotile/Autotile";
 
 import fogAsset from "../../assets/Fog.png";
-import blockAsset from "../../assets/DirtTile.png";
+import tilesetAsset from "../../assets/DirtTileset.png";
 
       // {fogged && (
         // <Sprite
@@ -19,17 +19,17 @@ import blockAsset from "../../assets/DirtTile.png";
       // )}
           // frame={fogged ? 1 : 0}
 
-export const DirtTile = ({ x, y, fogged, tileFrame }) => {
+export const DirtTile = React.memo(({ x, y, zIndex, offset }) => {
   return (
     <>
-      <Node x={x} y={y}>
-        <Sprite
-          src={blockAsset}
+      <Node x={x} y={y} zIndex={zIndex}>
+        <Autotile
+          src={tilesetAsset}
           width={39}
           height={23}
-          frame={0}
+          offset={offset}
         />
       </Node>
     </>
   );
-};
+});
