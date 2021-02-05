@@ -9,7 +9,6 @@ const initialState = {
   tick: false,
   isLoading: false,
   loaded: false,
-  map: [],
   entities: {},
   camera: {
     x: 0,
@@ -59,19 +58,6 @@ const gameSlice = createSlice({
 
       entity.moveDir = moveDir;
     },
-    moveEntityOnMap: (state, { payload }) => {
-      const { newPosition, entityId, size = 1 } = payload;
-      const { tiles } = state.map;
-
-      if (size === 1) {
-        const currentMapElement = tiles.find(({ entityId: mapEntityId }) => entityId === mapEntityId);
-        delete currentMapElement.entityId;
-
-        const newMapElement = tiles.find(({ x, y }) => newPosition.x === x && newPosition.y === y);
-        newMapElement.entityId = entityId;
-        return;
-      }
-    },
     changeFog: (state, { payload }) => {
       const lightPosition = payload;
 
@@ -109,11 +95,11 @@ const gameSlice = createSlice({
       }
 
       // remove entity from map
-      const mapTile = state.map.tiles.find(({ entityId }) => entityId === entity.id);
-      mapTile.entityId = null;
-      
-      entity.state = ENTITY_STATE.DEAD;
-      entity.active = false;
+      // const mapTile = state.map.tiles.find(({ entityId }) => entityId === entity.id);
+      // mapTile.entityId = null;
+      //
+      // entity.state = ENTITY_STATE.DEAD;
+      // entity.active = false;
     },
     changeEnemiesPositions: (state, { payload }) => {
       payload.forEach(({ id, position }) => {
@@ -131,9 +117,8 @@ const gameSlice = createSlice({
       }); 
     },
     updateStateAfterEnemyAction: (state, { payload }) => {
-      const { tiles, localEntities } = payload;
+      const { localEntities } = payload;
 
-      state.map.tiles = [...tiles];
       state.entities = {...localEntities};
     },
     idleEnemies: (state) => {
@@ -208,10 +193,9 @@ const gameSlice = createSlice({
       state.loaded = false;
     },
     [loadLevel.fulfilled]: (state, { payload }) => {
-      const { entities, map } = payload;
+      const { entities } = payload;
 
       state.entities = {...entities};
-      state.map = {...map};
 
       state.isLoading = false;
       state.loaded = true;
@@ -225,11 +209,8 @@ export const {
   changeState,
   changeFacing,
   changeFog,
-  moveEntityOnMap,
-  changeEnemiesPositions,
   damageEntity,
   updateStateAfterEnemyAction,
-  updateEnemiesPositions,
   idleEnemies,
   idlePlayer,
   hideEntity,

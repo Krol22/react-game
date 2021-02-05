@@ -14,37 +14,39 @@ import { getDirectionString } from "../../helpers/getDirectionString";
 import { skeletonBehaviour } from "./skeletonBehaviour";
 import { padActions } from "../game/padActions";
 
+import { moveEntityOnMap, updateMapState } from "../map/mapSlice";
+
 import {
   changePosition,
   changeState,
   changeFacing,
-  moveEntityOnMap,
   damageEntity,
-  updateStateAfterEnemyAction,
   spawnItemFromCrate,
   idleEnemies,
   hideEntity,
   startTick,
   endTick,
+  updateStateAfterEnemyAction,
   pickupItemByPlayer,
-  changeFog,
 } from "../../gameSlice";
 
 import { changeCameraPosition } from "../camera/cameraSlice";
 
 const handleEnemyAction = async (dispatch, getState) => {
-  const { entities, map } = getState().game;
+  const { entities } = getState().game;
+  const { tiles } = getState().map;
+
   const enemies = Object.values(entities).filter(({ entityType, active }) => active && entityType === ENTITY_TYPE.ENEMY);
   
   // making enemies move outside redux, update map and enemyEntities after.  
-  const tiles = JSON.parse(JSON.stringify(map.tiles));
+  const tilesCopy = JSON.parse(JSON.stringify(tiles));
   const localEntities = JSON.parse(JSON.stringify(entities));
 
   enemies.forEach(enemy => {
     const { type } = enemy;
 
     if (type === "SKELETON") {
-      skeletonBehaviour(dispatch, enemy, tiles, localEntities);
+      skeletonBehaviour(dispatch, enemy, tilesCopy, localEntities);
       return;
     }
 
@@ -53,7 +55,8 @@ const handleEnemyAction = async (dispatch, getState) => {
     }
   });
 
-  dispatch(updateStateAfterEnemyAction({ tiles, localEntities }));
+  dispatch(updateStateAfterEnemyAction({ localEntities }));
+  dispatch(updateMapState(tilesCopy))
 
   setTimeout(() => {
     dispatch(idleEnemies());
@@ -160,8 +163,8 @@ const pickupItem = async (dispatch, player, collidedEntityId) => {
 };
 
 const handlePadScripts = (dispatch, player, newPosition, tiles) => {
-  const currentPositionTile = tiles.find(({x, y}) => player.x === x && player.y === y);
-  const newPositionTile = tiles.find(({x, y}) => newPosition.x === x && newPosition.y === y);
+  const currentPositionTile = tiles[player.y][player.x];
+  const newPositionTile = tiles[newPosition.y][newPosition.x];
 
   try {
     if (currentPositionTile.action?.onLeave) {
@@ -184,9 +187,12 @@ const handlePadScripts = (dispatch, player, newPosition, tiles) => {
 };
 
 const movePlayer = (dispatch, player, newPosition) => {
-
   dispatch(moveEntityOnMap({
     newPosition,
+    oldPosition: {
+      x: player.x,
+      y: player.y,
+    },
     entityId: player.id,
   }));
 
@@ -210,7 +216,8 @@ const movePlayer = (dispatch, player, newPosition) => {
 };
 
 const handlePlayerMove = async (dispatch, state, player, action) => {
-  const { entities, map } = state.game; 
+  const { entities } = state.game; 
+  const { tiles } = state.map;
   const { direction } = action;
 
   const newPosition = {
@@ -228,7 +235,7 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
   const {
     type: collisionType,
     entityId: collidedEntityId,
-  } = collisionCheck(entities, map, newPosition);
+  } = collisionCheck(entities, tiles, newPosition);
 
   if (collisionType === COLLISION_TYPE.MAP) {
     return;
@@ -249,7 +256,7 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
   }
 
   setTimeout(() => {
-    handlePadScripts(dispatch, player, newPosition, map.tiles);
+    handlePadScripts(dispatch, player, newPosition, tiles);
   }, 200);
 
   movePlayer(dispatch, player, newPosition);

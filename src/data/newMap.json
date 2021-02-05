@@ -1,0 +1,926 @@
+{
+  "tiles": [
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      {
+        "x": 2,
+        "y": 1,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 3
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      {
+        "x": 2,
+        "y": 2,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      {
+        "x": 0,
+        "y": 3,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 0
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 1
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 45
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 1
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 2
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      {
+        "x": 0,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 7
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 44
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 5
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 5
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 5
+      },
+      {
+        "x": 8,
+        "y": 4,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 36
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      {
+        "x": 0,
+        "y": 5,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 7
+      },
+      {
+        "x": 1,
+        "y": 5,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 2,
+        "y": 5,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 3,
+        "y": 5,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 4,
+        "y": 5,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 9
+      },
+      null,
+      null,
+      null,
+      {
+        "x": 8,
+        "y": 5,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      {
+        "x": 0,
+        "y": 6,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 14
+      },
+      {
+        "x": 1,
+        "y": 6,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 15
+      },
+      {
+        "x": 2,
+        "y": 6,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 37
+      },
+      {
+        "x": 3,
+        "y": 6,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 15
+      },
+      {
+        "x": 4,
+        "y": 6,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 16
+      },
+      null,
+      null,
+      null,
+      {
+        "x": 8,
+        "y": 6,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      {
+        "x": 2,
+        "y": 7,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      {
+        "x": 8,
+        "y": 7,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      {
+        "x": 2,
+        "y": 8,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      {
+        "x": 6,
+        "y": 8,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 0
+      },
+      {
+        "x": 7,
+        "y": 8,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 1
+      },
+      {
+        "x": 8,
+        "y": 8,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 45
+      },
+      {
+        "x": 9,
+        "y": 8,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 1
+      },
+      {
+        "x": 10,
+        "y": 8,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 2
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      {
+        "x": 2,
+        "y": 9,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 10
+      },
+      null,
+      null,
+      null,
+      {
+        "x": 6,
+        "y": 9,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 7
+      },
+      {
+        "x": 7,
+        "y": 9,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 8,
+        "y": 9,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 9,
+        "y": 9,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 10,
+        "y": 9,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 9
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      {
+        "x": 2,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 42
+      },
+      {
+        "x": 3,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 5
+      },
+      {
+        "x": 4,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 5
+      },
+      {
+        "x": 5,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 5
+      },
+      {
+        "x": 6,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 38
+      },
+      {
+        "x": 7,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 8,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 9,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 8
+      },
+      {
+        "x": 10,
+        "y": 10,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 9
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      {
+        "x": 6,
+        "y": 11,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 14
+      },
+      {
+        "x": 7,
+        "y": 11,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 15
+      },
+      {
+        "x": 8,
+        "y": 11,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 15
+      },
+      {
+        "x": 9,
+        "y": 11,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 15
+      },
+      {
+        "x": 10,
+        "y": 11,
+        "element": {
+          "name": "tech",
+          "type": "tileset"
+        },
+        "offset": 16
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  ],
+  "entities": [
+    {
+      "x": 2,
+      "y": 1,
+      "element": {
+        "name": "player",
+        "type": "object"
+      }
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "element": {
+        "name": "skeleton",
+        "type": "object"
+      }
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "element": {
+        "name": "crate",
+        "type": "object"
+      }
+    },
+    {
+      "x": 7,
+      "y": 9,
+      "element": {
+        "name": "skeleton",
+        "type": "object"
+      }
+    }
+  ]
+}

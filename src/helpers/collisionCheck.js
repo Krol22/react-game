@@ -8,10 +8,8 @@ export const COLLISION_TYPE = {
   PICKABLE: "PICKABLE",
 };
 
-export const collisionCheck = (entities, map, newPos) => {
-  const { tiles } = map;
-
-  const mapElement = tiles.find(({x, y}) => newPos.x === x && newPos.y === y);
+export const collisionCheck = (entities, tiles, newPos) => {
+  const mapElement = tiles[newPos.y][newPos.x];
 
   // no tile
   if (!mapElement) {

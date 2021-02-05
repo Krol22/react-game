@@ -99,8 +99,6 @@ export const Level = () => {
     };
   });
 
-  const map = useSelector((state) => state.game.map);
-
   const { showExampleText, text } = useSelector((state) => state.ui);
 
   return (
@@ -127,7 +125,7 @@ export const Level = () => {
       <Wrapper loaded={loaded}>
         <Camera>
           <Player {...mapToIsometric(player)} />
-          <Map map={map.tiles} />
+          <Map />
           <EnemiesContainer enemies={enemies} />
           {crates.map(mapToIsometric).map(props => <Crate {...props} />)}
           {pickables.map(mapToIsometric).map(props => <Pickable {...props} />)}

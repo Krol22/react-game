@@ -75,22 +75,10 @@ export const parseLevel = ({ tiles, entities }) => {
     gameEntities[entity.id] = entity;
   });
 
-  const mapTiles = tiles.map((tile) => {
-    const { x, y } = tile;
-    const entity = Object.values(gameEntities).find(({ x: entityX, y: entityY }) => x === entityX && y === entityY);
-
-    if (entity) {
-      return {
-        ...tile,
-        entityId: entity.id,
-      }
-    }
-
-    return { ...tile };
-  });
+  Object.values(gameEntities).forEach(({ id, x, y }) => tiles[y][x].entityId = id);
 
   return {
-    map: { tiles: mapTiles },
+    map: { tiles },
     entities: gameEntities,
   };
 };

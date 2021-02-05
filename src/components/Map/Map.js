@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { DirtTile } from "./DirtTile";
 
@@ -11,15 +12,15 @@ const mapToComponent = (tile => {
   };
 });
 
-const isMapEqual = (prevMap, newMap) => {
-  // TODO: for now;
-  return true;
-};
+export const Map = () => {
+  const { tiles } = useSelector((state) => state.map);
 
-export const Map = ({ map }) => {
   return (
     <>
-      {map
+      {tiles
+        .flat()
+        .flat()
+        .filter(element => element) 
         .map(mapToIsometric)
         .map(mapToComponent)
         .map(
@@ -29,3 +30,4 @@ export const Map = ({ map }) => {
     </>
   )
 };
+
