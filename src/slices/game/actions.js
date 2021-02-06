@@ -4,22 +4,22 @@ import {
   ENTITY_STATE,
   GAME_ACTION,
   STEP_TIME_MS,
-} from "../../constants";
+} from "~/constants";
 
-import { collisionCheck, COLLISION_TYPE } from "../../helpers/collisionCheck";
-import { weapons } from "../../components/Weapons/Weapons";
-import delay from "../../helpers/asyncDelay";
-import { getDirectionString } from "../../helpers/getDirectionString";
-import { throttledDispatch } from "../../helpers/throttledDispatch";
-import { skeletonBehaviour } from "./skeletonBehaviour";
-import { padActions } from "../game/padActions";
+import { weapons } from "~/components/Weapons/Weapons";
+import delay from "~/helpers/asyncDelay";
+import { collisionCheck, COLLISION_TYPE } from "~/helpers/collisionCheck";
+import { getDirectionString } from "~/helpers/getDirectionString";
+import { throttledDispatch } from "~/helpers/throttledDispatch";
+import { padActions } from "~/slices/game/padActions";
 
 import {
   moveEntityOnMap,
   updateMapState,
   spawnEntity,
   removeEntityFromMap,
-} from "../map/mapSlice";
+} from "~/slices/map/mapSlice";
+import { changeCameraPosition } from "~/slices/camera/cameraSlice";
 
 import {
   changePosition,
@@ -33,9 +33,9 @@ import {
   endTick,
   updateStateAfterEnemyAction,
   pickupItemByPlayer,
-} from "../../gameSlice";
+} from "~/gameSlice";
 
-import { changeCameraPosition } from "../camera/cameraSlice";
+import { skeletonBehaviour } from "./skeletonBehaviour";
 
 const handleEnemyAction = async (dispatch, getState) => {
   const { entities } = getState().game;
