@@ -8,13 +8,13 @@ export const pickables = {
       height: 11,
     },
     node: {
-      offsetX: 12,
+      offsetX: 16,
       offsetY: -4,
     },
     action: {
       name: "CHANGE_ATTRIBUTE",
       change: {
-        health: 2
+        health: 1,
       },
     }
   }

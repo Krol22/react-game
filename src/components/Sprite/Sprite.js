@@ -15,11 +15,13 @@ export const SpriteContainer = styled.div`
     flipV = false,
     width = 0,
     height = 0,
+    frame = 0,
     src,
   }) => `
     left: ${offsetX}px;
     top: ${offsetY}px;
     background: url(${src});
+    background-position: ${frame * width}px 0;
 
     transform: 
       scaleX(${flipV ? "-1": "1"})

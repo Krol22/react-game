@@ -25,10 +25,12 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
     y: y + (direction.y || 0),
   };
 
+  const localEnemy = localEntities[enemy.id];
+
   const { 
     type: collisionType,
     entityId: collidedEntityId,
-  } = collisionCheck(localEntities, { tiles }, newPosition);
+  } = collisionCheck(localEntities, tiles, newPosition);
 
   if (collisionType === COLLISION_TYPE.PLAYER) {
     setTimeout(() => {
@@ -38,7 +40,6 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
       }));
     }, 100);
 
-    const localEnemy = localEntities[enemy.id];
     localEnemy.state = ENTITY_STATE.ATTACK;
     localEnemy.facing = facing;
 
@@ -68,13 +69,11 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
   }
 
   /* move enemy */
-  const currentMapElement = tiles.find(({ entityId: mapEntityId }) => enemy.id === mapEntityId);
+  const currentMapElement = tiles[localEnemy.y][localEnemy.x];
   currentMapElement.entityId = null;
 
-  const newMapElement = tiles.find(({ x, y }) => newPosition.x === x && newPosition.y === y);
+  const newMapElement = tiles[newPosition.y][newPosition.x];
   newMapElement.entityId = enemy.id;
-
-  const localEnemy = localEntities[enemy.id];
 
   localEnemy.facing = facing;
   localEnemy.state = ENTITY_STATE.MOVE;

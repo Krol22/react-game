@@ -1,64 +1,80 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 
-import { Camera } from "./components/Camera/Camera";
-import { Map } from "./components/Map/Map";
-import { Player } from "./components/Player/Player";
-import { Crate } from "./components/Crate/Crate";
-import { EnemiesContainer } from "./components/Enemy/EnemiesContainer";
-import { mapToIsometric } from "./helpers/mapToIsometric";
-import useInputManager from "./hooks/useInputManager";
-import usePlayerInput from "./components/Player/usePlayerInput";
+import { loadLevel } from "./gameSlice";
+import { Level } from "./Level";
 
-import { ENTITY_TYPE } from "./constants";
-import {Pickable} from "./components/Pickables/Pickable";
-import {HealthBar} from "./components/HealthBar";
+import level0 from "./data/newMap1.json";
 
-const Wrapper = styled.div`
+const GameWindowContainer = styled.div`
+  display: flex;
+  height: 1100px;
+  width: 1100px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: black;
   position: relative;
+  transform-origin: top left;
+
+  left: 50%;
+  top: 50%;
+  ${({ scale = 1 }) => `
+    transform:
+      translateX(${-1100 * scale * 0.5}px)
+      translateY(${-1100 * scale * 0.5}px)
+      scale(${scale})
+  `}
 `;
 
-const UI = styled.div`
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  transform: scale(2);
-`;
+const GameWindow = ({ width = 1100, height = 1100, children }) => {
+  const gameWindowRef = useRef(null);
+  const [scale, setScale] = useState(1);
 
-export const Game = () => {
-  useInputManager();
-  usePlayerInput();
+  useEffect(() => {
+    const onResize = () => {
+      const maxWidth = window.innerWidth;
+      const maxHeight = window.innerHeight;
 
-  const { player, map, enemies, crates, pickables } = useSelector((state) => {
-    const player = Object.values(state.game.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-    const enemies = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
-    const crates = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.CRATE);
-    const pickables = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.PICKABLE);
+      let newScale = 1;
+      if (maxWidth > maxHeight) {
+        newScale = maxHeight / height; 
+      } else {
+        newScale = maxWidth / width; 
+      }
 
-    return {
-      player,
-      enemies,
-      crates,
-      pickables,
-      map: state.game.map,
+      setScale(newScale);
     };
-  });
+
+    window.addEventListener("resize", onResize);
+    onResize();
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+
+  }, [gameWindowRef, width, height]);
+
 
   return (
-    <>
-      <UI>
-        <HealthBar x={10} y={10} health={player.attributes.health} />
-      </UI>
-      <Wrapper>
-        <Camera>
-          <Player {...mapToIsometric(player)} />
-          <Map map={map} />
-          <EnemiesContainer enemies={enemies} />
-          {crates.map(mapToIsometric).map(props => <Crate {...props} />)}
-          {pickables.map(mapToIsometric).map(props => <Pickable {...props} />)}
-        </Camera>
-      </Wrapper>
-    </>
+    <GameWindowContainer ref={gameWindowRef} scale={scale}>
+      {children}
+    </GameWindowContainer>
+  );
+};
+
+export const Game = () => {
+  const dispatch = useDispatch();
+  const { loaded, isLoading } = useSelector((state) => state.game);
+
+  useEffect(() => {
+    dispatch(loadLevel(level0));
+  }, [dispatch]);
+
+  return (
+    <GameWindow>
+      {(loaded && !isLoading) && (<Level />)}
+    </GameWindow>
   );
 };

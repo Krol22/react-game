@@ -3,7 +3,7 @@ import gsap from "gsap";
 
 import crateSprite from "../../assets/Crate.png";
 
-import { ENTITY_STATE } from "../../constants";
+import { ENTITY_STATE, TILE_HEIGHT_HALF, TILE_WIDTH_HALF } from "../../constants";
 import { Node } from "../Node/Node";
 import { Sprite } from "../Sprite/Sprite";
 
@@ -33,11 +33,11 @@ export function Crate({ x, y, zIndex, state, visible }) {
       <Sprite
         src={crateSprite}
         id="sprite"
-        width={19}
-        height={18}
+        width={17}
+        height={15}
         node={{
-          y: -8,
-          x: 6,
+          y: TILE_HEIGHT_HALF / 2 - 8,
+          x: TILE_WIDTH_HALF / 2 + 1,
         }}
       />
     </Node>

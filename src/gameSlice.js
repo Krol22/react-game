@@ -1,15 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { ENTITY_TYPE, ENTITY_STATE } from "./constants";
 
-import level from "./data/level0.js";
 import { pickables } from "./components/Pickables/Pickables";
+import { parseLevel } from "./helpers/parseLevel";
 
 const initialState = {
   tick: false,
-  map: level.map,
-  entities: level.entities,
+  isLoading: false,
+  loaded: false,
+  entities: {},
+  camera: {
+    x: 0,
+    y: 0,
+  },
 };
+
+export const loadLevel = createAsyncThunk(
+  "game/loadLevel",
+  (level) => {
+    const gameLevel = parseLevel(level);
+
+    return gameLevel;
+  },
+);
 
 const gameSlice = createSlice({
   initialState,
@@ -26,6 +40,11 @@ const gameSlice = createSlice({
 
       entity.state = ENTITY_STATE.IDLE;
     },
+    idlePlayer: (state) => {
+      const player = Object.values(state.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+
+      player.state = ENTITY_STATE.IDLE;
+    },
     changePosition: (state, { payload }) => {
       // I could add playerId in a state
       const player = Object.values(state.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
@@ -38,19 +57,6 @@ const gameSlice = createSlice({
       const entity = state.entities[entityId];
 
       entity.moveDir = moveDir;
-    },
-    moveEntityOnMap: (state, { payload }) => {
-      const { newPosition, entityId, size = 1 } = payload;
-      const { tiles } = state.map;
-
-      if (size === 1) {
-        const currentMapElement = tiles.find(({ entityId: mapEntityId }) => entityId === mapEntityId);
-        delete currentMapElement.entityId;
-
-        const newMapElement = tiles.find(({ x, y }) => newPosition.x === x && newPosition.y === y);
-        newMapElement.entityId = entityId;
-        return;
-      }
     },
     damageEntity: (state, { payload }) => {
       const { damage, entityId } = payload;
@@ -65,32 +71,12 @@ const gameSlice = createSlice({
         return;
       }
 
-      // remove entity from map
-      const mapTile = state.map.tiles.find(({ entityId }) => entityId === entity.id);
-      mapTile.entityId = null;
-      
       entity.state = ENTITY_STATE.DEAD;
       entity.active = false;
     },
-    changeEnemiesPositions: (state, { payload }) => {
-      payload.forEach(({ id, position }) => {
-        const { tiles } = state.map;
-
-        const currentMapElement = tiles.find(({ entityId: mapEntityId }) => id === mapEntityId);
-        currentMapElement.entityId = null;
-
-        const newMapElement = tiles.find(({ x, y }) => position.x === x && position.y === y);
-        newMapElement.entityId = id;
-
-        const enemy = state.entities[id];
-        enemy.x = position.x;
-        enemy.y = position.y;
-      }); 
-    },
     updateStateAfterEnemyAction: (state, { payload }) => {
-      const { tiles, localEntities } = payload;
+      const { localEntities } = payload;
 
-      state.map.tiles = [...tiles];
       state.entities = {...localEntities};
     },
     idleEnemies: (state) => {
@@ -102,26 +88,12 @@ const gameSlice = createSlice({
         enemy.state = ENTITY_STATE.IDLE;
       });
     },
-    updateEnemiesPositions: (state, { payload }) => {
-      payload.forEach(({ id, x, y }) => {
-        const enemy = state.entities[id];
-
-        enemy.x = x;
-        enemy.y = y;
-      });
-    },
     hideEntity: (state, { payload }) => {
       const entity = state.entities[payload];
       entity.visible = false;
     },
-    spawnItemFromCrate: (state, { payload }) => {
-      const { item, crate } = payload;
-      const { tiles } = state.map;
-
-      state.entities[item.id] = item;
-
-      const currentMapElement = tiles.find(({ entityId }) => entityId === crate.id);
-      currentMapElement.entityId = item.id;
+    addNewEntity: (state, { payload }) => {
+      state.entities[payload.id] = payload;
     },
     pickupItemByPlayer: (state, { payload }) => {
       const { itemId, playerId } = payload;
@@ -157,7 +129,21 @@ const gameSlice = createSlice({
     },
     endTick: (state) => {
       state.tick = false;
-    }
+    },
+  },
+  extraReducers: {
+    [loadLevel.pending]: (state) => {
+      state.isLoading = true;
+      state.loaded = false;
+    },
+    [loadLevel.fulfilled]: (state, { payload }) => {
+      const { entities } = payload;
+
+      state.entities = {...entities};
+
+      state.isLoading = false;
+      state.loaded = true;
+    },
   },
 });
 
@@ -166,16 +152,14 @@ export const {
   changePosition,
   changeState,
   changeFacing,
-  moveEntityOnMap,
-  changeEnemiesPositions,
   damageEntity,
   updateStateAfterEnemyAction,
-  updateEnemiesPositions,
   idleEnemies,
+  idlePlayer,
   hideEntity,
   startTick,
   endTick,
-  spawnItemFromCrate,
+  addNewEntity,
   pickupItemByPlayer,
 } = gameSlice.actions;
 

@@ -1,39 +1,34 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import { DirtTile } from "./DirtTile";
-import { WallTile } from "./WallTile";
 
 import { mapToIsometric } from "../../helpers/mapToIsometric";
 
 const mapToComponent = (tile => {
-  const { type } = tile;
-
-  let component;
-  switch(type) {
-    case 0: 
-      component = DirtTile;
-      break;
-    case 1:
-      component = WallTile;
-      break;
-    default:
-      component = DirtTile;
-  }
-
   return {
     ...tile,
-    Component: component,
+    zIndex: tile.zIndex - 1,
+    Component: DirtTile,
   };
-}) 
+});
 
-export const Map = ({ map }) => {
-  const { tiles } = map;
+export const Map = () => {
+  const { tiles } = useSelector((state) => state.map);
 
   return (
     <>
-      {tiles.map(mapToIsometric).map(mapToComponent).map(({ Component, ...rest }) => (
-        <Component {...rest} />
-      ))}
+      {tiles
+        .flat()
+        .flat()
+        .filter(element => element) 
+        .map(mapToIsometric)
+        .map(mapToComponent)
+        .map(
+          ({ Component, ...rest }) => (
+            <Component {...rest} />
+          ))}
     </>
   )
 };
+
