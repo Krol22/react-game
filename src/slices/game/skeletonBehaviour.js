@@ -32,8 +32,6 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
     entityId: collidedEntityId,
   } = collisionCheck(localEntities, tiles, newPosition);
 
-  console.log(tiles);
-
   if (collisionType === COLLISION_TYPE.PLAYER) {
     setTimeout(() => {
       dispatch(changeState({
@@ -74,12 +72,8 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
   const currentMapElement = tiles[localEnemy.y][localEnemy.x];
   currentMapElement.entityId = null;
 
-  console.log(currentMapElement);
-
   const newMapElement = tiles[newPosition.y][newPosition.x];
   newMapElement.entityId = enemy.id;
-
-  console.log(newMapElement);
 
   localEnemy.facing = facing;
   localEnemy.state = ENTITY_STATE.MOVE;

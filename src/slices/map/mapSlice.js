@@ -16,13 +16,19 @@ const mapSlice = createSlice({
       tiles[newPosition.y][newPosition.x].entityId = entityId;
     },
     removeEntityFromMap: (state, { payload }) => {
-      const { position } = payload;
+      const { x, y } = payload;
       const { tiles } = state;
 
-      tiles[position.y][position.x].entityId = null;
+      tiles[y][x].entityId = null;
     },
     updateMapState: (state, { payload }) => {
       state.tiles = payload;
+    },
+    spawnEntity: (state, { payload }) => {
+      const { tiles } = state;
+      const { position, entityId } = payload;
+
+      tiles[position.y][position.x].entityId = entityId;
     },
   },
   extraReducers: {
@@ -38,6 +44,7 @@ export const {
   updateMapState,
   moveEntityOnMap,
   removeEntityFromMap,
+  spawnEntity,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

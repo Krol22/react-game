@@ -67,6 +67,26 @@ export const parseLevel = ({ tiles, entities }) => {
         };
         break;
       }
+      case "imp": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "IMP",
+          entityType: ENTITY_TYPE.ENEMY,
+          active: true,
+          state: ENTITY_STATE.IDLE,
+          currentStep: 0,
+          visible: true,
+          attributes: {
+            health: {
+              current: 1,
+              min: 0,
+              max: 1,
+            },
+          },
+        };
+        break;
+      }
     };
 
     idCounter++;

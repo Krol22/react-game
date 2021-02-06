@@ -8,6 +8,7 @@ import { mapToIsometric } from "../../helpers/mapToIsometric";
 const mapToComponent = (tile => {
   return {
     ...tile,
+    zIndex: tile.zIndex - 1,
     Component: DirtTile,
   };
 });

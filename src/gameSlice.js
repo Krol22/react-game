@@ -58,29 +58,6 @@ const gameSlice = createSlice({
 
       entity.moveDir = moveDir;
     },
-    changeFog: (state, { payload }) => {
-      const lightPosition = payload;
-
-      const { tiles } = state.map;
-
-      tiles.map(tile => tile.fogged = true);
-
-      for(let xOffset = -3; xOffset < 4; xOffset++) {
-        for(let yOffset = -3; yOffset < 4; yOffset++) {
-          if (Math.abs(xOffset) + Math.abs(yOffset) >= 4) {
-            continue;
-          } 
-
-          const tile = tiles.find(({ x, y }) => lightPosition.x + xOffset === x && lightPosition.y + yOffset === y);
-
-          if (!tile) {
-            continue;
-          }
-
-          tile.fogged = false;
-        }
-      }
-    },
     damageEntity: (state, { payload }) => {
       const { damage, entityId } = payload;
 
@@ -94,27 +71,8 @@ const gameSlice = createSlice({
         return;
       }
 
-      // remove entity from map
-      // const mapTile = state.map.tiles.find(({ entityId }) => entityId === entity.id);
-      // mapTile.entityId = null;
-      //
-      // entity.state = ENTITY_STATE.DEAD;
-      // entity.active = false;
-    },
-    changeEnemiesPositions: (state, { payload }) => {
-      payload.forEach(({ id, position }) => {
-        const { tiles } = state.map;
-
-        const currentMapElement = tiles.find(({ entityId: mapEntityId }) => id === mapEntityId);
-        currentMapElement.entityId = null;
-
-        const newMapElement = tiles.find(({ x, y }) => position.x === x && position.y === y);
-        newMapElement.entityId = id;
-
-        const enemy = state.entities[id];
-        enemy.x = position.x;
-        enemy.y = position.y;
-      }); 
+      entity.state = ENTITY_STATE.DEAD;
+      entity.active = false;
     },
     updateStateAfterEnemyAction: (state, { payload }) => {
       const { localEntities } = payload;
@@ -130,26 +88,12 @@ const gameSlice = createSlice({
         enemy.state = ENTITY_STATE.IDLE;
       });
     },
-    updateEnemiesPositions: (state, { payload }) => {
-      payload.forEach(({ id, x, y }) => {
-        const enemy = state.entities[id];
-
-        enemy.x = x;
-        enemy.y = y;
-      });
-    },
     hideEntity: (state, { payload }) => {
       const entity = state.entities[payload];
       entity.visible = false;
     },
-    spawnItemFromCrate: (state, { payload }) => {
-      const { item, crate } = payload;
-      const { tiles } = state.map;
-
-      state.entities[item.id] = item;
-
-      const currentMapElement = tiles.find(({ entityId }) => entityId === crate.id);
-      currentMapElement.entityId = item.id;
+    addNewEntity: (state, { payload }) => {
+      state.entities[payload.id] = payload;
     },
     pickupItemByPlayer: (state, { payload }) => {
       const { itemId, playerId } = payload;
@@ -208,7 +152,6 @@ export const {
   changePosition,
   changeState,
   changeFacing,
-  changeFog,
   damageEntity,
   updateStateAfterEnemyAction,
   idleEnemies,
@@ -216,7 +159,7 @@ export const {
   hideEntity,
   startTick,
   endTick,
-  spawnItemFromCrate,
+  addNewEntity,
   pickupItemByPlayer,
 } = gameSlice.actions;
 
