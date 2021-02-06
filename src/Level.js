@@ -17,8 +17,7 @@ import { ENTITY_TYPE } from "./constants";
 import {Pickable} from "./components/Pickables/Pickable";
 
 const Wrapper = styled.div`
-  position: relative;
-
+  position: absolute;
   opacity: .4;
 
   ${({ loaded }) => loaded && 'opacity: 1'};
@@ -28,7 +27,6 @@ const Wrapper = styled.div`
 `;
 
 const UI = styled.div`
-  position: fixed;
   width: 100%;
   height: 100%;
   color: white;
