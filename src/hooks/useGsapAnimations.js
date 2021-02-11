@@ -23,6 +23,8 @@ const useGsapAnimations = (nodeRef, animations = []) => {
     }
 
     setTimeline(newTimeline);
+
+    return newTimeline;
   }, [animations, timeline, nodeRef]);
 
   return { playAnimation };

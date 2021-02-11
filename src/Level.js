@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 
 import { Camera } from "./components/Camera/Camera";
 import { Map } from "./components/Map/Map";
-import { Player } from "./components/Player/Player";
+import { PlayerContainer } from "./components/Player/Player";
 import { Crate } from "./components/Crate/Crate";
 import { EnemiesContainer } from "./components/Enemy/EnemiesContainer";
 import { PlayerHealthBar } from "./components/UI/PlayerHealthBar.js/PlayerHealthBar";
@@ -86,29 +87,13 @@ const getVisibleTiles = (tiles, lightSources = {}) => {
   return visibleTiles;
 };
 
-export const Level = () => {
-  const dispatch = useDispatch();
-
-  useInputManager();
-  usePlayerInput();
-
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 500);
-
-    setTimeout(() => {
-      dispatch(idlePlayer());
-    }, 1000);
-  }, []);
-
-  const { player, enemies, crates, pickables } = useSelector((state) => {
-    const { tiles, lightSources } = state.map;
+const selectGameEntities = createSelector(
+  state => ({ game: state.game, map: state.map }),
+  ({ game, map }) => {
+    const { tiles, lightSources } = map;
 
     const visibleTiles = getVisibleTiles(tiles, lightSources);
-    const visibleEntities = Object.values(state.game.entities).map((entity) => { 
+    const visibleEntities = Object.values(game.entities).map((entity) => { 
       const { x, y } = entity;
 
       if (visibleTiles[`${x}-${y}`]) {
@@ -131,7 +116,28 @@ export const Level = () => {
       crates,
       pickables,
     };
-  });
+  },
+);
+
+export const Level = () => {
+  const dispatch = useDispatch();
+
+  useInputManager();
+  usePlayerInput();
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaded(true);
+    }, 500);
+
+    setTimeout(() => {
+      dispatch(idlePlayer());
+    }, 1000);
+  }, []);
+
+  const { player, enemies, crates, pickables } = useSelector(selectGameEntities, shallowEqual);
 
   const { showExampleText, text } = useSelector((state) => state.ui);
 
@@ -158,7 +164,7 @@ export const Level = () => {
       </UI>
       <Wrapper loaded={loaded}>
         <Camera>
-          <Player {...mapToIsometric(player)} />
+          <PlayerContainer {...mapToIsometric(player)} />
           <Map />
           <EnemiesContainer enemies={enemies} />
           {crates.map(mapToIsometric).map(props => <Crate {...props} />)}

@@ -32,6 +32,7 @@ import {
   hideEntity,
   startTick,
   endTick,
+  updateEntity,
   updateStateAfterEnemyAction,
   pickupItemByPlayer,
 } from "~/gameSlice";
@@ -217,10 +218,14 @@ const movePlayer = (dispatch, player, newPosition) => {
     y: newPosition.y,
   }));
 
-  dispatch(changeState({
+  dispatch(updateEntity({
     entityId: player.id,
-    newState: ENTITY_STATE.MOVE,
+    state: ENTITY_STATE.MOVE,
+    x: newPosition.x,
+    y: newPosition.y,
   }));
+
+  dispatch(changeCameraPosition(newPosition));
 
   throttledDispatch(
     400, 
@@ -230,11 +235,6 @@ const movePlayer = (dispatch, player, newPosition) => {
     }),
   );
 
-  throttledDispatch(
-    10, 
-    changePosition(newPosition), 
-    changeCameraPosition(newPosition),
-  );
 };
 
 const handlePlayerMove = async (dispatch, state, player, action) => {
@@ -248,7 +248,6 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
   };
 
   const moveDir = getDirectionString(direction);
-
   dispatch(changeFacing({
     moveDir,
     entityId: player.id,

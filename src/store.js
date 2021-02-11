@@ -19,7 +19,10 @@ const createReducer = (injectedReducers = {}) => {
 };
 
 const getMiddleware = () => {
-  let middleware = [...getDefaultMiddleware()];
+  // removing all the immutable check middlewars for better performance,
+  let middleware = [getDefaultMiddleware()[1]];
+
+  console.log(middleware);
 
   if (process.env.NODE_ENV !== "production") {
     middleware = [...middleware];

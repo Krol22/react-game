@@ -145,36 +145,35 @@ export const moveAnimation = (nodeRef, direction) => {
 
   switch (direction) {
     case "TOP":
-      xSign = "-"; 
-      ySign = "+";
+      xSign = "+"; 
+      ySign = "-";
       ease = "back.out(4)";
       break;
     case "LEFT":
-      xSign = "-"; 
-      ySign = "+";
+      xSign = "+"; 
+      ySign = "-";
       ease = "back.out(4)";
       break;
     case "RIGHT":
-      xSign = "-"; 
-      ySign = "-";
+      xSign = "+"; 
+      ySign = "+";
       ease = "power2.in";
       break;
     case "BOTTOM":
-      xSign = "-"; 
-      ySign = "-";
+      xSign = "+"; 
+      ySign = "+";
       ease = "power3.in";
       break;
   }
 
-  timeline.to([...elements, shadowSprite], { x: `${xSign}=${TILE_WIDTH_HALF}`, y: `${ySign}=${TILE_HEIGHT_HALF}`, duration: 0.0001 });
 
   timeline
-    .to(elements, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-    .to(elements, { y: `=0`, duration: .4 * SPEED, ease }, 0 * SPEED);
+    .to(elements, { x: `${xSign}=${TILE_WIDTH_HALF}`,duration: .4 * SPEED }, 0 * SPEED)
+    .to(elements, { y: `${ySign}=${TILE_HEIGHT_HALF}`, duration: .4 * SPEED, ease }, 0 * SPEED);
 
   timeline
-    .to(shadowSprite, { x: `=0`, duration: .4 * SPEED }, 0 * SPEED)
-    .to(shadowSprite, { y: `=0`, duration: .4 * SPEED }, 0 * SPEED);
+    .to([shadowSprite], { x: `${xSign}=${TILE_WIDTH_HALF}`,duration: .4 * SPEED }, 0 * SPEED)
+    .to([shadowSprite], { y: `${ySign}=${TILE_HEIGHT_HALF}`, duration: .4 * SPEED}, 0 * SPEED);
 
   return timeline;
 };

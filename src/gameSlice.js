@@ -40,6 +40,14 @@ const gameSlice = createSlice({
 
       entity.state = ENTITY_STATE.IDLE;
     },
+    updateEntity: (state, { payload }) => {
+      const { entityId, ...rest } = payload;
+
+      state.entities[entityId] = {
+        ...state.entities[entityId],
+        ...rest,
+      };
+    },
     idlePlayer: (state) => {
       const player = Object.values(state.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
 
@@ -153,6 +161,7 @@ export const {
   changeState,
   changeFacing,
   damageEntity,
+  updateEntity,
   updateStateAfterEnemyAction,
   idleEnemies,
   idlePlayer,

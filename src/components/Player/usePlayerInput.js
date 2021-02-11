@@ -15,8 +15,13 @@ const usePlayerInput = () => {
   const dispatch = useDispatch();
 
   const keys = useSelector((state) => state.input.keys);
+  const tick = useSelector((state) => state.game.tick);
 
   useEffect(() => {
+    if (tick) {
+      return;
+    }
+
     if (keys[ARROW_LEFT].isDown !== keys[ARROW_LEFT].isPressed) {
       dispatch(step({
         name: GAME_ACTION.PLAYER_MOVE,
@@ -54,7 +59,7 @@ const usePlayerInput = () => {
         name: GAME_ACTION.PLAYER_SKIP,
       }));
     }
-  }, [keys, dispatch]);
+  }, [keys, dispatch, tick]);
 };
 
 export default usePlayerInput;

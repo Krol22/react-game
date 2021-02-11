@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
@@ -103,7 +103,7 @@ export const Game = () => {
 
   return (
     <GameWindow width="1200" height="800">
-      {(loaded && !isLoading) && (<Level />)}
+      {(loaded && !isLoading) && <><Level /></>}
     </GameWindow>
   );
 };
