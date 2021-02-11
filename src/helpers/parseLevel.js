@@ -40,6 +40,8 @@ export const parseLevel = ({ tiles, entities }) => {
           entityType: ENTITY_TYPE.CRATE,
           active: true,
           visible: true,
+          discovered: false,
+          fogged: true,
           item: {
             id: 999,
             name: "healthPotion",
@@ -57,6 +59,8 @@ export const parseLevel = ({ tiles, entities }) => {
           state: ENTITY_STATE.IDLE,
           currentStep: 0,
           visible: true,
+          discovered: false,
+          fogged: true,
           attributes: {
             health: {
               current: 2,
@@ -77,6 +81,8 @@ export const parseLevel = ({ tiles, entities }) => {
           state: ENTITY_STATE.IDLE,
           currentStep: 0,
           visible: true,
+          discovered: false,
+          fogged: true,
           attributes: {
             health: {
               current: 1,
@@ -97,8 +103,14 @@ export const parseLevel = ({ tiles, entities }) => {
 
   Object.values(gameEntities).forEach(({ id, x, y }) => tiles[y][x].entityId = id);
 
+  const mappedTiles = tiles.map(row => {
+    return row.map(element => element && ({ ...element, discovered: false, fogged: true }));
+  });
+
   return {
-    map: { tiles },
+    map: {
+      tiles: mappedTiles,
+    },
     entities: gameEntities,
   };
 };

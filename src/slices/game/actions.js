@@ -18,6 +18,7 @@ import {
   updateMapState,
   spawnEntity,
   removeEntityFromMap,
+  moveLightSource,
 } from "~/slices/map/mapSlice";
 import { changeCameraPosition } from "~/slices/camera/cameraSlice";
 
@@ -208,6 +209,12 @@ const movePlayer = (dispatch, player, newPosition) => {
       y: player.y,
     },
     entityId: player.id,
+  }));
+
+  dispatch(moveLightSource({
+    id: 0,
+    x: newPosition.x,
+    y: newPosition.y,
   }));
 
   dispatch(changeState({

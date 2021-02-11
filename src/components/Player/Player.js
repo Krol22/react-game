@@ -33,7 +33,7 @@ const weapons = {
 };
 
 
-export function Player({ x, y, weapon, state, moveDir, zIndex }) {
+export const Player = React.memo(({ x, y, weapon, state, moveDir, zIndex }) => {
   const nodeRef = useRef(null);
 
   const { node } = weapons[weapon];
@@ -91,7 +91,7 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
       <Weapon name={weapon} node={{...node}} />
     </Node>
   );
-};
+});
 
 Player.propTypes = {
   x: PropTypes.number.isRequired,

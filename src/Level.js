@@ -65,6 +65,27 @@ const GoldContainer = styled.div`
   font-size: 30px;
 `;
 
+const getVisibleTiles = (tiles, lightSources = {}) => {
+  const visibleTiles = {};
+
+  Object.values(lightSources).forEach(({ x, y, fov }) => {
+    for (let i = -fov; i <= fov; i++) {
+      for (let j = -fov; j <= fov; j++) {
+        const newX = x + j;
+        const newY = y + i;
+
+        if (newX < 0 || newY < 0) {
+          continue;
+        }
+        
+        visibleTiles[`${x + j}-${y + i}`] = 1;
+      }
+    }
+  });
+
+  return visibleTiles;
+};
+
 export const Level = () => {
   const dispatch = useDispatch();
 
@@ -84,10 +105,25 @@ export const Level = () => {
   }, []);
 
   const { player, enemies, crates, pickables } = useSelector((state) => {
-    const player = Object.values(state.game.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-    const enemies = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
-    const crates = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.CRATE);
-    const pickables = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.PICKABLE);
+    const { tiles, lightSources } = state.map;
+
+    const visibleTiles = getVisibleTiles(tiles, lightSources);
+    const visibleEntities = Object.values(state.game.entities).map((entity) => { 
+      const { x, y } = entity;
+
+      if (visibleTiles[`${x}-${y}`]) {
+        return {
+          ...entity,
+          fogged: false,
+        };
+      }
+      return entity;
+    });
+
+    const player = visibleEntities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+    const enemies = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
+    const crates = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.CRATE);
+    const pickables = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.PICKABLE);
 
     return {
       player,

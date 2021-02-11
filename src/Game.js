@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -9,8 +10,6 @@ import level0 from "./data/newMap1.json";
 
 const GameWindowContainer = styled.div`
   display: flex;
-  height: 1100px;
-  width: 1100px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -20,16 +19,41 @@ const GameWindowContainer = styled.div`
 
   left: 50%;
   top: 50%;
-  ${({ scale = 1 }) => `
+  ${({ scale = 1, width, height }) => `
+    height: ${height}px;
+    width: ${width}px;
     transform:
-      translateX(${-1100 * scale * 0.5}px)
-      translateY(${-1100 * scale * 0.5}px)
-      scale(${scale})
+      translateX(${-width * scale * 0.5}px)
+      translateY(${-height * scale * 0.5}px)
+      scale(${scale});
   `}
+
+   &::before {
+    content: " ";
+    display: block;
+    width: 100%;
+    height: calc(100% - 4px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%,
+        rgba(0, 0, 0, 0.25) 50%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.06),
+        rgba(0, 255, 0, 0.02),
+        rgba(0, 0, 255, 0.06)
+      );
+    z-index: 2000000;
+    background-size: 100% 0.4rem, 4px 100%;
+    opacity: 0.2;
+    pointer-events: none;
+  }
 `;
 
-const GameWindow = ({ width = 1100, height = 1100, children }) => {
-  const gameWindowRef = useRef(null);
+const GameWindow = ({ width = 1200, height = 800, children }) => {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -54,14 +78,19 @@ const GameWindow = ({ width = 1100, height = 1100, children }) => {
       window.removeEventListener("resize", onResize);
     };
 
-  }, [gameWindowRef, width, height]);
+  }, [width, height]);
 
 
   return (
-    <GameWindowContainer ref={gameWindowRef} scale={scale}>
+    <GameWindowContainer scale={scale} width={width} height={height}>
       {children}
     </GameWindowContainer>
   );
+};
+
+GameWindow.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 };
 
 export const Game = () => {
@@ -73,7 +102,7 @@ export const Game = () => {
   }, [dispatch]);
 
   return (
-    <GameWindow>
+    <GameWindow width="1200" height="800">
       {(loaded && !isLoading) && (<Level />)}
     </GameWindow>
   );

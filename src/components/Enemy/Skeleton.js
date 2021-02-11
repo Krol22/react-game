@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import PropTypes from "prop-types";
 import gsap from "gsap";
 
@@ -21,7 +22,20 @@ const scaleEnemy = (nodeRef, scale) => {
   gsap.set(elements, { scaleX: scale });
 };
 
-export function Skeleton({ x, y, zIndex, attributes, state, facing }) {
+const Enemy = styled(Node)`
+  transition: opacity .2s steps(4) .2s;
+  opacity: 1;
+  ${({fogged}) => fogged && `opacity: 0;`}
+`;
+
+export const Skeleton = React.memo(({
+  x, y,
+  zIndex,
+  attributes,
+  state,
+  facing,
+  fogged,
+}) => {
   const nodeRef = useRef(null);
 
   const [ bodySpriteOffsetY, setBodySpriteOffsetY ] = useState(0);
@@ -61,7 +75,7 @@ export function Skeleton({ x, y, zIndex, attributes, state, facing }) {
   }, [nodeRef, facing]);
 
   return (
-    <Node x={x + 11} y={y - 10} width={16} height={5} zIndex={zIndex} ref={nodeRef}>
+    <Enemy x={x + 11} y={y - 10} width={16} height={5} zIndex={zIndex} ref={nodeRef} fogged={fogged}>
       <Sprite
         id="shadow-sprite"
         src={smallShadowSprite}
@@ -90,9 +104,9 @@ export function Skeleton({ x, y, zIndex, attributes, state, facing }) {
           }}
         />
       )}
-    </Node>
+    </Enemy>
   )
-};
+});
 
 Skeleton.propTypes = {
   x: PropTypes.number.isRequired,
