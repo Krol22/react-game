@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import PropTypes from "prop-types";
 import gsap from "gsap";
 
@@ -12,7 +13,13 @@ import { ENTITY_STATE } from "../../constants";
 
 import enemyAnimations, { hitAnimation } from "./Enemy.animations";
 
-export function Imp({ x, y, zIndex, state, facing }) {
+const Enemy = styled(Node)`
+  transition: opacity .2s steps(4) .2s;
+  opacity: 1;
+  ${({fogged}) => fogged && `opacity: 0;`}
+`;
+
+export const Imp = React.memo(({ x, y, zIndex, state, facing, fogged }) => {
   const nodeRef = useRef(null);
 
   const [ bodySpriteOffsetY, setBodySpriteOffsetY ] = useState(0);
@@ -48,13 +55,14 @@ export function Imp({ x, y, zIndex, state, facing }) {
   }, [nodeRef, facing]);
 
   return (
-    <Node
+    <Enemy
       x={x + 7} 
       y={y - 10}
       zIndex={zIndex}
       ref={nodeRef}
       width={16}
       height={5}
+      fogged={fogged}
     >
       <Sprite
         id="shadow-sprite"
@@ -74,9 +82,9 @@ export function Imp({ x, y, zIndex, state, facing }) {
           y: bodySpriteOffsetY,
         }}
       />
-    </Node>
+    </Enemy>
   )
-};
+});
 
 Imp.propTypes = {
   x: PropTypes.number.isRequired,

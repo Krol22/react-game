@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import gsap from "gsap";
 
@@ -32,15 +32,45 @@ const weapons = {
   },
 };
 
+export const PlayerContainer = React.memo(({ state, x, y, ...rest }) => {
+  const [currentPosition, setCurrentPosition] = useState({x, y});
 
-export function Player({ x, y, weapon, state, moveDir, zIndex }) {
+  return (
+    <Player
+      x={currentPosition.x}
+      y={currentPosition.y}
+      newX={x}
+      newY={y}
+      state={state}
+      changePosition={setCurrentPosition} 
+      {...rest}
+    />
+  );
+});
+
+
+export const Player = React.memo(({
+  x,
+  y,
+  weapon,
+  state,
+  moveDir,
+  zIndex,
+  newX,
+  newY,
+  changePosition,
+}) => {
   const nodeRef = useRef(null);
 
   const { node } = weapons[weapon];
-
   const { playAnimation } = useGsapAnimations(nodeRef, playerAnimations);
 
   useEffect(() => {
+    if (moveDir === "TOP") { gsap.set(nodeRef.current, { scaleX: 1 }) }
+    if (moveDir === "BOTTOM") { gsap.set(nodeRef.current, { scaleX: -1 }) }
+    if (moveDir === "LEFT") { gsap.set(nodeRef.current, { scaleX: -1 }) }
+    if (moveDir === "RIGHT") { gsap.set(nodeRef.current, { scaleX: 1 }) }
+
     if (state === ENTITY_STATE.IDLE) {
       playAnimation("idle");
     } else if (state === ENTITY_STATE.ATTACK) {
@@ -53,16 +83,13 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
       hitAnimation(nodeRef);
     }
 
-    return () => {};
+    return () => {
+      if (state === ENTITY_STATE.MOVE) {
+        changePosition({ x: newX, y: newY });
+      }
+    };
 
-  }, [nodeRef, state, weapon, moveDir]);
-
-  useEffect(() => {
-    if (moveDir === "TOP") { gsap.set(nodeRef.current, { scaleX: 1 }) }
-    if (moveDir === "BOTTOM") { gsap.set(nodeRef.current, { scaleX: -1 }) }
-    if (moveDir === "LEFT") { gsap.set(nodeRef.current, { scaleX: -1 }) }
-    if (moveDir === "RIGHT") { gsap.set(nodeRef.current, { scaleX: 1 }) }
-  }, [nodeRef, moveDir]);
+  }, [nodeRef, state, weapon, moveDir, newX, newY]);
 
   return (
     <Node
@@ -91,7 +118,7 @@ export function Player({ x, y, weapon, state, moveDir, zIndex }) {
       <Weapon name={weapon} node={{...node}} />
     </Node>
   );
-};
+});
 
 Player.propTypes = {
   x: PropTypes.number.isRequired,

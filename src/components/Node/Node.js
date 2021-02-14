@@ -1,35 +1,38 @@
-import styled, { css } from "styled-components";
+import React from "react";
 
-export const Node = styled.div`
-  box-sizing: content-box;
-
-  ${({
-    x = 0,
-    y = 0,
-    rotation = 0,
-    scaleX = 1,
-    scaleY = 1,
-    debug = false,
-    local = false,
-    width = 0,
-    height = 0,
-    anchorPoint,
-    zIndex,
-    visible = true,
-  }) => css`
-    position: ${local ? 'relative' : 'absolute'};
-    top: ${y}px;
-    left: ${x}px;
-    transform:
-      rotate(${rotation}deg)
-      scale(${scaleX}, ${scaleY});
-    transform-origin: center;
-    width: ${width}px;
-    height: ${height}px;
-    display: ${visible ? `inline-block` :`none`};
-
-    ${zIndex && `z-index: ${zIndex};`}
-    ${debug && `background-color: red;`}
-    ${anchorPoint && `transform-origin: ${anchorPoint};`}
-  `}
-`;
+export const Node = React.forwardRef(({
+  x = 0,
+  y = 0,
+  rotation = 0,
+  scaleX = 1,
+  scaleY = 1,
+  local = false,
+  width = 0,
+  height = 0,
+  anchorPoint,
+  zIndex,
+  visible = true,
+  children,
+  ...rest
+}, ref) => {
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: local ? 'relative' : 'absolute',
+        top: y,
+        left: x,
+        transform:`rotate(${rotation}deg) scale(${scaleX}, ${scaleY})`,
+        width: width,
+        height: height,
+        display: visible ? `inline-block` :`none`,
+        zIndex: zIndex ? `${zIndex}` : 'unset',
+        boxSizing: 'content-box',
+        transformOrigin: anchorPoint ? `${anchorPoint}` : 'center',
+      }}
+      {...rest}
+    >
+      {children}
+    </div>
+  ) 
+});

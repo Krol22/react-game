@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 import gsap from "gsap";
 
 import crateSprite from "../../assets/Crate.png";
@@ -13,7 +14,13 @@ const hitAnimation = (nodeRef) => {
   gsap.to(sprite, { filter: "grayscale(1) invert(1) brightness(100)", duration: .1 });
 };
 
-export function Crate({ x, y, zIndex, state, visible }) {
+const CrateContainer = styled(Node)`
+  transition: opacity .2s steps(4) .2s;
+  opacity: 1;
+  ${({fogged}) => fogged && `opacity: 0;`}
+`;
+
+export const Crate = React.memo(({ x, y, zIndex, state, visible, fogged }) => {
   const nodeRef = useRef(null);
 
   useEffect(() => {
@@ -23,12 +30,13 @@ export function Crate({ x, y, zIndex, state, visible }) {
   }, [nodeRef, state]);
 
   return (
-    <Node
+    <CrateContainer
       x={x}
       y={y}
       zIndex={zIndex}
       ref={nodeRef}
       visible={visible}
+      fogged={fogged}
     >
       <Sprite
         src={crateSprite}
@@ -36,10 +44,10 @@ export function Crate({ x, y, zIndex, state, visible }) {
         width={17}
         height={15}
         node={{
-          y: TILE_HEIGHT_HALF / 2 - 8,
-          x: TILE_WIDTH_HALF / 2 + 1,
+          y: TILE_HEIGHT_HALF / 2 - 9,
+          x: TILE_WIDTH_HALF / 2 + 2,
         }}
       />
-    </Node>
+    </CrateContainer>
   )
-};
+});

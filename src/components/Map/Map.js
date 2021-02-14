@@ -25,8 +25,8 @@ export const Map = () => {
         .map(mapToIsometric)
         .map(mapToComponent)
         .map(
-          ({ Component, ...rest }) => (
-            <Component {...rest} />
+          ({ Component, x, y, zIndex, offset, discovered, fogged }) => (
+            <Component x={x} y={y} zIndex={zIndex} discovered={discovered} fogged={fogged} offset={offset} />
           ))}
     </>
   )

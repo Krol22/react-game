@@ -15,6 +15,7 @@ export const ENTITY_TYPE = {
   ENEMY: "ENEMY", 
   CRATE: "CRATE",
   PICKABLE: "PICKABLE",
+  SPIKE: "SPIKE",
 };
 
 export const ENTITY_STATE = {
@@ -26,6 +27,8 @@ export const ENTITY_STATE = {
   DEAD: "DEAD",
   PICK: "PICK",
   SPAWN: "SPAWN",
+  SHOW: "SHOW",
+  HIDE: "HIDE",
 };
 
 export const GAME_ACTION = {

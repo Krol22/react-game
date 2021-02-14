@@ -4,22 +4,23 @@ import {
   ENTITY_STATE,
   GAME_ACTION,
   STEP_TIME_MS,
-} from "../../constants";
+} from "~/constants";
 
-import { collisionCheck, COLLISION_TYPE } from "../../helpers/collisionCheck";
-import { weapons } from "../../components/Weapons/Weapons";
-import delay from "../../helpers/asyncDelay";
-import { getDirectionString } from "../../helpers/getDirectionString";
-import { throttledDispatch } from "../../helpers/throttledDispatch";
-import { skeletonBehaviour } from "./skeletonBehaviour";
-import { padActions } from "../game/padActions";
+import { weapons } from "~/components/Weapons/Weapons";
+import delay from "~/helpers/asyncDelay";
+import { collisionCheck, COLLISION_TYPE } from "~/helpers/collisionCheck";
+import { getDirectionString } from "~/helpers/getDirectionString";
+import { throttledDispatch } from "~/helpers/throttledDispatch";
+import { padActions } from "~/slices/game/padActions";
 
 import {
   moveEntityOnMap,
   updateMapState,
   spawnEntity,
   removeEntityFromMap,
-} from "../map/mapSlice";
+  moveLightSource,
+} from "~/slices/map/mapSlice";
+import { changeCameraPosition } from "~/slices/camera/cameraSlice";
 
 import {
   changePosition,
@@ -31,11 +32,13 @@ import {
   hideEntity,
   startTick,
   endTick,
+  updateEntity,
   updateStateAfterEnemyAction,
   pickupItemByPlayer,
-} from "../../gameSlice";
+  toggleSpikes,
+} from "~/gameSlice";
 
-import { changeCameraPosition } from "../camera/cameraSlice";
+import { skeletonBehaviour } from "./skeletonBehaviour";
 
 const handleEnemyAction = async (dispatch, getState) => {
   const { entities } = getState().game;
@@ -96,7 +99,7 @@ const damageEnemyByPlayer = async (dispatch, player, entities, enemyId) => {
       );
     } else {
       const enemy = entities[enemyId];
-      dispatch(removeEntityFromMap({ x: enemy.x, y: enemy.y }));
+      dispatch(removeEntityFromMap({ x: enemy.x, y: enemy.y, entityId: enemyId }));
     }
 
     throttledDispatch(
@@ -210,10 +213,20 @@ const movePlayer = (dispatch, player, newPosition) => {
     entityId: player.id,
   }));
 
-  dispatch(changeState({
-    entityId: player.id,
-    newState: ENTITY_STATE.MOVE,
+  dispatch(moveLightSource({
+    id: 0,
+    x: newPosition.x,
+    y: newPosition.y,
   }));
+
+  dispatch(updateEntity({
+    entityId: player.id,
+    state: ENTITY_STATE.MOVE,
+    x: newPosition.x,
+    y: newPosition.y,
+  }));
+
+  dispatch(changeCameraPosition(newPosition));
 
   throttledDispatch(
     400, 
@@ -221,12 +234,6 @@ const movePlayer = (dispatch, player, newPosition) => {
       entityId: player.id,
       newState: ENTITY_STATE.IDLE,
     }),
-  );
-
-  throttledDispatch(
-    10, 
-    changePosition(newPosition), 
-    changeCameraPosition(newPosition),
   );
 };
 
@@ -241,33 +248,45 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
   };
 
   const moveDir = getDirectionString(direction);
-
   dispatch(changeFacing({
     moveDir,
     entityId: player.id,
   }));
 
-  const {
-    type: collisionType,
-    entityId: collidedEntityId,
-  } = collisionCheck(entities, tiles, newPosition);
+  const collisions = collisionCheck(entities, tiles, newPosition);
 
-  if (collisionType === COLLISION_TYPE.MAP) {
-    return;
-  }
+  for (let i = 0; i < collisions.length; i++) {
+    const {
+      type: collisionType,
+      entityId: collidedEntityId,
+    } = collisions[i];
 
-  if (collisionType === COLLISION_TYPE.ENEMY) {
-    damageEnemyByPlayer(dispatch, player, entities, collidedEntityId);
-    return;
-  }
+    if (collisionType === COLLISION_TYPE.MAP) {
+      return;
+    }
 
-  if (collisionType === COLLISION_TYPE.CRATE) {
-    destroyCrate(dispatch, player, entities, collidedEntityId);
-    return;
-  }
+    if (collisionType === COLLISION_TYPE.ENEMY) {
+      damageEnemyByPlayer(dispatch, player, entities, collidedEntityId);
+      return;
+    }
 
-  if (collisionType === COLLISION_TYPE.PICKABLE) {
-    pickupItem(dispatch, player, collidedEntityId); 
+    if (collisionType === COLLISION_TYPE.CRATE) {
+      destroyCrate(dispatch, player, entities, collidedEntityId);
+      return;
+    }
+
+    if (collisionType === COLLISION_TYPE.PICKABLE) {
+      pickupItem(player, collidedEntityId);
+    }
+
+    if (collisionType === COLLISION_TYPE.SPIKE) {
+      dispatch(
+        damageEntity({
+          entityId: player.id,
+          damage: 1,
+        })
+      );
+    }
   }
 
   setTimeout(() => {
@@ -296,9 +315,14 @@ export const step = createAsyncThunk(
 
     const player = Object.values(entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
 
+    dispatch(toggleSpikes());
+
     switch (name) {
       case GAME_ACTION.PLAYER_SKIP:
-        // literally do nothing.
+        // dispatch(damageEntity({
+          // entityId: player.id,
+          // damage: 1,
+        // }))
         break;
       case GAME_ACTION.PLAYER_MOVE:
         handlePlayerMove(dispatch, state, player, action);

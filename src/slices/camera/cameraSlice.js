@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { ENTITY_TYPE } from "../../constants";
-import { loadLevel } from "../../gameSlice";
+import { ENTITY_TYPE } from "~/constants";
+import { loadLevel } from "~/gameSlice";
 
 const cameraSlice = createSlice({
   initialState: {

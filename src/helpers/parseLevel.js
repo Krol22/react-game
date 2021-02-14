@@ -40,6 +40,8 @@ export const parseLevel = ({ tiles, entities }) => {
           entityType: ENTITY_TYPE.CRATE,
           active: true,
           visible: true,
+          discovered: false,
+          fogged: true,
           item: {
             id: 999,
             name: "healthPotion",
@@ -57,6 +59,8 @@ export const parseLevel = ({ tiles, entities }) => {
           state: ENTITY_STATE.IDLE,
           currentStep: 0,
           visible: true,
+          discovered: false,
+          fogged: true,
           attributes: {
             health: {
               current: 2,
@@ -77,6 +81,8 @@ export const parseLevel = ({ tiles, entities }) => {
           state: ENTITY_STATE.IDLE,
           currentStep: 0,
           visible: true,
+          discovered: false,
+          fogged: true,
           attributes: {
             health: {
               current: 1,
@@ -87,6 +93,45 @@ export const parseLevel = ({ tiles, entities }) => {
         };
         break;
       }
+      case "spike_hide": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "SPIKE",
+          entityType: ENTITY_TYPE.SPIKE,
+          active: true,
+          state: ENTITY_STATE.HIDE,
+          visible: true,
+          fogged: true,
+        }
+        break;
+      }
+      case "spike_show": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "SPIKE",
+          entityType: ENTITY_TYPE.SPIKE,
+          active: true,
+          state: ENTITY_STATE.SHOW,
+          visible: true,
+          fogged: true,
+        }
+        break;
+      }
+      case "potion": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "SPIKE",
+          entityType: ENTITY_TYPE.SPIKE,
+          active: true,
+          state: ENTITY_STATE.SHOW,
+          visible: true,
+          fogged: true,
+        }
+        break;
+      }
     };
 
     idCounter++;
@@ -95,10 +140,22 @@ export const parseLevel = ({ tiles, entities }) => {
     gameEntities[entity.id] = entity;
   });
 
-  Object.values(gameEntities).forEach(({ id, x, y }) => tiles[y][x].entityId = id);
+  Object.values(gameEntities).forEach(({ id, x, y }) => {
+    if (!tiles[y][x].entities) {
+      tiles[y][x].entities = [];
+    }
+
+    tiles[y][x].entities.push(id);
+  });
+
+  const mappedTiles = tiles.map(row => {
+    return row.map(element => element && ({ ...element, discovered: false, fogged: true }));
+  });
 
   return {
-    map: { tiles },
+    map: {
+      tiles: mappedTiles,
+    },
     entities: gameEntities,
   };
 };

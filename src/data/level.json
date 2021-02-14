@@ -647,8 +647,8 @@
       }
     },
     {
-      "x": 8,
-      "y": 8,
+      "x": 10,
+      "y": 3,
       "element": {
         "name": "crate",
         "type": "object"

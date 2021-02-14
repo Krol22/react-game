@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 
 import { Camera } from "./components/Camera/Camera";
 import { Map } from "./components/Map/Map";
-import { Player } from "./components/Player/Player";
+import { PlayerContainer } from "./components/Player/Player";
 import { Crate } from "./components/Crate/Crate";
 import { EnemiesContainer } from "./components/Enemy/EnemiesContainer";
 import { PlayerHealthBar } from "./components/UI/PlayerHealthBar.js/PlayerHealthBar";
@@ -12,9 +13,12 @@ import { mapToIsometric } from "./helpers/mapToIsometric";
 import useInputManager from "./hooks/useInputManager";
 import usePlayerInput from "./components/Player/usePlayerInput";
 import { idlePlayer } from "./gameSlice";
+import { Spikes} from "./components/Spikes/Spikes";
 
 import { ENTITY_TYPE } from "./constants";
 import {Pickable} from "./components/Pickables/Pickable";
+import level0 from "./data/newMap1.json";
+import { loadLevel } from "./gameSlice";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -37,8 +41,7 @@ const TopBar = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  margin: 20px;
+  align-items: center   margin: 20px;
 `;
 
 const Overlay = styled.div`
@@ -65,6 +68,90 @@ const GoldContainer = styled.div`
   font-size: 30px;
 `;
 
+const MoveTimerContainer = styled.div`
+  position: relative;
+  width: 200px;
+  height: 20px;
+  border: 4px solid white;
+
+  &:before {
+    display: block;
+    content: "";
+    position: absolute;
+    height: 20px;
+    background-color: #ac3232;
+
+    transition: linear .1s width;
+    width: 200px;
+
+    ${({ tick }) => !tick && `
+      transition: linear .8s width;
+      width: 0;
+    `}
+  }
+
+`;
+
+const MoveTimer = () => {
+  const tick = useSelector((state) => state.game.tick);
+  return <MoveTimerContainer tick={tick} />
+};
+
+const getVisibleTiles = (tiles, lightSources = {}) => {
+  const visibleTiles = {};
+
+  Object.values(lightSources).forEach(({ x, y, fov }) => {
+    for (let i = -fov; i <= fov; i++) {
+      for (let j = -fov; j <= fov; j++) {
+        const newX = x + j;
+        const newY = y + i;
+
+        if (newX < 0 || newY < 0) {
+          continue;
+        }
+        
+        visibleTiles[`${x + j}-${y + i}`] = 1;
+      }
+    }
+  });
+
+  return visibleTiles;
+};
+
+const selectGameEntities = createSelector(
+  state => ({ game: state.game, map: state.map }),
+  ({ game, map }) => {
+    const { tiles, lightSources } = map;
+
+    const visibleTiles = getVisibleTiles(tiles, lightSources);
+    const visibleEntities = Object.values(game.entities).map((entity) => { 
+      const { x, y } = entity;
+
+      if (visibleTiles[`${x}-${y}`]) {
+        return {
+          ...entity,
+          fogged: false,
+        };
+      }
+      return entity;
+    });
+
+    const player = visibleEntities.find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
+    const enemies = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
+    const crates = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.CRATE);
+    const pickables = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.PICKABLE);
+    const spikes = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.SPIKE);
+
+    return {
+      player,
+      enemies,
+      crates,
+      pickables,
+      spikes,
+    };
+  },
+);
+
 export const Level = () => {
   const dispatch = useDispatch();
 
@@ -83,20 +170,7 @@ export const Level = () => {
     }, 1000);
   }, []);
 
-  const { player, enemies, crates, pickables } = useSelector((state) => {
-    const player = Object.values(state.game.entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
-    const enemies = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
-    const crates = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.CRATE);
-    const pickables = Object.values(state.game.entities).filter(({ entityType }) => entityType === ENTITY_TYPE.PICKABLE);
-
-    return {
-      player,
-      enemies,
-      crates,
-      pickables,
-    };
-  });
-
+  const { player, enemies, crates, pickables, spikes } = useSelector(selectGameEntities, shallowEqual);
   const { showExampleText, text } = useSelector((state) => state.ui);
 
   return (
@@ -104,11 +178,11 @@ export const Level = () => {
       <UI>
         <Overlay />
         <TopBar>
-          <HealthBarContainer style={{ transform: "scale(8)", transformOrigin: "center left" }}>
+          <HealthBarContainer style={{ transform:"scale(8)", transformOrigin: "left top" }}>
             <PlayerHealthBar {...player.attributes.health} />
           </HealthBarContainer>
+          <MoveTimer />
           <GoldContainer>
-            Gold: 0
           </GoldContainer>
         </TopBar>
         <LevelTitle loaded={loaded}>
@@ -122,11 +196,12 @@ export const Level = () => {
       </UI>
       <Wrapper loaded={loaded}>
         <Camera>
-          <Player {...mapToIsometric(player)} />
+          <PlayerContainer {...mapToIsometric(player)} />
           <Map />
           <EnemiesContainer enemies={enemies} />
           {crates.map(mapToIsometric).map(props => <Crate {...props} />)}
           {pickables.map(mapToIsometric).map(props => <Pickable {...props} />)}
+          {spikes.map(mapToIsometric).map(props => <Spikes {...props} />)}
         </Camera>
       </Wrapper>
     </>
