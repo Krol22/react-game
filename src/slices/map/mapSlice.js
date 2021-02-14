@@ -20,14 +20,26 @@ const mapSlice = createSlice({
       const { newPosition, oldPosition, entityId } = payload;
       const { tiles } = state;
 
-      tiles[oldPosition.y][oldPosition.x].entityId = null;
-      tiles[newPosition.y][newPosition.x].entityId = entityId;
+      tiles[oldPosition.y][oldPosition.x].entities = [
+        ...tiles[oldPosition.y][oldPosition.x].entities.filter(id => entityId !== id),
+      ];
+
+      if (!tiles[newPosition.y][newPosition.x].entities) {
+        tiles[newPosition.y][newPosition.x].entities = [];
+      }
+
+      tiles[newPosition.y][newPosition.x].entities = [
+        ...tiles[newPosition.y][newPosition.x].entities,
+        entityId,
+      ];
     },
     removeEntityFromMap: (state, { payload }) => {
-      const { x, y } = payload;
+      const { x, y, entityId } = payload;
       const { tiles } = state;
 
-      tiles[y][x].entityId = null;
+      tiles[y][x].entities = [
+        ...tiles[y][x].entities.filter(id => entityId !== id),
+      ];
     },
     updateMapState: (state, { payload }) => {
       state.tiles = payload;
@@ -36,7 +48,14 @@ const mapSlice = createSlice({
       const { tiles } = state;
       const { position, entityId } = payload;
 
-      tiles[position.y][position.x].entityId = entityId;
+      if (!tiles[position.y][position.x].entityId) {
+        tiles[position.y][position.x].entities = [];
+      }
+
+      tiles[position.y][position.x].entities = [
+        ...tiles[position.y][position.x].entities,
+        entityId,
+      ];
     },
     addLightSource: (state, { payload }) => {
       const { x, y, id, fov } = payload;

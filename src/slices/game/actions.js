@@ -99,7 +99,7 @@ const damageEnemyByPlayer = async (dispatch, player, entities, enemyId) => {
       );
     } else {
       const enemy = entities[enemyId];
-      dispatch(removeEntityFromMap({ x: enemy.x, y: enemy.y }));
+      dispatch(removeEntityFromMap({ x: enemy.x, y: enemy.y, entityId: enemyId }));
     }
 
     throttledDispatch(
@@ -253,37 +253,40 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
     entityId: player.id,
   }));
 
-  const {
-    type: collisionType,
-    entityId: collidedEntityId,
-  } = collisionCheck(entities, tiles, newPosition);
+  const collisions = collisionCheck(entities, tiles, newPosition);
 
+  for (let i = 0; i < collisions.length; i++) {
+    const {
+      type: collisionType,
+      entityId: collidedEntityId,
+    } = collisions[i];
 
-  if (collisionType === COLLISION_TYPE.MAP) {
-    return;
-  }
+    if (collisionType === COLLISION_TYPE.MAP) {
+      return;
+    }
 
-  if (collisionType === COLLISION_TYPE.ENEMY) {
-    damageEnemyByPlayer(dispatch, player, entities, collidedEntityId);
-    return;
-  }
+    if (collisionType === COLLISION_TYPE.ENEMY) {
+      damageEnemyByPlayer(dispatch, player, entities, collidedEntityId);
+      return;
+    }
 
-  if (collisionType === COLLISION_TYPE.CRATE) {
-    destroyCrate(dispatch, player, entities, collidedEntityId);
-    return;
-  }
+    if (collisionType === COLLISION_TYPE.CRATE) {
+      destroyCrate(dispatch, player, entities, collidedEntityId);
+      return;
+    }
 
-  if (collisionType === COLLISION_TYPE.PICKABLE) {
-    pickupItem(player, collidedEntityId); 
-  }
+    if (collisionType === COLLISION_TYPE.PICKABLE) {
+      pickupItem(player, collidedEntityId);
+    }
 
-  if (collisionType === COLLISION_TYPE.SPIKE) {
-    dispatch(
-      damageEntity({
-        entityId: player.id,
-        damage: 1,  
-      })
-    );
+    if (collisionType === COLLISION_TYPE.SPIKE) {
+      dispatch(
+        damageEntity({
+          entityId: player.id,
+          damage: 1,
+        })
+      );
+    }
   }
 
   setTimeout(() => {

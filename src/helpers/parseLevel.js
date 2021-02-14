@@ -119,6 +119,19 @@ export const parseLevel = ({ tiles, entities }) => {
         }
         break;
       }
+      case "potion": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "SPIKE",
+          entityType: ENTITY_TYPE.SPIKE,
+          active: true,
+          state: ENTITY_STATE.SHOW,
+          visible: true,
+          fogged: true,
+        }
+        break;
+      }
     };
 
     idCounter++;
@@ -127,7 +140,13 @@ export const parseLevel = ({ tiles, entities }) => {
     gameEntities[entity.id] = entity;
   });
 
-  Object.values(gameEntities).forEach(({ id, x, y }) => tiles[y][x].entityId = id);
+  Object.values(gameEntities).forEach(({ id, x, y }) => {
+    if (!tiles[y][x].entities) {
+      tiles[y][x].entities = [];
+    }
+
+    tiles[y][x].entities.push(id);
+  });
 
   const mappedTiles = tiles.map(row => {
     return row.map(element => element && ({ ...element, discovered: false, fogged: true }));

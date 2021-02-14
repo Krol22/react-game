@@ -14,62 +14,82 @@ export const collisionCheck = (entities, tiles, newPos) => {
 
   // no tile
   if (!mapElement) {
-    return {
+    return [{
       type: COLLISION_TYPE.MAP,
-    };
+    }];
   }
 
   // wall
   if (mapElement.type === 1) {
-    return {
+    return [{
       type: COLLISION_TYPE.MAP,
-    };
+    }];
   }
 
-  const entity = entities[mapElement.entityId];
+  if (!mapElement.entities) {
+    return [];
+  }
+
+  const mapTileEntities = mapElement.entities.map(entityId => entities[entityId]);
+  // const entity = entities[mapElement.entityId];
 
   // no collision
-  if (!entity) {
-    return false;
+  if (!mapTileEntities.length) {
+    return [];
   }
 
-  // enemy
-  if (entity.entityType === ENTITY_TYPE.ENEMY) {
-    return {
-      type: COLLISION_TYPE.ENEMY,
-      entityId: entity.id,
-    };
-  }
+  const collisions = [];
 
-  // player
-  if (entity.entityType === ENTITY_TYPE.PLAYER) {
-    return {
-      type: COLLISION_TYPE.PLAYER,
-      entityId: entity.id,
-    };
-  }
+  mapTileEntities.forEach(entity => {
+    if (entity.entityType === ENTITY_TYPE.ENEMY) {
+      collisions.push({
+        type: COLLISION_TYPE.ENEMY,
+        entityId: entity.id,
+      });
 
-  // crate
-  if (entity.entityType === ENTITY_TYPE.CRATE) {
-    return {
-      type: COLLISION_TYPE.CRATE,
-      entityId: entity.id,
-    };
-  }
-
-  // item
-  if (entity.entityType === ENTITY_TYPE.PICKABLE) {
-    return {
-      type: COLLISION_TYPE.PICKABLE,
-      entityId: entity.id,
-    };
-  }
-
-  // spike
-  if (entity.entityType === ENTITY_TYPE.SPIKE) {
-    return {
-      type: COLLISION_TYPE.SPIKE,
-      entityId: entity.id,
+      return;
     }
-  }
+
+    // player
+    if (entity.entityType === ENTITY_TYPE.PLAYER) {
+      collisions.push({
+        type: COLLISION_TYPE.PLAYER,
+        entityId: entity.id,
+      });
+
+      return;
+    }
+
+    // crate
+    if (entity.entityType === ENTITY_TYPE.CRATE) {
+      collisions.push({
+        type: COLLISION_TYPE.CRATE,
+        entityId: entity.id,
+      });
+
+      return;
+    }
+
+    // item
+    if (entity.entityType === ENTITY_TYPE.PICKABLE) {
+      collisions.push({
+        type: COLLISION_TYPE.PICKABLE,
+        entityId: entity.id,
+      });
+
+      return;
+    }
+
+    // spike
+    if (entity.entityType === ENTITY_TYPE.SPIKE) {
+      collisions.push({
+        type: COLLISION_TYPE.SPIKE,
+        entityId: entity.id,
+      });
+
+      return;
+    }
+  });
+
+  return collisions;
 };

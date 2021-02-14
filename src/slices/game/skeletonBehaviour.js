@@ -27,53 +27,65 @@ export const skeletonBehaviour = (dispatch, enemy, tiles, localEntities) => {
 
   const localEnemy = localEntities[enemy.id];
 
-  const { 
-    type: collisionType,
-    entityId: collidedEntityId,
-  } = collisionCheck(localEntities, tiles, newPosition);
+  const collisions = collisionCheck(localEntities, tiles, newPosition);
 
-  if (collisionType === COLLISION_TYPE.PLAYER) {
-    setTimeout(() => {
-      dispatch(changeState({
-        entityId: collidedEntityId,
-        newState: ENTITY_STATE.IDLE,
-      }));
-    }, 100);
+  for (let i = 0; i < collisions.length; i++) {
+    const {
+      type: collisionType,
+      entityId: collidedEntityId,
+    } = collisions[i];
 
-    localEnemy.state = ENTITY_STATE.ATTACK;
-    localEnemy.facing = facing;
+    if (collisionType === COLLISION_TYPE.PLAYER) {
+      setTimeout(() => {
+        dispatch(changeState({
+          entityId: collidedEntityId,
+          newState: ENTITY_STATE.IDLE,
+        }));
+      }, 100);
 
-    setTimeout(() => {
-      dispatch(damageEntity({
-        entityId: collidedEntityId,  
-        damage: 1,
-      }))
-    }, 100);
+      localEnemy.state = ENTITY_STATE.ATTACK;
+      localEnemy.facing = facing;
 
-    setTimeout(() => {
-      dispatch(changeState({
-        entityId: enemy.id,  
-        newState: ENTITY_STATE.IDLE,
-      }));
-    }, 100);
+      setTimeout(() => {
+        dispatch(damageEntity({
+          entityId: collidedEntityId,  
+          damage: 1,
+        }))
+      }, 100);
 
-    return;
-  }
+      setTimeout(() => {
+        dispatch(changeState({
+          entityId: enemy.id,  
+          newState: ENTITY_STATE.IDLE,
+        }));
+      }, 100);
 
-  if (collisionType === COLLISION_TYPE.MAP) {
-    return;
-  }
+      return;
+    }
+    if (collisionType === COLLISION_TYPE.MAP) {
+      return;
+    }
 
-  if (collisionType === COLLISION_TYPE.ENEMY) {
-    return;
+    if (collisionType === COLLISION_TYPE.ENEMY) {
+      return;
+    }
   }
 
   /* move enemy */
   const currentMapElement = tiles[localEnemy.y][localEnemy.x];
-  currentMapElement.entityId = null;
+  currentMapElement.entities = [
+    ...currentMapElement.entities.filter(id => id !== enemy.id),
+  ];
 
   const newMapElement = tiles[newPosition.y][newPosition.x];
-  newMapElement.entityId = enemy.id;
+  if (!newMapElement.entities) {
+    newMapElement.entities = [];
+  }
+
+  newMapElement.entities = [
+    ...newMapElement.entities,
+    enemy.id,
+  ];
 
   localEnemy.facing = facing;
   localEnemy.state = ENTITY_STATE.MOVE;

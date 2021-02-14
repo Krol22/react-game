@@ -1129,6 +1129,14 @@
         "name": "spike_show",
         "type": "object"
       }
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "element": {
+        "name": "potion",
+        "type": "object"
+      }
     }
   ]
 }

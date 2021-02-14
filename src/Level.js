@@ -17,6 +17,8 @@ import { Spikes} from "./components/Spikes/Spikes";
 
 import { ENTITY_TYPE } from "./constants";
 import {Pickable} from "./components/Pickables/Pickable";
+import level0 from "./data/newMap1.json";
+import { loadLevel } from "./gameSlice";
 
 const Wrapper = styled.div`
   position: absolute;
