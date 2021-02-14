@@ -44,8 +44,8 @@ export const Crate = React.memo(({ x, y, zIndex, state, visible, fogged }) => {
         width={17}
         height={15}
         node={{
-          y: TILE_HEIGHT_HALF / 2 - 8,
-          x: TILE_WIDTH_HALF / 2 + 1,
+          y: TILE_HEIGHT_HALF / 2 - 9,
+          x: TILE_WIDTH_HALF / 2 + 2,
         }}
       />
     </CrateContainer>

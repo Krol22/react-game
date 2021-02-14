@@ -30,7 +30,6 @@ export const PlayerHealthBar = ({ current, max }) => {
 
   useEffect(() => {
     const timeline = gsap.timeline({});
-    console.log(nodeRef);
 
     if (current > prevCurrentRef.current) {
       timeline

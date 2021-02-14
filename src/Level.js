@@ -38,8 +38,7 @@ const TopBar = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  margin: 20px;
+  align-items: center   margin: 20px;
 `;
 
 const Overlay = styled.div`
@@ -65,6 +64,35 @@ const HealthBarContainer = styled.div`
 const GoldContainer = styled.div`
   font-size: 30px;
 `;
+
+const MoveTimerContainer = styled.div`
+  position: relative;
+  width: 200px;
+  height: 20px;
+  border: 4px solid white;
+
+  &:before {
+    display: block;
+    content: "";
+    position: absolute;
+    height: 20px;
+    background-color: #ac3232;
+
+    transition: linear .1s width;
+    width: 200px;
+
+    ${({ tick }) => !tick && `
+      transition: linear .8s width;
+      width: 0;
+    `}
+  }
+
+`;
+
+const MoveTimer = () => {
+  const tick = useSelector((state) => state.game.tick);
+  return <MoveTimerContainer tick={tick} />
+};
 
 const getVisibleTiles = (tiles, lightSources = {}) => {
   const visibleTiles = {};
@@ -138,7 +166,6 @@ export const Level = () => {
   }, []);
 
   const { player, enemies, crates, pickables } = useSelector(selectGameEntities, shallowEqual);
-
   const { showExampleText, text } = useSelector((state) => state.ui);
 
   return (
@@ -146,11 +173,11 @@ export const Level = () => {
       <UI>
         <Overlay />
         <TopBar>
-          <HealthBarContainer style={{ transform: "scale(8)", transformOrigin: "center left" }}>
+          <HealthBarContainer style={{ transform:"scale(8)", transformOrigin: "left top" }}>
             <PlayerHealthBar {...player.attributes.health} />
           </HealthBarContainer>
+          <MoveTimer />
           <GoldContainer>
-            Gold: 0
           </GoldContainer>
         </TopBar>
         <LevelTitle loaded={loaded}>

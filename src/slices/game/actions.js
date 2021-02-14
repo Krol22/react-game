@@ -273,7 +273,7 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
   }
 
   if (collisionType === COLLISION_TYPE.PICKABLE) {
-    pickupItem(dispatch, player, collidedEntityId); 
+    pickupItem(player, collidedEntityId); 
   }
 
   setTimeout(() => {
@@ -304,7 +304,10 @@ export const step = createAsyncThunk(
 
     switch (name) {
       case GAME_ACTION.PLAYER_SKIP:
-        // literally do nothing.
+        dispatch(damageEntity({
+          entityId: player.id,
+          damage: 1,
+        }))
         break;
       case GAME_ACTION.PLAYER_MOVE:
         handlePlayerMove(dispatch, state, player, action);

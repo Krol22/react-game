@@ -1092,6 +1092,14 @@
     },
     {
       "x": 3,
+      "y": 1,
+      "element": {
+        "name": "crate",
+        "type": "object"
+      }
+    },
+    {
+      "x": 3,
       "y": 3,
       "element": {
         "name": "player",
