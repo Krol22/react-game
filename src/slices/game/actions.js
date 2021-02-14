@@ -35,6 +35,7 @@ import {
   updateEntity,
   updateStateAfterEnemyAction,
   pickupItemByPlayer,
+  toggleSpikes,
 } from "~/gameSlice";
 
 import { skeletonBehaviour } from "./skeletonBehaviour";
@@ -234,7 +235,6 @@ const movePlayer = (dispatch, player, newPosition) => {
       newState: ENTITY_STATE.IDLE,
     }),
   );
-
 };
 
 const handlePlayerMove = async (dispatch, state, player, action) => {
@@ -258,6 +258,7 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
     entityId: collidedEntityId,
   } = collisionCheck(entities, tiles, newPosition);
 
+
   if (collisionType === COLLISION_TYPE.MAP) {
     return;
   }
@@ -274,6 +275,15 @@ const handlePlayerMove = async (dispatch, state, player, action) => {
 
   if (collisionType === COLLISION_TYPE.PICKABLE) {
     pickupItem(player, collidedEntityId); 
+  }
+
+  if (collisionType === COLLISION_TYPE.SPIKE) {
+    dispatch(
+      damageEntity({
+        entityId: player.id,
+        damage: 1,  
+      })
+    );
   }
 
   setTimeout(() => {
@@ -302,12 +312,14 @@ export const step = createAsyncThunk(
 
     const player = Object.values(entities).find(({ entityType }) => entityType === ENTITY_TYPE.PLAYER);
 
+    dispatch(toggleSpikes());
+
     switch (name) {
       case GAME_ACTION.PLAYER_SKIP:
-        dispatch(damageEntity({
-          entityId: player.id,
-          damage: 1,
-        }))
+        // dispatch(damageEntity({
+          // entityId: player.id,
+          // damage: 1,
+        // }))
         break;
       case GAME_ACTION.PLAYER_MOVE:
         handlePlayerMove(dispatch, state, player, action);

@@ -103,6 +103,14 @@ const gameSlice = createSlice({
     addNewEntity: (state, { payload }) => {
       state.entities[payload.id] = payload;
     },
+    toggleSpikes: (state) => {
+      Object
+        .values(state.entities)
+        .filter(({ entityType }) => entityType === ENTITY_TYPE.SPIKE)
+        .forEach(entity => {
+          entity.state = entity.state === ENTITY_STATE.SHOW ? ENTITY_STATE.HIDE : ENTITY_STATE.SHOW; 
+        });
+    },
     pickupItemByPlayer: (state, { payload }) => {
       const { itemId, playerId } = payload;
 
@@ -170,6 +178,7 @@ export const {
   endTick,
   addNewEntity,
   pickupItemByPlayer,
+  toggleSpikes,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -1105,6 +1105,30 @@
         "name": "player",
         "type": "object"
       }
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "element": {
+        "name": "spike_hide",
+        "type": "object"
+      }
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "element": {
+        "name": "spike_show",
+        "type": "object"
+      }
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "element": {
+        "name": "spike_show",
+        "type": "object"
+      }
     }
   ]
 }

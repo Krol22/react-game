@@ -93,6 +93,32 @@ export const parseLevel = ({ tiles, entities }) => {
         };
         break;
       }
+      case "spike_hide": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "SPIKE",
+          entityType: ENTITY_TYPE.SPIKE,
+          active: true,
+          state: ENTITY_STATE.HIDE,
+          visible: true,
+          fogged: true,
+        }
+        break;
+      }
+      case "spike_show": {
+        newEntity = {
+          id: idCounter,
+          x, y,
+          type: "SPIKE",
+          entityType: ENTITY_TYPE.SPIKE,
+          active: true,
+          state: ENTITY_STATE.SHOW,
+          visible: true,
+          fogged: true,
+        }
+        break;
+      }
     };
 
     idCounter++;

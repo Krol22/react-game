@@ -13,6 +13,7 @@ import { mapToIsometric } from "./helpers/mapToIsometric";
 import useInputManager from "./hooks/useInputManager";
 import usePlayerInput from "./components/Player/usePlayerInput";
 import { idlePlayer } from "./gameSlice";
+import { Spikes} from "./components/Spikes/Spikes";
 
 import { ENTITY_TYPE } from "./constants";
 import {Pickable} from "./components/Pickables/Pickable";
@@ -137,12 +138,14 @@ const selectGameEntities = createSelector(
     const enemies = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.ENEMY);
     const crates = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.CRATE);
     const pickables = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.PICKABLE);
+    const spikes = visibleEntities.filter(({ entityType }) => entityType === ENTITY_TYPE.SPIKE);
 
     return {
       player,
       enemies,
       crates,
       pickables,
+      spikes,
     };
   },
 );
@@ -165,7 +168,7 @@ export const Level = () => {
     }, 1000);
   }, []);
 
-  const { player, enemies, crates, pickables } = useSelector(selectGameEntities, shallowEqual);
+  const { player, enemies, crates, pickables, spikes } = useSelector(selectGameEntities, shallowEqual);
   const { showExampleText, text } = useSelector((state) => state.ui);
 
   return (
@@ -196,6 +199,7 @@ export const Level = () => {
           <EnemiesContainer enemies={enemies} />
           {crates.map(mapToIsometric).map(props => <Crate {...props} />)}
           {pickables.map(mapToIsometric).map(props => <Pickable {...props} />)}
+          {spikes.map(mapToIsometric).map(props => <Spikes {...props} />)}
         </Camera>
       </Wrapper>
     </>

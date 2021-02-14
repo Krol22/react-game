@@ -6,6 +6,7 @@ export const COLLISION_TYPE = {
   MAP: "MAP",
   CRATE: "CRATE",
   PICKABLE: "PICKABLE",
+  SPIKE: "SPIKE",
 };
 
 export const collisionCheck = (entities, tiles, newPos) => {
@@ -62,5 +63,13 @@ export const collisionCheck = (entities, tiles, newPos) => {
       type: COLLISION_TYPE.PICKABLE,
       entityId: entity.id,
     };
+  }
+
+  // spike
+  if (entity.entityType === ENTITY_TYPE.SPIKE) {
+    return {
+      type: COLLISION_TYPE.SPIKE,
+      entityId: entity.id,
+    }
   }
 };

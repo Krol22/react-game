@@ -32,7 +32,7 @@ const GameWindowContainer = styled.div`
     content: " ";
     display: block;
     width: 100%;
-    height: calc(100% - 4px);
+    height: calc(100% - 5px);
     position: absolute;
     top: 0;
     left: 0;
@@ -47,8 +47,8 @@ const GameWindowContainer = styled.div`
         rgba(0, 0, 255, 0.06)
       );
     z-index: 2000000;
-    background-size: 100% 0.4rem, 4px 100%;
-    opacity: 0.2;
+    background-size: 100% 0.5rem, 5px 100%;
+    opacity: 0;
     pointer-events: none;
   }
 `;
