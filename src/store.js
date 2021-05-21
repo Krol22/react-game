@@ -1,5 +1,5 @@
-import { combineReducers } from "redux";
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {combineReducers} from "redux";
+import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit";
 
 import gameSlice from "./gameSlice";
 import inputSlice from "./inputSlice";
@@ -18,21 +18,7 @@ const createReducer = (injectedReducers = {}) => {
   });
 };
 
-const getMiddleware = () => {
-  // removing all the immutable check middlewars for better performance,
-  let middleware = [getDefaultMiddleware()[1]];
-
-  console.log(middleware);
-
-  if (process.env.NODE_ENV !== "production") {
-    middleware = [...middleware];
-  }
-
-  return middleware;
-};
-
 export default configureStore({
   reducer: createReducer(),
-  middleware: [...getMiddleware()],
   devTools: process.env.NODE_ENV !== "production",
 });
